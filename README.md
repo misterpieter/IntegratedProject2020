@@ -49,7 +49,7 @@ Volders Pieter
 Klassen / Database structuur
 
 Student:  id:Long - studentnr: String - name:String - list<Autograph>
-Autograph: id:Long - image: BLOB - suspicionLevel:Enum
+Autograph: id:Long - image: BLOB - date: Date - suspicionLevel:Enm
 suspicionLevel: notRelevant - low  - high
 
 
