@@ -1,7 +1,8 @@
 Integrated Project 2020
 
-
+SAMENVATTING
 voormalig “I was there” (app om een student in te loggen met handtekening)
+
 
 2 DELEN
 
@@ -26,3 +27,35 @@ Deadline 19/10:
 - wireframes
 - architectuur (nadenken over klassen Welke database om lokaal weg te schrijven)
 - canvas technologie -> welke canvas wordt er gebruikt
+
+
+
+
+
+
+
+
+POTENTIEEL RELEVANTE INFORMATIE:
+
+Rahimi Halima
+
+
+
+
+
+
+Volders Pieter
+
+
+
+
+
+
+
+Adriaenssens Jonas
+
+
+
+
+
+
