@@ -46,8 +46,15 @@ Rahimi Halima
 
 Volders Pieter
 
+Klassen / Database structuur
+
+Student:  id:Long - studentnr: String - name:String - list<Autograph>
+Autograph: id:Long - image: BLOB - suspicionLevel:Enum
+suspicionLevel: notRelevant - low  - high
 
 
+Inloggen van student / Admin:
+mogelijkheid van integratie met LDAP authentication / Azure Active Directory
 
 
 
