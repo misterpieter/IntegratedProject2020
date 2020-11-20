@@ -1,7 +1,8 @@
 Integrated Project 2020
 
-
+SAMENVATTING
 voormalig “I was there” (app om een student in te loggen met handtekening)
+
 
 2 DELEN
 
@@ -26,3 +27,42 @@ Deadline 19/10:
 - wireframes
 - architectuur (nadenken over klassen Welke database om lokaal weg te schrijven)
 - canvas technologie -> welke canvas wordt er gebruikt
+
+
+
+
+
+
+
+
+POTENTIEEL RELEVANTE INFORMATIE:
+
+Rahimi Halima
+
+
+
+
+
+
+Volders Pieter
+
+Klassen / Database structuur
+
+Student:  id:Long - studentnr: String - name:String - list<Autograph>
+Autograph: id:Long - image: BLOB - date: Date - suspicionLevel:Enm
+suspicionLevel: notRelevant - low  - high
+
+
+Inloggen van student / Admin:
+mogelijkheid van integratie met LDAP authentication / Azure Active Directory
+
+
+
+
+Adriaenssens Jonas
+
+
+
+
+
+
