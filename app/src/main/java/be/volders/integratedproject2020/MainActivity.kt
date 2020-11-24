@@ -17,6 +17,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import be.volders.integratedproject2020.Model.Address
 import be.volders.integratedproject2020.Signature.SignatureActivity
+import be.volders.integratedproject2020.Students.StudentListActivity
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
 import kotlinx.android.synthetic.main.activity_main.*
@@ -58,7 +59,8 @@ class MainActivity : AppCompatActivity(), LocationListener {
         }
 
         btnShowAllStudents.setOnClickListener {
-            Toast.makeText(this, "Nog niet geimplementeerd", Toast.LENGTH_SHORT).show()
+            intent = Intent(this, StudentListActivity::class.java)
+            startActivity(intent)
         }
     }
 
@@ -127,8 +129,6 @@ class MainActivity : AppCompatActivity(), LocationListener {
             val address = obj["address"] as JsonObject
 
             Log.d("TAG", "obj: ${obj.toJsonString(true)}")
-            Log.d("TAG", "display_name: ${obj.get("display_name")}")
-            Log.d("TAG", "address: ${address.toJsonString(true)}")
 //
 //            Log.d("TAG", "road: ${address.get("road").toString()}")
 //            Log.d("TAG", "house_number: ${address.get("house_number")}")

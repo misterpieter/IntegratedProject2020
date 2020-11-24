@@ -8,6 +8,7 @@ TO DO:
 - lijst weergeven studenten: naam - snummer
 - detail lijst van studenten: handtekening - locatie - datum - (suspecion level)
 - data lokaal wegschrijven (HALIMA)
+- opzoeken mogelijkheid tot machine learning voor handtekeningen
 
 DATA:
 Student:  (id:Long) - studentnr:String - name:String - list<Autograph>
