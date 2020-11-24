@@ -27,6 +27,7 @@
         app:layout_constraintBottom_toTopOf="@+id/clear"
         app:layout_constraintStart_toStartOf="parent" />
 
+
     <Button
         android:id="@+id/recognize"
         android:layout_width="0dp"
