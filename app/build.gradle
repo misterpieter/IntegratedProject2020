@@ -35,6 +35,8 @@ android {
 
 dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation "com.beust:klaxon:5.0.1"
+    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
 
     implementation 'com.google.mlkit:digital-ink-recognition:16.0.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
