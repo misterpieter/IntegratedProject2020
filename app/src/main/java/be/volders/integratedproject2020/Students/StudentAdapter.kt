@@ -1,5 +1,6 @@
 package be.volders.integratedproject2020.Students
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,8 +10,10 @@ import be.volders.integratedproject2020.Model.Student
 import be.volders.integratedproject2020.R
 import java.util.*
 
+
 class StudentAdapter(private val students: ArrayList<Student>) :
     RecyclerView.Adapter<StudentAdapter.ViewHolder>() {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.recycler_view_item, parent, false)
@@ -35,4 +38,9 @@ class StudentAdapter(private val students: ArrayList<Student>) :
         var tvSnumber: TextView = itemView.findViewById(R.id.tvSnumber)
         var tvPassword: TextView = itemView.findViewById(R.id.tvPassword)
     }
+
+    internal interface ListItemClickListener {
+        fun onListItemClick(position: Int)
+    }
+
 }
