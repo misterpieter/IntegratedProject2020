@@ -3,31 +3,31 @@
     {
       "name": "Pieter",
       "lastname": "Volders",
-      "snumber": "summer1",
+      "snumber": "snummer1",
       "password": "paswoord1"
     },
     {
       "name": "Jonas",
       "lastname": "Adriaenssens",
-      "snumber": "summer2",
+      "snumber": "snummer2",
       "password": "paswoord2"
     },
     {
       "name": "Halima",
       "lastname": "Rahimi",
-      "snumber": "summer3",
+      "snumber": "snummer3",
       "password": "paswoord3"
     },
     {
       "name": "naam4",
       "lastname": "achternaam4",
-      "snumber": "summer4",
+      "snumber": "snummer4",
       "password": "paswoord4"
     },
     {
       "name": "naam5",
       "lastname": "achternaam5",
-      "snumber": "summer5",
+      "snumber": "snummer5",
       "password": "paswoord5"
     }
   ]
