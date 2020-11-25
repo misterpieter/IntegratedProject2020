@@ -36,7 +36,6 @@ class StudentAdapter(context:Context, private val students: ArrayList<Student>) 
 
         // click listener op item
         holder.itemView.setOnClickListener{
-
             //toast + redirect naar home (enkel als voorbeeld om naar een andere activity te gaan wanneer geklikt )
             Toast.makeText(context, "${student} clicked", Toast.LENGTH_SHORT).show()
             val intent = Intent(context, MainActivity::class.java)

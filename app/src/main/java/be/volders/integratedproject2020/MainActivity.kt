@@ -10,12 +10,13 @@ import android.location.LocationManager
 import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
-import android.widget.TextView
-import android.widget.Toast
+import android.view.View
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import be.volders.integratedproject2020.Model.Address
+import be.volders.integratedproject2020.Model.Student
 import be.volders.integratedproject2020.Signature.SignatureActivity
 import be.volders.integratedproject2020.Students.StudentListActivity
 import com.beust.klaxon.JsonObject
@@ -30,20 +31,43 @@ class MainActivity : AppCompatActivity(), LocationListener {
     private lateinit var locationManager: LocationManager
     private lateinit var tvGpsLocation: TextView
     private val locationPermissionCode = 2
-    private lateinit var jsonResult :JsonObject
-
+    var parentView:View?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val studentList = ArrayList<Student>()
+        studentList.add(Student( "Barrack","Obama","snumber1","password1"))
+        studentList.add(Student("Angela", "Merkel","snumber2","password2"))
+        studentList.add(Student("Kim", "Jong-Un","snumber3","password3"))
+        studentList.add(Student("Donald", "Trump","snumber4","password4"))
+        studentList.add(Student("Pieter", "Volders","snumber5","password5"))
+        studentList.add(Student("Jonas", "Adriaanssens","snumber6","password6"))
+        studentList.add(Student("Halima", "Rahimi","snumber7","password7"))
+
+
+        parentView = findViewById(R.id.parentView)
+
+        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, studentList)
+        actvStudents.setAdapter(adapter)
+
+        actvStudents.setOnItemClickListener { parent, view, position, id ->
+            var selectedStudent = parent.getItemAtPosition(position) as Student
+            Toast.makeText(this, "${selectedStudent.name} ${selectedStudent.lastname} selected", Toast.LENGTH_SHORT).show()
+            actvStudents.setText("")
+            Helper.hideKeyboard(parentView!!,this)
+        }
+
 
         btnSignature.setOnClickListener {
             intent = Intent(this, SignatureActivity::class.java)
             startActivity(intent)
         }
 
-        btnLogin.setOnClickListener {
-            Toast.makeText(this, "Nog niet geimplementeerd", Toast.LENGTH_SHORT).show()
+        btnLogin?.setOnClickListener {
+            val enteredText = actvStudents.getText()
+            Toast.makeText(this, enteredText, Toast.LENGTH_SHORT).show()
         }
 
         btnCoordinates.setOnClickListener {

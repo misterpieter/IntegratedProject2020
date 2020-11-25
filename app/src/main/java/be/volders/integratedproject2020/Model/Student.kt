@@ -12,7 +12,7 @@ data class Student(
         val password: String
 ){
     override fun toString(): String {
-        return name
+        return "${name} ${lastname} (${snumber})"
     }
 
 
