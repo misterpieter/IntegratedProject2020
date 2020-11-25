@@ -27,7 +27,7 @@ class StudentListActivity : AppCompatActivity() {
         val studentList = Student.getStudentsFromFile("students.json", this)
         Log.d("TAG", "onCreate: ${studentList[0].password}")
 
-        val adapter = StudentAdapter(studentList)
+        val adapter = StudentAdapter(this,studentList)
         rvPersons.adapter = adapter
     }
 }
