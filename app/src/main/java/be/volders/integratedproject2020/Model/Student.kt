@@ -11,6 +11,8 @@ data class Student(
         val snumber: String,
         val password: String
 ){
+
+
     override fun toString(): String {
         return "${name} ${lastname} - ${snumber}"
     }

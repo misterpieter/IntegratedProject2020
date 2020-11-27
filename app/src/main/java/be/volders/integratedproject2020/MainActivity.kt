@@ -9,6 +9,7 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.AsyncTask
 import android.os.Bundle
+import android.os.Debug
 import android.util.Log
 import android.view.View
 import android.widget.*
@@ -22,6 +23,7 @@ import be.volders.integratedproject2020.Students.StudentListActivity
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_signature.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.lang.StringBuilder
@@ -46,19 +48,17 @@ class MainActivity : AppCompatActivity(), LocationListener {
         studentList.add(Student("Jonas", "Adriaanssens","snumber6","password6"))
         studentList.add(Student("Halima", "Rahimi","snumber7","password7"))
 
-
         parentView = findViewById(R.id.parentView)
 
         val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, studentList)
         actvStudents.setAdapter(adapter)
-
+        //zoek fun, student uit een lijst zoeken
         actvStudents.setOnItemClickListener { parent, view, position, id ->
             var selectedStudent = parent.getItemAtPosition(position) as Student
             Toast.makeText(this, "${selectedStudent.name} ${selectedStudent.lastname} selected", Toast.LENGTH_SHORT).show()
             actvStudents.setText("")
             Helper.hideKeyboard(parentView!!,this)
         }
-
 
         btnSignature.setOnClickListener {
             intent = Intent(this, SignatureActivity::class.java)
