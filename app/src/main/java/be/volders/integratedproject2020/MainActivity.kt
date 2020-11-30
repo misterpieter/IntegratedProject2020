@@ -15,6 +15,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import be.volders.integratedproject2020.Model.Address
 import be.volders.integratedproject2020.Model.Student
 import be.volders.integratedproject2020.Signature.SignatureActivity
@@ -30,14 +31,18 @@ import java.net.URL
 class MainActivity : AppCompatActivity(), LocationListener {
     private lateinit var locationManager: LocationManager
     private lateinit var tvGpsLocation: TextView
+    private lateinit var tvAddress: TextView
     private val locationPermissionCode = 2
     var parentView:View?=null
+    private lateinit var selectedStudent:Student
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // lijst hardcoded van studenten
         val studentList = ArrayList<Student>()
+        studentList.add(Student( "Admin","Admin","pnumber","admin"))
         studentList.add(Student( "Barrack","Obama","snumber1","password1"))
         studentList.add(Student("Angela", "Merkel","snumber2","password2"))
         studentList.add(Student("Kim", "Jong-Un","snumber3","password3"))
@@ -52,12 +57,51 @@ class MainActivity : AppCompatActivity(), LocationListener {
         val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, studentList)
         actvStudents.setAdapter(adapter)
 
+        // event click listener op zoekbalk van studenten
         actvStudents.setOnItemClickListener { parent, view, position, id ->
-            var selectedStudent = parent.getItemAtPosition(position) as Student
-            Toast.makeText(this, "${selectedStudent.name} ${selectedStudent.lastname} selected", Toast.LENGTH_SHORT).show()
-            actvStudents.setText("")
+             selectedStudent = parent.getItemAtPosition(position) as Student
+//            Toast.makeText(this, "${selectedStudent.name} ${selectedStudent.lastname} selected", Toast.LENGTH_SHORT).show()
             Helper.hideKeyboard(parentView!!,this)
         }
+
+
+
+        // LOGIN
+        btnLogin?.setOnClickListener {
+            var password:String = etPassword.text.toString()
+            var boolAdmin = selectedStudent.name == "Admin"
+
+            if (!boolAdmin && selectedStudent.password == password){
+                intent = Intent(this, SignatureActivity::class.java)
+                startActivity(intent)
+
+                cleartextFieldsPassword()
+                Toast.makeText(this, "STUDENT", Toast.LENGTH_SHORT).show()
+            }
+            else if (boolAdmin && selectedStudent.password == password) {
+                intent = Intent(this, StudentListActivity::class.java)
+                startActivity(intent)
+                cleartextFieldsPassword()
+                Toast.makeText(this, "ADMIN", Toast.LENGTH_SHORT).show()
+            }
+            else {
+                Toast.makeText(this, "FOUTE INPUT! (${password} (fout) - ${selectedStudent.password} (correct)", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+
+        // DEV  => visibility in comment zetten
+
+        tvAddress = findViewById(R.id.tvAddress)
+        tvGpsLocation = findViewById(R.id.tvCoorddinates)
+
+        tvGpsLocation.isVisible = false
+        tvAddress.isVisible = false
+        btnSignature.isVisible = false
+        btnCoordinates.isVisible = false
+        btnExportCSV.isVisible = false
+        btnImportCSV.isVisible = false
+        btnShowAllStudents.isVisible = false
 
 
         btnSignature.setOnClickListener {
@@ -65,16 +109,13 @@ class MainActivity : AppCompatActivity(), LocationListener {
             startActivity(intent)
         }
 
-        btnLogin?.setOnClickListener {
-            val enteredText = actvStudents.getText()
-            Toast.makeText(this, enteredText, Toast.LENGTH_SHORT).show()
-        }
-
         btnCoordinates.setOnClickListener {
+            tvGpsLocation.isVisible = true
+            tvAddress.isVisible = true
             getLocation()
         }
 
-        btnExportCsv.setOnClickListener {
+        btnExportCSV.setOnClickListener {
             Toast.makeText(this, "Nog niet geimplementeerd", Toast.LENGTH_SHORT).show()
         }
 
@@ -88,6 +129,11 @@ class MainActivity : AppCompatActivity(), LocationListener {
         }
     }
 
+    private fun cleartextFieldsPassword(){
+        actvStudents.setText("")
+        etPassword.setText("")
+    }
+
 
     private fun getLocation() {
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -99,7 +145,6 @@ class MainActivity : AppCompatActivity(), LocationListener {
     }
 
     override fun onLocationChanged(location: Location) {
-        tvGpsLocation = findViewById(R.id.tvCoorddinates)
         tvGpsLocation.text = "Latitude: " + location.latitude + " , Longitude: " + location.longitude
 //        val urlReversedSearch = "https://nominatim.openstreetmap.org/reverse?format=json&lat=${location.latitude}&lon=${location.longitude}"
         val urlReversedSearch = "        https://nominatim.openstreetmap.org/reverse?format=json&lat=51.2944529776287&lon=4.485295861959457\n"
