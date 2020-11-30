@@ -39,7 +39,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         onCreate(db)
     }
 
-    fun addStudent(student: Student){
+    fun addStudent(student: Student): Long{
         val db = this.writableDatabase
         val values = ContentValues().apply {
             put(STUDENT_ID,student.snumber)
@@ -48,6 +48,6 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         }
         val r = db.insert(TABLE_STUDENTS, null, values)
 
-        //return r
+        return r
     }
 }

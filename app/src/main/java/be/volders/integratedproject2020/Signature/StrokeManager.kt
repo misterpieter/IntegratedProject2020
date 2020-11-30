@@ -1,6 +1,7 @@
 package be.volders.integratedproject2020
 
 import android.content.Context
+import android.os.Debug
 import android.util.Log
 import android.view.MotionEvent
 import android.widget.Toast
@@ -72,8 +73,9 @@ object StrokeManager {
 
         recognizer.recognize(ink)
             .addOnSuccessListener { result: RecognitionResult ->
-                Toast.makeText(context, "${result.candidates[0].text}", Toast.LENGTH_LONG)
-                    .show()
+               // Toast.makeText(context, "${result.candidates[0].text}", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "${ink}", Toast.LENGTH_LONG).show()
+                Log.d("ink", "${ink}")
             }
             .addOnFailureListener { e: Exception ->
                 Log.e("StrokeManager", "Error during recognition: $e")
