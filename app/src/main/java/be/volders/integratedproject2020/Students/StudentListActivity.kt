@@ -16,7 +16,7 @@ class StudentListActivity : AppCompatActivity() {
         val rvPersons = findViewById<RecyclerView>(R.id.rvPersons)
         rvPersons.layoutManager = LinearLayoutManager(this)
 
-        val studentList = Student.getStudentsFromFile("students.json", this)
+        val studentList = Student.getStudentsFromLocalJson("students.json", this)
         Log.d("TAG", "onCreate: ${studentList[0]}")
 
         val adapter = StudentAdapter(this,studentList)

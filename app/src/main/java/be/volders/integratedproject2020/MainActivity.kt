@@ -21,6 +21,7 @@ import androidx.core.view.isVisible
 import be.volders.integratedproject2020.Admin.AdminActivity
 import be.volders.integratedproject2020.Model.Address
 import be.volders.integratedproject2020.Model.Student
+import be.volders.integratedproject2020.Model.Student.Companion.getStudentsFromLocalCSV
 import be.volders.integratedproject2020.Signature.SignatureActivity
 import be.volders.integratedproject2020.Students.StudentListActivity
 import com.beust.klaxon.JsonObject
@@ -54,6 +55,10 @@ class MainActivity : AppCompatActivity(), LocationListener {
         studentList.add(Student("Pieter", "Volders","snumber5","password5"))
         studentList.add(Student("Jonas", "Adriaanssens","snumber6","password6"))
         studentList.add(Student("Halima", "Rahimi","snumber7","password7"))
+
+
+        // lijst imported csv
+        var sList = getStudentsFromLocalCSV(this)
 
 
         parentView = findViewById(R.id.parentView)
