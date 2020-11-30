@@ -9,6 +9,8 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.AsyncTask
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.*
@@ -16,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import be.volders.integratedproject2020.Admin.AdminActivity
 import be.volders.integratedproject2020.Model.Address
 import be.volders.integratedproject2020.Model.Student
 import be.volders.integratedproject2020.Signature.SignatureActivity
@@ -35,6 +38,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
     private val locationPermissionCode = 2
     var parentView:View?=null
     private lateinit var selectedStudent:Student
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,8 +69,9 @@ class MainActivity : AppCompatActivity(), LocationListener {
         }
 
 
+//        // LOGIN
+        btnLogin.isEnabled = false
 
-        // LOGIN
         btnLogin?.setOnClickListener {
             var password:String = etPassword.text.toString()
             var boolAdmin = selectedStudent.name == "Admin"
@@ -75,13 +80,13 @@ class MainActivity : AppCompatActivity(), LocationListener {
                 intent = Intent(this, SignatureActivity::class.java)
                 startActivity(intent)
 
-                cleartextFieldsPassword()
+                resetPage()
                 Toast.makeText(this, "STUDENT", Toast.LENGTH_SHORT).show()
             }
             else if (boolAdmin && selectedStudent.password == password) {
-                intent = Intent(this, StudentListActivity::class.java)
+                intent = Intent(this, AdminActivity::class.java)
                 startActivity(intent)
-                cleartextFieldsPassword()
+                resetPage()
                 Toast.makeText(this, "ADMIN", Toast.LENGTH_SHORT).show()
             }
             else {
@@ -90,18 +95,25 @@ class MainActivity : AppCompatActivity(), LocationListener {
         }
 
 
+
         // DEV  => visibility in comment zetten
+
+        etPassword.addTextChangedListener(textWatcher)
 
         tvAddress = findViewById(R.id.tvAddress)
         tvGpsLocation = findViewById(R.id.tvCoorddinates)
 
         tvGpsLocation.isVisible = false
         tvAddress.isVisible = false
+
         btnSignature.isVisible = false
         btnCoordinates.isVisible = false
-        btnExportCSV.isVisible = false
-        btnImportCSV.isVisible = false
-        btnShowAllStudents.isVisible = false
+
+
+        btnAdmin.setOnClickListener {
+            intent = Intent(this, AdminActivity::class.java)
+            startActivity(intent)
+        }
 
 
         btnSignature.setOnClickListener {
@@ -115,21 +127,31 @@ class MainActivity : AppCompatActivity(), LocationListener {
             getLocation()
         }
 
-        btnExportCSV.setOnClickListener {
-            Toast.makeText(this, "Nog niet geimplementeerd", Toast.LENGTH_SHORT).show()
+
+    }
+
+    private val textWatcher = object : TextWatcher {
+
+        override fun afterTextChanged(s: Editable?) {
+            Log.d("TAG", "afterTextChanged: ${s.toString()}")
         }
 
-        btnImportCSV.setOnClickListener {
-            Toast.makeText(this, "Nog niet geimplementeerd", Toast.LENGTH_SHORT).show()
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
         }
 
-        btnShowAllStudents.setOnClickListener {
-            intent = Intent(this, StudentListActivity::class.java)
-            startActivity(intent)
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            isPasswordEmpty(s.toString())
         }
     }
 
-    private fun cleartextFieldsPassword(){
+    private fun isPasswordEmpty(string:String, minimumPasswordLength:Int = 5) {
+        var length = string.trim().length
+        btnLogin.isEnabled = length >= minimumPasswordLength
+    }
+
+
+    private fun resetPage(){
+        btnLogin.isEnabled = false
         actvStudents.setText("")
         etPassword.setText("")
     }
