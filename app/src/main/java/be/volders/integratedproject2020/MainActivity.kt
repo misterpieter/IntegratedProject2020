@@ -19,11 +19,10 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import be.volders.integratedproject2020.Admin.AdminActivity
+import be.volders.integratedproject2020.Helper.getStudentsFromLocalCSV
 import be.volders.integratedproject2020.Model.Address
 import be.volders.integratedproject2020.Model.Student
-import be.volders.integratedproject2020.Model.Student.Companion.getStudentsFromLocalCSV
 import be.volders.integratedproject2020.Signature.SignatureActivity
-import be.volders.integratedproject2020.Students.StudentListActivity
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
 import kotlinx.android.synthetic.main.activity_main.*
