@@ -74,7 +74,7 @@ object StrokeManager {
         recognizer.recognize(ink)
             .addOnSuccessListener { result: RecognitionResult ->
                // Toast.makeText(context, "${result.candidates[0].text}", Toast.LENGTH_LONG).show()
-                Toast.makeText(context, "${ink}", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "${result}", Toast.LENGTH_LONG).show()
                 Log.d("ink", "${ink}")
             }
             .addOnFailureListener { e: Exception ->

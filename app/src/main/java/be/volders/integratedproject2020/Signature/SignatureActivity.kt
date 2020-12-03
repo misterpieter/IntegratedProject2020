@@ -3,7 +3,7 @@ package be.volders.integratedproject2020.Signature
 import android.graphics.Bitmap
 import android.media.MediaScannerConnection
 import android.os.Bundle
-import android.os.Environment;
+import android.os.Environment
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
@@ -14,7 +14,6 @@ import be.volders.integratedproject2020.DrawingView
 import be.volders.integratedproject2020.Model.Student
 import be.volders.integratedproject2020.R
 import be.volders.integratedproject2020.StrokeManager
-import kotlinx.android.synthetic.main.activity_main.view.*
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -59,27 +58,29 @@ class SignatureActivity : AppCompatActivity() {
             bitmap = drawingView.drawToBitmap()
             path = saveImage(bitmap);
             databaseHelper!!.addStudent(saveStudent)
-            Toast.makeText(this, saveStudent.name + "studen stored!", Toast.LENGTH_SHORT).show()
+            databaseHelper!!.insetImage(drawingView,saveStudent.name+saveStudent.lastname)
+            //Toast.makeText(this, saveStudent.name + "studen stored!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, saveStudent.name + "imag stored!", Toast.LENGTH_SHORT).show()
         }
 
     }
     private fun saveImage(myBitmap: Bitmap): String {
         val bytes = ByteArrayOutputStream()
-        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes)
+        myBitmap.compress(Bitmap.CompressFormat.PNG, 90, bytes)
         val wallpaperDirectory = File(Environment.getExternalStorageDirectory().toString() + IMAGE_DIRECTORY)
         // have the object build the directory structure, if needed.
         if (!wallpaperDirectory.exists()) {
             wallpaperDirectory.mkdirs()
-            Log.d("img", wallpaperDirectory.toString())
+            //Log.d("img", wallpaperDirectory.toString())
         }
 
         try {
             val f = File(wallpaperDirectory, Calendar.getInstance()
-                    .getTimeInMillis().toString() + ".jpg")
+                    .getTimeInMillis().toString() + ".png")
             f.createNewFile()
             val fo = FileOutputStream(f)
             fo.write(bytes.toByteArray())
-            MediaScannerConnection.scanFile(this, arrayOf(f.getPath()), arrayOf("image/jpeg"), null)
+            MediaScannerConnection.scanFile(this, arrayOf(f.getPath()), arrayOf("image/png"), null)
             fo.close()
             Log.d("save", "File Saved::--->" + f.getAbsolutePath())
             return f.getAbsolutePath()
@@ -88,4 +89,5 @@ class SignatureActivity : AppCompatActivity() {
         }
         return ""
     }
+
 }
