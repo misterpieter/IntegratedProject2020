@@ -7,13 +7,17 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
+import android.os.Environment
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
-import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -28,7 +32,7 @@ import com.beust.klaxon.Parser
 import kotlinx.android.synthetic.main.activity_main.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import java.lang.StringBuilder
+import java.io.*
 import java.net.URL
 
 class MainActivity : AppCompatActivity(), LocationListener {
@@ -46,14 +50,14 @@ class MainActivity : AppCompatActivity(), LocationListener {
 
         // lijst hardcoded van studenten
         val studentList = ArrayList<Student>()
-        studentList.add(Student( "Admin","Admin","pnumber","admin"))
-        studentList.add(Student( "Barrack","Obama","snumber1","password1"))
-        studentList.add(Student("Angela", "Merkel","snumber2","password2"))
-        studentList.add(Student("Kim", "Jong-Un","snumber3","password3"))
-        studentList.add(Student("Donald", "Trump","snumber4","password4"))
-        studentList.add(Student("Pieter", "Volders","snumber5","password5"))
-        studentList.add(Student("Jonas", "Adriaanssens","snumber6","password6"))
-        studentList.add(Student("Halima", "Rahimi","snumber7","password7"))
+        studentList.add(Student("Admin", "Admin", "pnumber", "admin"))
+        studentList.add(Student("Barrack", "Obama", "snumber1", "password1"))
+        studentList.add(Student("Angela", "Merkel", "snumber2", "password2"))
+        studentList.add(Student("Kim", "Jong-Un", "snumber3", "password3"))
+        studentList.add(Student("Donald", "Trump", "snumber4", "password4"))
+        studentList.add(Student("Pieter", "Volders", "snumber5", "password5"))
+        studentList.add(Student("Jonas", "Adriaanssens", "snumber6", "password6"))
+        studentList.add(Student("Halima", "Rahimi", "snumber7", "password7"))
 
 
         // lijst imported csv
@@ -69,7 +73,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
         actvStudents.setOnItemClickListener { parent, view, position, id ->
              selectedStudent = parent.getItemAtPosition(position) as Student
 //            Toast.makeText(this, "${selectedStudent.name} ${selectedStudent.lastname} selected", Toast.LENGTH_SHORT).show()
-            Helper.hideKeyboard(parentView!!,this)
+            Helper.hideKeyboard(parentView!!, this)
         }
 
 
@@ -94,7 +98,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
                 Toast.makeText(this, "ADMIN", Toast.LENGTH_SHORT).show()
             }
             else {
-                Toast.makeText(this, "FOUTE INPUT! (${password} (fout) - ${selectedStudent.password} (correct)", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "FOUTE INPUT! (FOUT: (${password})\nCorrect wachtoord: ${selectedStudent.password}", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -110,7 +114,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
         tvGpsLocation.isVisible = false
         tvAddress.isVisible = false
 
-        btnSignature.isVisible = false
+        btnSignature.isVisible = true
         btnCoordinates.isVisible = false
 
 
@@ -121,8 +125,39 @@ class MainActivity : AppCompatActivity(), LocationListener {
 
 
         btnSignature.setOnClickListener {
-            intent = Intent(this, SignatureActivity::class.java)
-            startActivity(intent)
+
+            try {
+                PrintWriter(openFileOutput("filename.txt", Context.MODE_PRIVATE)).use {
+                    it.println("KABOEM")
+                }
+            } catch (e: Exception) {
+                Log.e("TAG", e.toString())
+            }
+            val uri = Uri.fromFile(File("data/data/be.volders.integratedproject2020/files/filename.txt"))
+
+            val file = File(Environment.getExternalStorageDirectory(), "read.me")
+            val uri2 = Uri.fromFile(file)
+            val auxFile = File(uri2.getPath())
+
+            Log.d("TAG", "onCreate ${auxFile}")
+
+            //WERKEND SHARE FILE
+            val sendIntent: Intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, "This is my text to send.")
+                type = "text/html"
+//                putExtra(Intent.EXTRA_STREAM, uri2)
+//                flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+            }
+
+            val shareIntent = Intent.createChooser(sendIntent, null)
+            startActivity(shareIntent)
+
+
+
+            // DEV SIGNATURE
+//            intent = Intent(this, SignatureActivity::class.java)
+//            startActivity(intent)
         }
 
         btnCoordinates.setOnClickListener {
@@ -148,7 +183,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
         }
     }
 
-    private fun isPasswordEmpty(string:String, minimumPasswordLength:Int = 5) {
+    private fun isPasswordEmpty(string: String, minimumPasswordLength: Int = 5) {
         var length = string.trim().length
         btnLogin.isEnabled = length >= minimumPasswordLength
     }
@@ -239,7 +274,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
                         address["neighbourhood"]?.toString(), address["county"]?.toString())
                 Log.d("TAG", "Address object:\n$addressObject")
                 tvAddress.text = addressObject.toString()
-            }catch (e:Exception){
+            }catch (e: Exception){
                 Log.d("TAG", "EXCEPTION: ${e.message}\n${e.stackTrace}")
             }
         }
