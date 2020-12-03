@@ -9,6 +9,8 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.AsyncTask
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.os.Debug
 import android.util.Log
 import android.view.View
@@ -16,6 +18,9 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
+import be.volders.integratedproject2020.Admin.AdminActivity
+import be.volders.integratedproject2020.Helper.getStudentsFromLocalCSV
 import be.volders.integratedproject2020.Model.Address
 import be.volders.integratedproject2020.Model.Student
 import be.volders.integratedproject2020.Signature.SignatureActivity
@@ -32,14 +37,19 @@ import java.net.URL
 class MainActivity : AppCompatActivity(), LocationListener {
     private lateinit var locationManager: LocationManager
     private lateinit var tvGpsLocation: TextView
+    private lateinit var tvAddress: TextView
     private val locationPermissionCode = 2
     var parentView:View?=null
+    private lateinit var selectedStudent:Student
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // lijst hardcoded van studenten
         val studentList = ArrayList<Student>()
+        studentList.add(Student( "Admin","Admin","pnumber","admin"))
         studentList.add(Student( "Barrack","Obama","snumber1","password1"))
         studentList.add(Student("Angela", "Merkel","snumber2","password2"))
         studentList.add(Student("Kim", "Jong-Un","snumber3","password3"))
@@ -48,11 +58,18 @@ class MainActivity : AppCompatActivity(), LocationListener {
         studentList.add(Student("Jonas", "Adriaanssens","snumber6","password6"))
         studentList.add(Student("Halima", "Rahimi","snumber7","password7"))
 
+
+        // lijst imported csv
+        var sList = getStudentsFromLocalCSV(this)
+
+
         parentView = findViewById(R.id.parentView)
 
         val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, studentList)
         actvStudents.setAdapter(adapter)
         //zoek fun, student uit een lijst zoeken
+
+        // event click listener op zoekbalk van studenten
         actvStudents.setOnItemClickListener { parent, view, position, id ->
             var selectedStudent = parent.getItemAtPosition(position) as Student
             Toast.makeText(this, "${selectedStudent.name} ${selectedStudent.lastname} selected", Toast.LENGTH_SHORT).show()
@@ -60,32 +77,92 @@ class MainActivity : AppCompatActivity(), LocationListener {
             Helper.hideKeyboard(parentView!!,this)
         }
 
+
+//        // LOGIN
+        btnLogin.isEnabled = false
+
+        btnLogin?.setOnClickListener {
+            var password:String = etPassword.text.toString()
+            var boolAdmin = selectedStudent.name == "Admin"
+
+            if (!boolAdmin && selectedStudent.password == password){
+                intent = Intent(this, SignatureActivity::class.java)
+                startActivity(intent)
+
+                resetPage()
+                Toast.makeText(this, "STUDENT", Toast.LENGTH_SHORT).show()
+            }
+            else if (boolAdmin && selectedStudent.password == password) {
+                intent = Intent(this, AdminActivity::class.java)
+                startActivity(intent)
+                resetPage()
+                Toast.makeText(this, "ADMIN", Toast.LENGTH_SHORT).show()
+            }
+            else {
+                Toast.makeText(this, "FOUTE INPUT! (${password} (fout) - ${selectedStudent.password} (correct)", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+
+
+        // DEV  => visibility in comment zetten
+
+        etPassword.addTextChangedListener(textWatcher)
+
+        tvAddress = findViewById(R.id.tvAddress)
+        tvGpsLocation = findViewById(R.id.tvCoorddinates)
+
+        tvGpsLocation.isVisible = false
+        tvAddress.isVisible = false
+
+        btnSignature.isVisible = false
+        btnCoordinates.isVisible = false
+
+
+        btnAdmin.setOnClickListener {
+            intent = Intent(this, AdminActivity::class.java)
+            startActivity(intent)
+        }
+
+
         btnSignature.setOnClickListener {
             intent = Intent(this, SignatureActivity::class.java)
             startActivity(intent)
         }
 
-        btnLogin?.setOnClickListener {
-            val enteredText = actvStudents.getText()
-            Toast.makeText(this, enteredText, Toast.LENGTH_SHORT).show()
-        }
-
         btnCoordinates.setOnClickListener {
+            tvGpsLocation.isVisible = true
+            tvAddress.isVisible = true
             getLocation()
         }
 
-        btnExportCsv.setOnClickListener {
-            Toast.makeText(this, "Nog niet geimplementeerd", Toast.LENGTH_SHORT).show()
+
+    }
+
+    private val textWatcher = object : TextWatcher {
+
+        override fun afterTextChanged(s: Editable?) {
+            Log.d("TAG", "afterTextChanged: ${s.toString()}")
         }
 
-        btnImportCSV.setOnClickListener {
-            Toast.makeText(this, "Nog niet geimplementeerd", Toast.LENGTH_SHORT).show()
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
         }
 
-        btnShowAllStudents.setOnClickListener {
-            intent = Intent(this, StudentListActivity::class.java)
-            startActivity(intent)
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            isPasswordEmpty(s.toString())
         }
+    }
+
+    private fun isPasswordEmpty(string:String, minimumPasswordLength:Int = 5) {
+        var length = string.trim().length
+        btnLogin.isEnabled = length >= minimumPasswordLength
+    }
+
+
+    private fun resetPage(){
+        btnLogin.isEnabled = false
+        actvStudents.setText("")
+        etPassword.setText("")
     }
 
 
@@ -99,7 +176,6 @@ class MainActivity : AppCompatActivity(), LocationListener {
     }
 
     override fun onLocationChanged(location: Location) {
-        tvGpsLocation = findViewById(R.id.tvCoorddinates)
         tvGpsLocation.text = "Latitude: " + location.latitude + " , Longitude: " + location.longitude
 //        val urlReversedSearch = "https://nominatim.openstreetmap.org/reverse?format=json&lat=${location.latitude}&lon=${location.longitude}"
         val urlReversedSearch = "        https://nominatim.openstreetmap.org/reverse?format=json&lat=51.2944529776287&lon=4.485295861959457\n"

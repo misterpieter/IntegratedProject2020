@@ -2,7 +2,7 @@ Integrated Project 2020
 
 
 TO DO:
-- Data lokaal wegschrijven (SQLight of JSON via Shared Preferences ) - HALIMA
+- Data lokaal wegschrijven, hoe je de sign kunt opslaan (SQLight of JSON via Shared Preferences ) - HALIMA
 - Firebase synchronisatie - JONAS
 
 - CSV/XLS/JSON importeren / exporteren

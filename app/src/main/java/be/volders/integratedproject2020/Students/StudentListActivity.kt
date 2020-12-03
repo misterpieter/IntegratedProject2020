@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import be.volders.integratedproject2020.Helper.getStudentsFromLocalCSV
+import be.volders.integratedproject2020.Helper.getStudentsFromLocalJson
 import be.volders.integratedproject2020.Model.Student
 import be.volders.integratedproject2020.R
 
@@ -16,8 +18,12 @@ class StudentListActivity : AppCompatActivity() {
         val rvPersons = findViewById<RecyclerView>(R.id.rvPersons)
         rvPersons.layoutManager = LinearLayoutManager(this)
 
-        val studentList = Student.getStudentsFromFile("students.json", this)
+//        val studentList = getStudentsFromLocalJson(this)
+//        Log.d("TAG", "onCreate: ${studentList[0]}")
+
+        val studentList = getStudentsFromLocalCSV( this)
         Log.d("TAG", "onCreate: ${studentList[0]}")
+
 
         val adapter = StudentAdapter(this,studentList)
         rvPersons.adapter = adapter
