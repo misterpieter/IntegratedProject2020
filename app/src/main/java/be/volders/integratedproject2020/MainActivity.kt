@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
         studentList.add(Student("Donald", "Trump","snumber4","password4"))
         studentList.add(Student("Pieter", "Volders","snumber5","password5"))
         studentList.add(Student("Jonas", "Adriaanssens","snumber6","password6"))
-        studentList.add(Student("Halima", "Rahimi","snumber7","password7"))
+        studentList.add(Student("Halima", "Rahimi","snumber7","halima"))
 
 
         // lijst imported csv
@@ -71,9 +71,8 @@ class MainActivity : AppCompatActivity(), LocationListener {
 
         // event click listener op zoekbalk van studenten
         actvStudents.setOnItemClickListener { parent, view, position, id ->
-            var selectedStudent = parent.getItemAtPosition(position) as Student
-            Toast.makeText(this, "${selectedStudent.name} ${selectedStudent.lastname} selected", Toast.LENGTH_SHORT).show()
-            actvStudents.setText("")
+            selectedStudent = parent.getItemAtPosition(position) as Student
+//            Toast.makeText(this, "${selectedStudent.name} ${selectedStudent.lastname} selected", Toast.LENGTH_SHORT).show()
             Helper.hideKeyboard(parentView!!,this)
         }
 

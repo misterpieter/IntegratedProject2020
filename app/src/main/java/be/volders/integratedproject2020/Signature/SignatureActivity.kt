@@ -58,7 +58,7 @@ class SignatureActivity : AppCompatActivity() {
             bitmap = drawingView.drawToBitmap()
             path = saveImage(bitmap);
             databaseHelper!!.addStudent(saveStudent)
-            databaseHelper!!.insetImage(drawingView,saveStudent.name+saveStudent.lastname)
+            databaseHelper!!.insetImage(bitmap,saveStudent.name+ "_" + saveStudent.lastname, saveStudent.snumber)
             //Toast.makeText(this, saveStudent.name + "studen stored!", Toast.LENGTH_SHORT).show()
             Toast.makeText(this, saveStudent.name + "imag stored!", Toast.LENGTH_SHORT).show()
         }
@@ -73,7 +73,6 @@ class SignatureActivity : AppCompatActivity() {
             wallpaperDirectory.mkdirs()
             //Log.d("img", wallpaperDirectory.toString())
         }
-
         try {
             val f = File(wallpaperDirectory, Calendar.getInstance()
                     .getTimeInMillis().toString() + ".png")
