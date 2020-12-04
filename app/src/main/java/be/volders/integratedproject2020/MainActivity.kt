@@ -34,7 +34,7 @@ import okhttp3.Request
 import java.lang.StringBuilder
 import java.net.URL
 
-class MainActivity : AppCompatActivity(), LocationListener {
+class MainActivity : AppCompatActivity(), LocationListener{
     private lateinit var locationManager: LocationManager
     private lateinit var tvGpsLocation: TextView
     private lateinit var tvAddress: TextView
@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
         studentList.add(Student("Donald", "Trump","snumber4","password4"))
         studentList.add(Student("Pieter", "Volders","snumber5","password5"))
         studentList.add(Student("Jonas", "Adriaanssens","snumber6","password6"))
-        studentList.add(Student("Halima", "Rahimi","snumber7","halima"))
+        studentList.add(Student("Halima", "Rahimi","S425316","halima"))
 
 
         // lijst imported csv
@@ -67,17 +67,14 @@ class MainActivity : AppCompatActivity(), LocationListener {
 
         val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, studentList)
         actvStudents.setAdapter(adapter)
-        //zoek fun, student uit een lijst zoeken
-
         // event click listener op zoekbalk van studenten
         actvStudents.setOnItemClickListener { parent, view, position, id ->
             selectedStudent = parent.getItemAtPosition(position) as Student
-//            Toast.makeText(this, "${selectedStudent.name} ${selectedStudent.lastname} selected", Toast.LENGTH_SHORT).show()
             Helper.hideKeyboard(parentView!!,this)
         }
 
 
-//        // LOGIN
+        // LOGIN
         btnLogin.isEnabled = false
 
         btnLogin?.setOnClickListener {
@@ -86,6 +83,9 @@ class MainActivity : AppCompatActivity(), LocationListener {
 
             if (!boolAdmin && selectedStudent.password == password){
                 intent = Intent(this, SignatureActivity::class.java)
+                intent.putExtra("studentSnr",selectedStudent.snumber)
+                intent.putExtra("studentFirstname",selectedStudent.name)
+                intent.putExtra("studentLastname",selectedStudent.lastname)
                 startActivity(intent)
 
                 resetPage()
@@ -248,8 +248,6 @@ class MainActivity : AppCompatActivity(), LocationListener {
             }
         }
     }
-
-
 
 
 

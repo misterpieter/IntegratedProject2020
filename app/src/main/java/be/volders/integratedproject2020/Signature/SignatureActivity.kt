@@ -1,5 +1,6 @@
 package be.volders.integratedproject2020.Signature
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.media.MediaScannerConnection
 import android.os.Bundle
@@ -9,11 +10,8 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.drawToBitmap
-import be.volders.integratedproject2020.DatabaseHelpe
-import be.volders.integratedproject2020.DrawingView
+import be.volders.integratedproject2020.*
 import be.volders.integratedproject2020.Model.Student
-import be.volders.integratedproject2020.R
-import be.volders.integratedproject2020.StrokeManager
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -38,7 +36,10 @@ class SignatureActivity : AppCompatActivity() {
         var bitmap : Bitmap;
         var path : String;
 
-        val saveStudent = Student("Barrack", "Obama", "snumber1", "password1")
+        val saveStudent = Student(intent.getStringExtra("studentFirstname").toString(),
+                                  intent.getStringExtra("studentLastname").toString(),
+                                  intent.getStringExtra("studentSnr").toString(), "halima")
+
         btnStore = findViewById(R.id.buttonSave)
         recognize = findViewById(R.id.recognize)
         clear = findViewById(R.id.clear)
@@ -61,6 +62,9 @@ class SignatureActivity : AppCompatActivity() {
             val bytes = convertSignatur(bitmap)
             databaseHelper!!.insetImage(bytes.toString(),saveStudent.name+ "_" + saveStudent.lastname, saveStudent.snumber)
             Log.d("check",databaseHelper!!.insetImage(bytes.toString(),saveStudent.name+ "_" + saveStudent.lastname, saveStudent.snumber).toString().plus(" "));
+            Log.d("ST", saveStudent.name+ "_" + saveStudent.lastname)
+            intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
         }
 
     }

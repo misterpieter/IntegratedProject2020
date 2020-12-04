@@ -55,7 +55,6 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 + " FOREIGN KEY( " + FK_STUDENT_ID + " ) REFERENCES " + TABLE_STUDENTS + " ( " + STUDENT_ID + " ));"
                 )
 
-
         private val CREATE_TABLE_LOCATION = ("CREATE TABLE IF not exists "
                 + TABLE_LOCATION + " ( " + LOCATION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + LOCATION_NAME + " VARCHAR(255),"
@@ -105,6 +104,9 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         return !result .equals( -1)
     }
 
+    fun insertLocation(){
+
+    }
     fun getImage(imageId: String): SignatureHelper? {
         val db = this.writableDatabase
         val cursor2: Cursor = db.query(TABLE_SIGNATURE, arrayOf(SIGNATURE_ID, SIGNATURE_NAME, SIGNATURE_BITMAP), SIGNATURE_NAME
