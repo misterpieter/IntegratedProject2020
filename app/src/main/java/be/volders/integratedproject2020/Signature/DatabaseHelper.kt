@@ -19,11 +19,11 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
 
     companion object{
         private var DATABASE_NAME = "studenten"
-        private val DATABASE_VERSION = 5
+        private val DATABASE_VERSION = 1
         //table
         private val TABLE_STUDENTS = "student"
         private val TABLE_SIGNATURE = "signature"
-        private val TABLE_LOCATION = "signature"
+        private val TABLE_LOCATION = "location"
         //STUDENT
         private val KEY_ID = "id"
         private val STUDENT_ID = "student_id"
@@ -42,6 +42,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         private val TOWN = "town"
         private val COUNTRY = "country"
         private val POSTCODE = "postcode"
+        private val NEIGHBOURHOOD = "neighbourhood"
         private val TIMESTAMP = "locationTime"
         private val LONGITUDE = "longitude"
         private val LATTITUDE = "latitude"
@@ -69,9 +70,10 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 + TOWN + " VARCHAR(50),"
                 + COUNTRY + " VARCHAR(50),"
                 + POSTCODE + " INTEGER,"
+                + NEIGHBOURHOOD + " VARCHAR(50),"
                 + TIMESTAMP + " DATE, "
-                + LONGITUDE + " INTEGER, "
-                + LATTITUDE + " INTEGER, "
+                + LONGITUDE + " DOUBLE, "
+                + LATTITUDE + " DOUBLE, "
                 + FK_SIGNATURE_ID + " INTEGER,"
                 +" FOREIGN KEY("+ FK_SIGNATURE_ID+") REFERENCES " + TABLE_SIGNATURE + " (" + SIGNATURE_ID +"));"
                 )
@@ -124,9 +126,11 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         values.put(POSTCODE, adres.postcode)
         values.put(TOWN, adres.town)
         values.put(COUNTRY, adres.county)
+        values.put(NEIGHBOURHOOD, adres.neighbourhood)
         values.put(LONGITUDE, adres.lon)
         values.put(LATTITUDE, adres.lat)
         values.put(TIMESTAMP, LocalDate.now().toString())
+        values.put(FK_SIGNATURE_ID,19)
 
         val result = db.insert(TABLE_LOCATION, null, values)
         db.close()

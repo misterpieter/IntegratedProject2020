@@ -33,8 +33,8 @@ class SignatureActivity : AppCompatActivity() {
         setContentView(R.layout.activity_signature)
         StrokeManager.download()
 
-        var bitmap : Bitmap;
-        var path : String;
+        var bitmap : Bitmap
+        var path : String
 
         val saveStudent = Student(intent.getStringExtra("studentFirstname").toString(),
                                   intent.getStringExtra("studentLastname").toString(),
@@ -60,7 +60,7 @@ class SignatureActivity : AppCompatActivity() {
             path = saveImage(bitmap)
             //databaseHelper!!.addStudent(saveStudent)
             val bytes = convertSignatur(bitmap)
-            databaseHelper!!.insetImage(bytes.toString(),saveStudent.name+ "_" + saveStudent.lastname, saveStudent.snumber)
+            //databaseHelper!!.insetImage(bytes.toString(),saveStudent.name+ "_" + saveStudent.lastname, saveStudent.snumber)
             Log.d("check",databaseHelper!!.insetImage(bytes.toString(),saveStudent.name+ "_" + saveStudent.lastname, saveStudent.snumber).toString().plus(" "));
             Log.d("ST", saveStudent.name+ "_" + saveStudent.lastname)
             intent = Intent(this, MainActivity::class.java)

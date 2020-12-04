@@ -11,20 +11,17 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.os.Debug
 import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import be.volders.integratedproject2020.Admin.AdminActivity
 import be.volders.integratedproject2020.Helper.getStudentsFromLocalCSV
 import be.volders.integratedproject2020.Model.Address
 import be.volders.integratedproject2020.Model.Student
 import be.volders.integratedproject2020.Signature.SignatureActivity
-import be.volders.integratedproject2020.Students.StudentListActivity
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
 import kotlinx.android.synthetic.main.activity_main.*
@@ -40,13 +37,16 @@ class MainActivity : AppCompatActivity(), LocationListener{
     private lateinit var tvAddress: TextView
     private val locationPermissionCode = 2
     var parentView:View?=null
+    private lateinit var adres : Address
+    private var lat : Double = 0.0
+    private var lon : Double = 0.0
     private lateinit var selectedStudent:Student
-
+    var databaseHelper: DatabaseHelpe? = DatabaseHelpe(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        var adres : Address
         // lijst hardcoded van studenten
         val studentList = ArrayList<Student>()
         studentList.add(Student( "Admin","Admin","pnumber","admin"))
@@ -175,12 +175,13 @@ class MainActivity : AppCompatActivity(), LocationListener{
     }
 
     override fun onLocationChanged(location: Location) {
+        lat = location.latitude
+        lon = location.longitude
         tvGpsLocation.text = "Latitude: " + location.latitude + " , Longitude: " + location.longitude
-//        val urlReversedSearch = "https://nominatim.openstreetmap.org/reverse?format=json&lat=${location.latitude}&lon=${location.longitude}"
-        val urlReversedSearch = "https://nominatim.openstreetmap.org/reverse?format=json&lat=51.2944529776287&lon=4.485295861959457\n"
+        val urlReversedSearch = "https://nominatim.openstreetmap.org/reverse?format=json&lat=${location.latitude}&lon=${location.longitude}"
+        //val urlReversedSearch = "https://nominatim.openstreetmap.org/reverse?format=json&lat=51.2944529776287&lon=4.485295861959457\n"
         val urlAdress = URL(urlReversedSearch)
-
-        Toast.makeText(this, "EMULATOR -> address object = hardcoded", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "${lat} - ${lon}", Toast.LENGTH_SHORT).show()
         val task = MyAsyncTask()
         task.execute(urlAdress)
     }
@@ -195,7 +196,6 @@ class MainActivity : AppCompatActivity(), LocationListener{
             }
         }
     }
-
 
     inner class MyAsyncTask : AsyncTask<URL, Int, String>() {
 
@@ -227,30 +227,25 @@ class MainActivity : AppCompatActivity(), LocationListener{
             val obj = parser.parse(jsonString) as JsonObject
             val address = obj["address"] as JsonObject
 
-            Log.d("TAG", "obj: ${obj.toJsonString(true)}")
-//
-//            Log.d("TAG", "road: ${address.get("road").toString()}")
-//            Log.d("TAG", "house_number: ${address.get("house_number")}")
-//            Log.d("TAG", "postcode: ${address.get("postcode")}")
-//            Log.d("TAG", "town: ${address.get("town")}")
-
             try {
-                var addressObject = Address(
+                adres = Address(
                         address["road"]?.toString(),
                         address["house_number"]?.toString()?.toInt(),
                         address["postcode"]?.toString()?.toInt(),
                         address["town"]?.toString(),
-                        address["neighbourhood"]?.toString(), address["county"]?.toString())
-                Log.d("TAG", "Address object:\n$addressObject")
-                tvAddress.text = addressObject.toString()
+                        address["neighbourhood"]?.toString(),
+                        address["county"]?.toString(),
+                        lat,
+                        lon
+                )
+                Log.d("TAG", "Address object:\n$adres")
+                databaseHelper?.insertLocation(adres)
+                tvAddress.text = adres.toString()
             }catch (e:Exception){
                 Log.d("TAG", "EXCEPTION: ${e.message}\n${e.stackTrace}")
             }
         }
     }
-
-
-
 }
 
 
