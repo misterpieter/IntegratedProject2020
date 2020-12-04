@@ -111,11 +111,11 @@ class MainActivity : AppCompatActivity(), LocationListener{
         tvAddress = findViewById(R.id.tvAddress)
         tvGpsLocation = findViewById(R.id.tvCoorddinates)
 
-        tvGpsLocation.isVisible = false
-        tvAddress.isVisible = false
+        //tvGpsLocation.isVisible = false
+        //tvAddress.isVisible = false
 
-        btnSignature.isVisible = false
-        btnCoordinates.isVisible = false
+        //btnSignature.isVisible = false
+        //btnCoordinates.isVisible = false
 
 
         btnAdmin.setOnClickListener {
@@ -130,8 +130,8 @@ class MainActivity : AppCompatActivity(), LocationListener{
         }
 
         btnCoordinates.setOnClickListener {
-            tvGpsLocation.isVisible = true
-            tvAddress.isVisible = true
+            //tvGpsLocation.isVisible = true
+            //tvAddress.isVisible = true
             getLocation()
         }
 
@@ -177,7 +177,7 @@ class MainActivity : AppCompatActivity(), LocationListener{
     override fun onLocationChanged(location: Location) {
         tvGpsLocation.text = "Latitude: " + location.latitude + " , Longitude: " + location.longitude
 //        val urlReversedSearch = "https://nominatim.openstreetmap.org/reverse?format=json&lat=${location.latitude}&lon=${location.longitude}"
-        val urlReversedSearch = "        https://nominatim.openstreetmap.org/reverse?format=json&lat=51.2944529776287&lon=4.485295861959457\n"
+        val urlReversedSearch = "https://nominatim.openstreetmap.org/reverse?format=json&lat=51.2944529776287&lon=4.485295861959457\n"
         val urlAdress = URL(urlReversedSearch)
 
         Toast.makeText(this, "EMULATOR -> address object = hardcoded", Toast.LENGTH_SHORT).show()

@@ -7,9 +7,12 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.graphics.Bitmap
 import android.util.Log
+import be.volders.integratedproject2020.Model.Address
 import be.volders.integratedproject2020.Model.SignatureHelper
 import be.volders.integratedproject2020.Model.Student
 import java.io.ByteArrayOutputStream
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 
 class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
@@ -23,22 +26,26 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         private val TABLE_LOCATION = "signature"
         //STUDENT
         private val KEY_ID = "id"
-        private val STUDENT_ID = "studentID"
+        private val STUDENT_ID = "student_id"
         private val FIRSTNAME = "firstname"
         private val LASTNAME = "lastname"
         //SIGNATURE
-        private val SIGNATURE_ID = "signatureId"
+        private val SIGNATURE_ID = "signature_id"
         private val SIGNATURE_NAME = "signature_name"
         private val SIGNATURE_BITMAP = "signature_bitmap"
-        private val FK_STUDENT_ID = "fk_studentID"
+        private val FK_STUDENT_ID = "fk_student_id"
 
         //LOCATIE
-        private val LOCATION_ID = "locationId"
-        private val LOCATION_NAME = "locationName"
+        private val LOCATION_ID = "location_id"
+        private val HOUSE_NUMBER = "huis_number"
+        private val ROAD = "road"
+        private val TOWN = "town"
+        private val COUNTRY = "country"
+        private val POSTCODE = "postcode"
         private val TIMESTAMP = "locationTime"
         private val LONGITUDE = "longitude"
         private val LATTITUDE = "latitude"
-        private val FK_SIGNATURE_ID = "fk_signatureId"
+        private val FK_SIGNATURE_ID = "fk_signature_id"
 
         val selectQuery = "SELECT + FROM $TABLE_STUDENTS"
         private val CREATE_TABLE_STUDENTS = ("CREATE TABLE IF not exists "
@@ -57,10 +64,14 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
 
         private val CREATE_TABLE_LOCATION = ("CREATE TABLE IF not exists "
                 + TABLE_LOCATION + " ( " + LOCATION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + LOCATION_NAME + " VARCHAR(255),"
+                + HOUSE_NUMBER + " INTEGER,"
+                + ROAD + " VARCHAR(50),"
+                + TOWN + " VARCHAR(50),"
+                + COUNTRY + " VARCHAR(50),"
+                + POSTCODE + " INTEGER,"
                 + TIMESTAMP + " DATE, "
-                + LONGITUDE + " VARCHAR(50), "
-                + LATTITUDE + " VARCHAR(50), "
+                + LONGITUDE + " INTEGER, "
+                + LATTITUDE + " INTEGER, "
                 + FK_SIGNATURE_ID + " INTEGER,"
                 +" FOREIGN KEY("+ FK_SIGNATURE_ID+") REFERENCES " + TABLE_SIGNATURE + " (" + SIGNATURE_ID +"));"
                 )
@@ -104,8 +115,22 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         return !result .equals( -1)
     }
 
-    fun insertLocation(){
+    fun insertLocation(adres : Address): Boolean{
+        val db = this.writableDatabase
+        val values = ContentValues()
 
+        values.put(HOUSE_NUMBER, adres.houseNumber)
+        values.put(ROAD, adres.road)
+        values.put(POSTCODE, adres.postcode)
+        values.put(TOWN, adres.town)
+        values.put(COUNTRY, adres.county)
+        values.put(LONGITUDE, adres.lon)
+        values.put(LATTITUDE, adres.lat)
+        values.put(TIMESTAMP, LocalDate.now().toString())
+
+        val result = db.insert(TABLE_LOCATION, null, values)
+        db.close()
+        return !result .equals( -1)
     }
     fun getImage(imageId: String): SignatureHelper? {
         val db = this.writableDatabase
