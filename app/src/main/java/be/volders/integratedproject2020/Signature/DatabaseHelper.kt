@@ -6,7 +6,6 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import android.util.Log
 import be.volders.integratedproject2020.Model.SignatureHelper
 import be.volders.integratedproject2020.Model.Student
@@ -41,40 +40,37 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         private val LATTITUDE = "latitude"
         private val FK_SIGNATURE_ID = "fk_signatureId"
 
-        //hier wordt nog enkel naam opgeslagen
         val selectQuery = "SELECT + FROM $TABLE_STUDENTS"
-        private val CREATE_TABLE_STUDENTS = ("CREATE TABLE "
+        private val CREATE_TABLE_STUDENTS = ("CREATE TABLE IF not exists "
                 + TABLE_STUDENTS + "(" + STUDENT_ID + " VARCHAR(20)  PRIMARY KEY, "
-                                       + FIRSTNAME + " VARCHAR(20), "
-                                       + LASTNAME + " VARCHAR(20) );"
+                + FIRSTNAME + " VARCHAR(20), "
+                + LASTNAME + " VARCHAR(20) );"
                 )
-//TODO:voeg if exist toe (nakijken of de table al bestaat)
-        private val CREATE_TABLE_SIGNATURE = ("CREATE TABLE "
+
+        public val CREATE_TABLE_SIGNATURE = ( "CREATE TABLE IF not exists "
                 + TABLE_SIGNATURE + "(" + SIGNATURE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                                     + FK_STUDENT_ID + " VARCHAR(20), "
+                + FK_STUDENT_ID + " VARCHAR(20), "
+                + SIGNATURE_NAME + " VARCHAR(20), "
+                + SIGNATURE_BITMAP + " TEXT ,"
+                + " FOREIGN KEY( " + FK_STUDENT_ID + " ) REFERENCES " + TABLE_STUDENTS + " ( " + STUDENT_ID + " ));"
+                )
 
-                                         + SIGNATURE_NAME + " VARCHAR(20), "
-                                        + SIGNATURE_BITMAP + " TEXT ,"
-                                + " FOREIGN KEY( " + FK_STUDENT_ID + " ) REFERENCES " + TABLE_STUDENTS + " ( " + STUDENT_ID + " ));"
-        )
 
-        private val CREATE_TABLE_LOCATION = ("CREATE TABLE "
+        private val CREATE_TABLE_LOCATION = ("CREATE TABLE IF not exists "
                 + TABLE_LOCATION + " ( " + LOCATION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + LOCATION_NAME + " VARCHAR(255),"
                 + TIMESTAMP + " DATE, "
                 + LONGITUDE + " VARCHAR(50), "
                 + LATTITUDE + " VARCHAR(50), "
-                + FK_SIGNATURE_ID + " INTEGER FOREIGN KEY REFERENCES " + TABLE_SIGNATURE + "(" + SIGNATURE_ID +") );"
-        )
-
-
+                + FK_SIGNATURE_ID + " INTEGER,"
+                +" FOREIGN KEY("+ FK_SIGNATURE_ID+") REFERENCES " + TABLE_SIGNATURE + " (" + SIGNATURE_ID +"));"
+                )
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL(CREATE_TABLE_STUDENTS)
         db?.execSQL(CREATE_TABLE_SIGNATURE)
         db?.execSQL(CREATE_TABLE_LOCATION)
-
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
@@ -93,32 +89,20 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
             put(FIRSTNAME, student.name)
             put(LASTNAME, student.lastname)
         }
-
         return db.insert(TABLE_STUDENTS, null, values)
     }
 
-
-    //TODO: add location insertion as well when inserting signature (date is day of insertion)
-    fun insetImage(dbBitmap: Bitmap, imageId: String?, studentNr : String) {
+    fun insetImage(dbBitmap: String, imageId: String?, studentNr: String): Boolean {
         val db = this.writableDatabase
         val values = ContentValues()
 
-        //signature name
         values.put(SIGNATURE_NAME, imageId)
-
-        //foreign key student nr
         values.put(FK_STUDENT_ID, studentNr)
+        values.put(SIGNATURE_BITMAP, dbBitmap)
 
-        //signature
-        // val bitmap = (dbDrawable as BitmapDrawable).bitmap
-        val stream = ByteArrayOutputStream()
-
-        dbBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-        values.put(SIGNATURE_BITMAP, stream.toByteArray())
-
-        db.insert(TABLE_SIGNATURE, null, values)
-        Log.d("IMG","img is opgeslagen in insetImage")
+        val result = db.insert(TABLE_SIGNATURE, null, values)
         db.close()
+        return !result .equals( -1)
     }
 
     fun getImage(imageId: String): SignatureHelper? {

@@ -56,17 +56,24 @@ class SignatureActivity : AppCompatActivity() {
         }
         btnStore.setOnClickListener{
             bitmap = drawingView.drawToBitmap()
-            path = saveImage(bitmap);
-            databaseHelper!!.addStudent(saveStudent)
-            databaseHelper!!.insetImage(bitmap,saveStudent.name+ "_" + saveStudent.lastname, saveStudent.snumber)
-            //Toast.makeText(this, saveStudent.name + "studen stored!", Toast.LENGTH_SHORT).show()
-            Toast.makeText(this, saveStudent.name + "imag stored!", Toast.LENGTH_SHORT).show()
+            path = saveImage(bitmap)
+            //databaseHelper!!.addStudent(saveStudent)
+            val bytes = convertSignatur(bitmap)
+            databaseHelper!!.insetImage(bytes.toString(),saveStudent.name+ "_" + saveStudent.lastname, saveStudent.snumber)
+            Log.d("check",databaseHelper!!.insetImage(bytes.toString(),saveStudent.name+ "_" + saveStudent.lastname, saveStudent.snumber).toString().plus(" "));
         }
 
     }
-    private fun saveImage(myBitmap: Bitmap): String {
+    //convert
+    private  fun convertSignatur(myBitmap: Bitmap): ByteArray {
         val bytes = ByteArrayOutputStream()
         myBitmap.compress(Bitmap.CompressFormat.PNG, 90, bytes)
+        val byteArray = bytes.toByteArray()
+        return byteArray
+    }
+
+    private fun saveImage(myBitmap: Bitmap): String {
+        val bytes = convertSignatur(myBitmap)
         val wallpaperDirectory = File(Environment.getExternalStorageDirectory().toString() + IMAGE_DIRECTORY)
         // have the object build the directory structure, if needed.
         if (!wallpaperDirectory.exists()) {
@@ -78,7 +85,7 @@ class SignatureActivity : AppCompatActivity() {
                     .getTimeInMillis().toString() + ".png")
             f.createNewFile()
             val fo = FileOutputStream(f)
-            fo.write(bytes.toByteArray())
+            fo.write(bytes)
             MediaScannerConnection.scanFile(this, arrayOf(f.getPath()), arrayOf("image/png"), null)
             fo.close()
             Log.d("save", "File Saved::--->" + f.getAbsolutePath())
