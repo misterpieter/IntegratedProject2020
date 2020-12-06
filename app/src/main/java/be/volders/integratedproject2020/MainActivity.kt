@@ -17,6 +17,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import be.volders.integratedproject2020.Admin.AdminActivity
 import be.volders.integratedproject2020.Helper.getStudentsFromLocalCSV
 import be.volders.integratedproject2020.Model.Address
@@ -102,8 +103,6 @@ class MainActivity : AppCompatActivity(), LocationListener{
             }
         }
 
-
-
         // DEV  => visibility in comment zetten
 
         etPassword.addTextChangedListener(textWatcher)
@@ -117,12 +116,10 @@ class MainActivity : AppCompatActivity(), LocationListener{
         //btnSignature.isVisible = false
         //btnCoordinates.isVisible = false
 
-
         btnAdmin.setOnClickListener {
             intent = Intent(this, AdminActivity::class.java)
             startActivity(intent)
         }
-
 
         btnSignature.setOnClickListener {
             intent = Intent(this, SignatureActivity::class.java)
@@ -130,12 +127,10 @@ class MainActivity : AppCompatActivity(), LocationListener{
         }
 
         btnCoordinates.setOnClickListener {
-            //tvGpsLocation.isVisible = true
-            //tvAddress.isVisible = true
+            tvGpsLocation.isVisible = true
+            tvAddress.isVisible = true
             getLocation()
         }
-
-
     }
 
     private val textWatcher = object : TextWatcher {
@@ -156,7 +151,6 @@ class MainActivity : AppCompatActivity(), LocationListener{
         var length = string.trim().length
         btnLogin.isEnabled = length >= minimumPasswordLength
     }
-
 
     private fun resetPage(){
         btnLogin.isEnabled = false
@@ -181,7 +175,7 @@ class MainActivity : AppCompatActivity(), LocationListener{
         val urlReversedSearch = "https://nominatim.openstreetmap.org/reverse?format=json&lat=${location.latitude}&lon=${location.longitude}"
         //val urlReversedSearch = "https://nominatim.openstreetmap.org/reverse?format=json&lat=51.2944529776287&lon=4.485295861959457\n"
         val urlAdress = URL(urlReversedSearch)
-        Toast.makeText(this, "${lat} - ${lon}", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this, "${lat} - ${lon}", Toast.LENGTH_SHORT).show()
         val task = MyAsyncTask()
         task.execute(urlAdress)
     }
@@ -198,9 +192,7 @@ class MainActivity : AppCompatActivity(), LocationListener{
     }
 
     inner class MyAsyncTask : AsyncTask<URL, Int, String>() {
-
         var response = ""
-
         override fun onPreExecute(){
             super.onPreExecute()
         }

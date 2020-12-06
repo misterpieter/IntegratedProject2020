@@ -58,11 +58,11 @@ class SignatureActivity : AppCompatActivity() {
         btnStore.setOnClickListener{
             bitmap = drawingView.drawToBitmap()
             path = saveImage(bitmap)
-            //databaseHelper!!.addStudent(saveStudent)
+            databaseHelper!!.addStudent(saveStudent)
             val bytes = convertSignatur(bitmap)
-            //databaseHelper!!.insetImage(bytes.toString(),saveStudent.name+ "_" + saveStudent.lastname, saveStudent.snumber)
-            Log.d("check",databaseHelper!!.insetImage(bytes.toString(),saveStudent.name+ "_" + saveStudent.lastname, saveStudent.snumber).toString().plus(" "));
-            Log.d("ST", saveStudent.name+ "_" + saveStudent.lastname)
+            databaseHelper!!.insetImage(bytes.toString(),saveStudent.name+ "_" + saveStudent.lastname, saveStudent.snumber)
+            //Log.d("check",databaseHelper!!.insetImage(bytes.toString(),saveStudent.name+ "_" + saveStudent.lastname, saveStudent.snumber).toString().plus(" "));
+            Log.d("ST", "Signature ok!")
             intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
