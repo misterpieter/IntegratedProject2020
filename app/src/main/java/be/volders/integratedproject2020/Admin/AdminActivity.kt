@@ -1,20 +1,18 @@
 package be.volders.integratedproject2020.Admin
 
+import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.net.ConnectivityManager
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
-import androidx.core.view.isVisible
+import androidx.appcompat.app.AppCompatActivity
 import be.volders.integratedproject2020.Helper.getStudentsFromCSVString
-import be.volders.integratedproject2020.Helper.getStudentsFromLocalCSV
 import be.volders.integratedproject2020.Helper.loadDataFromIntent
 import be.volders.integratedproject2020.MainActivity
 import be.volders.integratedproject2020.R
 import be.volders.integratedproject2020.Students.StudentListActivity
 import kotlinx.android.synthetic.main.activity_admin.*
-import java.io.BufferedReader
-import java.io.InputStreamReader
+
 
 class AdminActivity : AppCompatActivity() {
     val REQUEST_CODE = 1
@@ -51,6 +49,18 @@ class AdminActivity : AppCompatActivity() {
             intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
+
+
+        if (haveNetworkConnection()){
+            btnSync.isEnabled = true
+
+        }
+
+        btnSync.setOnClickListener{
+            intent = Intent(this, SyncDatabase::class.java)
+            startActivity(intent)
+        }
+
     }
 
 
@@ -68,13 +78,36 @@ class AdminActivity : AppCompatActivity() {
 
             } catch (e: Exception) {
                 Toast.makeText(
-                        this,
-                        "Probleem bij het lezen van het bestand",
-                        Toast.LENGTH_SHORT
+                    this,
+                    "Probleem bij het lezen van het bestand",
+                    Toast.LENGTH_SHORT
                 ).show()
             }
         }
     }
+
+
+    //Checks if connectedvia WIFI or Mobile to Internet
+    private fun haveNetworkConnection(): Boolean {
+        var haveConnectedWifi = false
+        var haveConnectedMobile = false
+        val cm = getSystemService<Any>(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val netInfo = cm.allNetworkInfo
+        for (ni in netInfo) {
+            if (ni.typeName.equals(
+                    "WIFI",
+                    ignoreCase = true
+                )
+            ) if (ni.isConnected) haveConnectedWifi = true
+            if (ni.typeName.equals(
+                    "MOBILE",
+                    ignoreCase = true
+                )
+            ) if (ni.isConnected) haveConnectedMobile = true
+        }
+        return haveConnectedWifi || haveConnectedMobile
+    }
+
 
 //    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 //        super.onActivityResult(requestCode, resultCode, data)
