@@ -23,6 +23,11 @@ class NewSyncDatabase(context: Context) {
     }
 
 
+    fun deleteDocumentsStudent(){
+
+
+    }
+
 /*
     //version control
     fun checkVersion() {
@@ -30,13 +35,15 @@ class NewSyncDatabase(context: Context) {
     }
 */
 
+    //saves all students in this list. If changed it overwrites
     fun saveAllStudents(){
         val batch = mFirestore.batch()
         studentlist = databaseHelper?.getAllStudent()!!
         println("studerntlist print empty? " + studentlist.isEmpty() + "   size: " + studentlist.size)
 
         for(student in studentlist) {
-            val studentRef = mFirestore.collection("Students").document()
+            //names the document to Snumber
+            val studentRef = mFirestore.collection("Students").document(student.snumber)
             batch[studentRef] = student
 
             println(student.toString())
