@@ -35,8 +35,17 @@ class NewSyncDatabase(context: Context) {
     }
 */
 
+    fun saveOrUpdateAllSignatures(){
+
+    }
+
+    fun saveOrUpdateAllLocations(){
+
+    }
+
+
     //saves all students in this list. If changed it overwrites
-    fun saveAllStudents(){
+    fun saveOrUpdateAllStudents(){
         val batch = mFirestore.batch()
         studentlist = databaseHelper?.getAllStudent()!!
         println("studerntlist print empty? " + studentlist.isEmpty() + "   size: " + studentlist.size)

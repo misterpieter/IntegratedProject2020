@@ -6,7 +6,6 @@ import android.net.ConnectivityManager
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import be.volders.integratedproject2020.DatabaseHelpe
 import be.volders.integratedproject2020.Helper.getStudentsFromCSVString
 import be.volders.integratedproject2020.Helper.loadDataFromIntent
 import be.volders.integratedproject2020.MainActivity
@@ -58,7 +57,7 @@ class AdminActivity : AppCompatActivity() {
 
         btnSync.setOnClickListener{
             var newDBsyn = NewSyncDatabase(this)
-            newDBsyn.saveAllStudents()
+            newDBsyn.saveOrUpdateAllStudents()
 
         }
 
