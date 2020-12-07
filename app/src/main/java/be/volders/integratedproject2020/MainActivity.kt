@@ -31,6 +31,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.lang.StringBuilder
 import java.net.URL
+import java.time.LocalDate
 
 class MainActivity : AppCompatActivity(), LocationListener{
     private lateinit var locationManager: LocationManager
@@ -222,7 +223,9 @@ class MainActivity : AppCompatActivity(), LocationListener{
             try {
                 adres = Address(
                         lat,
-                        lon
+                        lon,
+                        LocalDate.now(),
+                        "S425316"
                 )
                 Log.d("TAG", "Address object:\n$adres")
                 databaseHelper?.insertLocation(adres)

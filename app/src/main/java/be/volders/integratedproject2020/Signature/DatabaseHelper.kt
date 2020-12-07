@@ -99,6 +99,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
     }
 
 
+    //TODO: rework password
     fun getAllStudent(): ArrayList<Student>{
         val StudentList = ArrayList<Student>()
         var stname:String
@@ -112,7 +113,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 stname = c.getString(c.getColumnIndex(LASTNAME))
                 stfirstname = c.getString(c.getColumnIndex(FIRSTNAME))
                 stsnr = c.getString(c.getColumnIndex(STUDENT_ID))
-                var s : Student = Student(stname,stfirstname,stsnr,"password")
+                var s : Student = Student(stname,stfirstname,stsnr, "password")
                 StudentList.add(s)
             }while(c.moveToNext())
         }
@@ -133,12 +134,27 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
     }
 
     //TODO: complete function
-    fun getAllLocations() : ArrayList<Location> {
-        val locationList = ArrayList<Location>()
+    fun getAllLocations() : ArrayList<Address> {
+        val locationList = ArrayList<Address>()
+        var dbLat : Double
+        var dbLon : Double
+        var date : LocalDate
+        var fkSnumber : String
 
-
-
-
+        val selectQuery ="SELECT * FROM $TABLE_LOCATION"
+        val db = this.readableDatabase
+        val c = db.rawQuery(selectQuery,null)
+        if(c.moveToFirst()){
+            do{
+                dbLat = c.getDouble(c.getColumnIndex(LATTITUDE))
+                dbLon = c.getDouble(c.getColumnIndex(LONGITUDE))
+                date = LocalDate.parse(c.getColumnIndex(TIMESTAMP).toString())
+                // date = c.get(c.getColumnIndex(TIMESTAMP))
+                fkSnumber = c.getString(c.getColumnIndex(FK_STUDENT_ID))
+                var location : Address = Address(dbLat, dbLon, date, fkSnumber)
+                locationList.add(location)
+            }while(c.moveToNext())
+        }
         return locationList
     }
 
