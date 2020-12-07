@@ -9,7 +9,7 @@ TO DO:
 - Lokaal inloggen
 - Detail lijst van studenten: handtekening - locatie - datum - (suspecion level)
 - Opzoeken mogelijkheid tot machine learning voor handtekeningen
-- TablevIew van studenten in Admin pagina met zoek/filter/order
+- TablevIew van studenten in Admin pagina met zoek/filter/order (filteren - halima)
 - Open van bestandsbeheer -> file zoeken om in te laden
 
 
