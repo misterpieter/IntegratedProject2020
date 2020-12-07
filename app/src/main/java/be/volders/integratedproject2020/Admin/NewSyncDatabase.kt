@@ -13,7 +13,9 @@ class NewSyncDatabase(context: Context) {
 
     private val mFirestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     var databaseHelper: DatabaseHelpe? = DatabaseHelpe(context)
-    //    private val dbHelper: DatabaseHelpe = DatabaseHelpe()
+
+
+    //testFunction
     fun addStudent() {
         val batch = mFirestore.batch()
         val studentRef = mFirestore.collection("Students").document()
@@ -28,16 +30,18 @@ class NewSyncDatabase(context: Context) {
 
     }
 
-/*
+/*  NICE TO HAVE
     //version control
     fun checkVersion() {
         val docRef = mFirestore.collection("DatabaseVersion").
     }
 */
 
+
     fun saveOrUpdateAllSignatures(){
 
     }
+
 
     fun saveOrUpdateAllLocations(){
 
@@ -51,18 +55,15 @@ class NewSyncDatabase(context: Context) {
         println("studerntlist print empty? " + studentlist.isEmpty() + "   size: " + studentlist.size)
 
         for(student in studentlist) {
-            //names the document to Snumber
+            //names the document to snumber
             val studentRef = mFirestore.collection("Students").document(student.snumber)
             batch[studentRef] = student
-
-            println(student.toString())
-
         }
             batch.commit()
       }
 
 
-
+    // isn't used delete later ?
     fun Student.convertToMap(): MutableMap<String, Any> {
         val map = mutableMapOf<String, Any>()
         map["name"] = name
