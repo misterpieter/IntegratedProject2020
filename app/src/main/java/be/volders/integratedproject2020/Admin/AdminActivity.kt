@@ -58,9 +58,8 @@ class AdminActivity : AppCompatActivity() {
         btnSync.setOnClickListener{
             var newDBsyn = NewSyncDatabase(this)
             newDBsyn.saveOrUpdateAllStudents()
-            println("wubba lubba dubdub 1")
             newDBsyn.saveOrUpdateAllLocations()
-            println("wubba lubba dubdub 2")
+           // newDBsyn.saveOrUpdateAllSignatures()
         }
 
     }
