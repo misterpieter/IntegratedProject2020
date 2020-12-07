@@ -33,6 +33,7 @@
         <activity android:name=".Admin.AdminActivity"></activity>
         <activity android:name=".Students.StudentListActivity" />
         <activity android:name=".Signature.SignatureActivity" />
+        <activity android:name=".Admin.SyncDatabase"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

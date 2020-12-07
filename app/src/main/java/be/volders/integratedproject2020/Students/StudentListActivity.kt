@@ -23,7 +23,7 @@ lateinit var rvPersons: RecyclerView
 lateinit var sortlist: List<Student>
 lateinit var studentlist : ArrayList<Student>
 
-class StudentListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener{
+abstract class StudentListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener{
     var databaseHelper: DatabaseHelpe? = DatabaseHelpe(this)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,11 +51,11 @@ class StudentListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListe
             rvPersons.adapter = adapter
         }
 
-        databaseHelper!!.filterStudent()
+        //databaseHelper!!.filterStudent()
         //val studentList = getStudentsFromLocalCSV(this)
     }
 
-    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+/*    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         var etFilter = ettFilter.text.toString()
         when (position) {
             0 -> {
@@ -80,7 +80,7 @@ class StudentListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListe
                 rvPersons.adapter = adapter
             }
         }
-    }
+    }*/
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
         val adapter = StudentAdapter(this, studentlist)

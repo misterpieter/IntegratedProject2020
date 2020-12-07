@@ -53,12 +53,13 @@ class AdminActivity : AppCompatActivity() {
 
         if (haveNetworkConnection()){
             btnSync.isEnabled = true
-
         }
 
         btnSync.setOnClickListener{
-            intent = Intent(this, SyncDatabase::class.java)
-            startActivity(intent)
+            var test = NewSyncDatabase()
+            test.addStudent()
+            /*intent = Intent(this, newSyncDatabase::class.java)
+            startActivity(intent)*/
         }
 
     }
@@ -91,7 +92,7 @@ class AdminActivity : AppCompatActivity() {
     private fun haveNetworkConnection(): Boolean {
         var haveConnectedWifi = false
         var haveConnectedMobile = false
-        val cm = getSystemService<Any>(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val netInfo = cm.allNetworkInfo
         for (ni in netInfo) {
             if (ni.typeName.equals(

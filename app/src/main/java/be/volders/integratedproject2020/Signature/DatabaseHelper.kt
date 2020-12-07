@@ -163,7 +163,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         return !result .equals( -1)
     }
 
-    fun filterStudent(filter: String) {
+   /* fun filterStudent(filter: String) {
         val db = this.readableDatabase
         var c : SQLiteDatabase?
         if(filter == "firstname" || filter == "lastname" || filter == "student_id"){
@@ -180,7 +180,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 //Log.d("FIL", "afterTextChanged: ${s}")
             }while(c.moveToNext())
         }
-    }
+    }*/
     /*
     fun getImage(imageId: String): SignatureHelper? {
         val db = this.writableDatabase
