@@ -7,12 +7,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import android.content.Context
 
 class NewSyncDatabase(context: Context) {
-    // private val mFirestore  : FirebaseFirestore by lazy {FirebaseFirestore.getInstance()}
-
-
     private val mFirestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     var databaseHelper: DatabaseHelpe? = DatabaseHelpe(context)
-
 
     //testFunction
     fun addStudent() {
@@ -23,10 +19,7 @@ class NewSyncDatabase(context: Context) {
         batch.commit()
     }
 
-
     fun deleteDocumentsStudent(){
-
-
     }
 
 /*  NICE TO HAVE
@@ -36,12 +29,11 @@ class NewSyncDatabase(context: Context) {
     }
 */
 
-
     fun saveOrUpdateAllSignatures(){
 
     }
 
-
+    //TODO: fix this function
     fun saveOrUpdateAllLocations(){
         val batch = mFirestore.batch()
         val locationList = databaseHelper?.getAllLocations()!!
@@ -49,7 +41,7 @@ class NewSyncDatabase(context: Context) {
 
             for(address in locationList) {
                 //names the document to snumber
-                val locationRef = mFirestore.collection("Locations").document(address.fkSnumber)
+                val locationRef = mFirestore.collection("Students").document("S425316").collection("Locations").document(address.date.toString())
                 batch[locationRef] = address
             }
             batch.commit()
