@@ -5,6 +5,9 @@ import be.volders.integratedproject2020.MainActivity
 import be.volders.integratedproject2020.Model.Student
 import com.google.firebase.firestore.FirebaseFirestore
 import android.content.Context
+import be.volders.integratedproject2020.Model.Address
+import java.time.LocalDate
+import java.util.*
 
 class NewSyncDatabase(context: Context) {
     private val mFirestore: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -36,14 +39,24 @@ class NewSyncDatabase(context: Context) {
     //TODO: fix this function
     fun saveOrUpdateAllLocations(){
         val batch = mFirestore.batch()
+        val millis = System.currentTimeMillis()
+        val date = java.sql.Date(millis)
+
+        val testAdress = Address(55.1123 , 4.5645, date,  "S425316")
+
+        println("locolocoloco: " + date)
+//        LocalDate.now()
+
         val locationList = databaseHelper?.getAllLocations()!!
         println("locationlist print empty? " + locationList.isEmpty() + "   size: " + locationList.size)
+                val locationRef = mFirestore.collection("Students").document("S425316").collection("Locations").document(
+                    testAdress.date.toString()
+                )
+                batch[locationRef] = testAdress
 
-            for(address in locationList) {
+         /*   for(address in locationList) {
                 //names the document to snumber
-                val locationRef = mFirestore.collection("Students").document("S425316").collection("Locations").document(address.date.toString())
-                batch[locationRef] = address
-            }
+            }*/
             batch.commit()
     }
 

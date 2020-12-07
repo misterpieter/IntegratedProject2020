@@ -31,6 +31,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.lang.StringBuilder
 import java.net.URL
+import java.sql.Date
 import java.time.LocalDate
 
 class MainActivity : AppCompatActivity(), LocationListener{
@@ -219,11 +220,14 @@ class MainActivity : AppCompatActivity(), LocationListener{
             val parser: Parser = Parser.default()
             val obj = parser.parse(jsonString) as JsonObject
             val address = obj["address"] as JsonObject
+            val millis = System.currentTimeMillis()
+            val date = Date(millis)
+
             try {
                 adres = Address(
                         lat,
                         lon,
-                        LocalDate.now(),
+                        date,
                         "S425316"
                 )
                 Log.d("TAG", "Address object:\n$adres")

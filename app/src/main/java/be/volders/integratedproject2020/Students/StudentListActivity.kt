@@ -46,7 +46,7 @@ class StudentListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListe
         spinner.adapter = adapterSort
         spinner.setOnItemSelectedListener(this)
 
-        btfilter = findViewById(R.id.btFilter)
+       // btfilter = findViewById(R.id.btFilter)
       /*  btfilter?.setOnClickListener {
             etFilter = ettFilter.text.toString()
             sortlist =

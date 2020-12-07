@@ -13,6 +13,7 @@ import be.volders.integratedproject2020.Model.Student
 import be.volders.integratedproject2020.Signature.Location
 import be.volders.integratedproject2020.Students.studentlist
 import java.io.ByteArrayOutputStream
+import java.sql.Date
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -138,7 +139,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         val locationList = ArrayList<Address>()
         var dbLat : Double
         var dbLon : Double
-        var date : LocalDate
+        var date : Date
         var fkSnumber : String
 
         val selectQuery ="SELECT * FROM $TABLE_LOCATION"
@@ -148,7 +149,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
             do{
                 dbLat = c.getDouble(c.getColumnIndex(LATTITUDE))
                 dbLon = c.getDouble(c.getColumnIndex(LONGITUDE))
-                date = LocalDate.parse(c.getColumnIndex(TIMESTAMP).toString())
+                date =   Date.valueOf(c.getString(c.getColumnIndex(TIMESTAMP)))
                 // date = c.get(c.getColumnIndex(TIMESTAMP))
                 fkSnumber = c.getString(c.getColumnIndex(FK_STUDENT_ID))
                 var location : Address = Address(dbLat, dbLon, date, fkSnumber)
@@ -162,9 +163,12 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         val db = this.writableDatabase
         val values = ContentValues()
 
+        val millis = System.currentTimeMillis()
+        val date = Date(millis)
+
         values.put(LONGITUDE, adres.lon)
         values.put(LATTITUDE, adres.lat)
-        values.put(TIMESTAMP, LocalDate.now().toString())
+        values.put(TIMESTAMP, date.toString())
         values.put(STUDENT_ID,"snumber4")
 
         val result = db.insert(TABLE_LOCATION, null, values)
