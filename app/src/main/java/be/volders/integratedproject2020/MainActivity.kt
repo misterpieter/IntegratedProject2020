@@ -221,12 +221,6 @@ class MainActivity : AppCompatActivity(), LocationListener{
 
             try {
                 adres = Address(
-                        address["road"]?.toString(),
-                        address["house_number"]?.toString()?.toInt(),
-                        address["postcode"]?.toString()?.toInt(),
-                        address["town"]?.toString(),
-                        address["neighbourhood"]?.toString(),
-                        address["county"]?.toString(),
                         lat,
                         lon
                 )

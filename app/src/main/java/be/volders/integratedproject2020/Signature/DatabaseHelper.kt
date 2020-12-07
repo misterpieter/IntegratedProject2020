@@ -10,6 +10,7 @@ import android.util.Log
 import be.volders.integratedproject2020.Model.Address
 import be.volders.integratedproject2020.Model.SignatureHelper
 import be.volders.integratedproject2020.Model.Student
+import be.volders.integratedproject2020.Signature.Location
 import be.volders.integratedproject2020.Students.studentlist
 import java.io.ByteArrayOutputStream
 import java.time.LocalDate
@@ -38,12 +39,6 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
 
         //LOCATIE
         private val LOCATION_ID = "location_id"
-        private val HOUSE_NUMBER = "huis_number"
-        private val ROAD = "road"
-        private val TOWN = "town"
-        private val COUNTRY = "country"
-        private val POSTCODE = "postcode"
-        private val NEIGHBOURHOOD = "neighbourhood"
         private val TIMESTAMP = "locationTime"
         private val LONGITUDE = "longitude"
         private val LATTITUDE = "latitude"
@@ -55,7 +50,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 + LASTNAME + " VARCHAR(20) );"
                 )
 
-        public val CREATE_TABLE_SIGNATURE = ( "CREATE TABLE IF not exists "
+        private val CREATE_TABLE_SIGNATURE = ( "CREATE TABLE IF not exists "
                 + TABLE_SIGNATURE + "(" + SIGNATURE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + FK_STUDENT_ID + " VARCHAR(20), "
                 + SIGNATURE_NAME + " VARCHAR(20), "
@@ -65,12 +60,6 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
 
         private val CREATE_TABLE_LOCATION = ("CREATE TABLE IF not exists "
                 + TABLE_LOCATION + " ( " + LOCATION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + HOUSE_NUMBER + " INTEGER,"
-                + ROAD + " VARCHAR(50),"
-                + TOWN + " VARCHAR(50),"
-                + COUNTRY + " VARCHAR(50),"
-                + POSTCODE + " INTEGER,"
-                + NEIGHBOURHOOD + " VARCHAR(50),"
                 + TIMESTAMP + " DATE, "
                 + LONGITUDE + " DOUBLE, "
                 + LATTITUDE + " DOUBLE, "
@@ -143,16 +132,20 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         return !result .equals( -1)
     }
 
+    //TODO: complete function
+    fun getAllLocations() : ArrayList<Location> {
+        val locationList = ArrayList<Location>()
+
+
+
+
+        return locationList
+    }
+
     fun insertLocation(adres : Address): Boolean{
         val db = this.writableDatabase
         val values = ContentValues()
 
-        values.put(HOUSE_NUMBER, adres.houseNumber)
-        values.put(ROAD, adres.road)
-        values.put(POSTCODE, adres.postcode)
-        values.put(TOWN, adres.town)
-        values.put(COUNTRY, adres.county)
-        values.put(NEIGHBOURHOOD, adres.neighbourhood)
         values.put(LONGITUDE, adres.lon)
         values.put(LATTITUDE, adres.lat)
         values.put(TIMESTAMP, LocalDate.now().toString())
@@ -160,7 +153,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
 
         val result = db.insert(TABLE_LOCATION, null, values)
         db.close()
-        return !result .equals( -1)
+        return !result.equals( -1)
     }
 
    /* fun filterStudent(filter: String) {
