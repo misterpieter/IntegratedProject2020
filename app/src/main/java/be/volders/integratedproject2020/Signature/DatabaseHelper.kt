@@ -37,6 +37,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         private val SIGNATURE_NAME = "signature_name"
         private val SIGNATURE_BITMAP = "signature_bitmap"
         private val FK_STUDENT_ID = "fk_student_id"
+        private val FK_LOCATION_ID = "fk_location_id"
 
         //LOCATIE
         private val LOCATION_ID = "location_id"
@@ -55,8 +56,10 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 + TABLE_SIGNATURE + "(" + SIGNATURE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + FK_STUDENT_ID + " VARCHAR(20), "
                 + SIGNATURE_NAME + " VARCHAR(20), "
+                + FK_LOCATION_ID + "INTEGER"
                 + SIGNATURE_BITMAP + " TEXT ,"
                 + " FOREIGN KEY( " + FK_STUDENT_ID + " ) REFERENCES " + TABLE_STUDENTS + " ( " + STUDENT_ID + " ));"
+                + " FOREIGN KEY( " + FK_LOCATION_ID + " ) REFERENCES " + TABLE_LOCATION + " ( " + LOCATION_ID + " ));"
                 )
 
         private val CREATE_TABLE_LOCATION = ("CREATE TABLE IF not exists "
@@ -121,6 +124,30 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         return StudentList
     }
 
+    fun getAllSignatures() : ArrayList<SignatureHelper> {
+        var signList = ArrayList<SignatureHelper>()
+        var dbImageId : String
+        var dbImageByteArray : ByteArray
+        var fkStudent : String
+        var fkAddress : Int
+
+
+        val selectQuery ="SELECT * FROM $TABLE_SIGNATURE"
+        val db = this.readableDatabase
+        val c = db.rawQuery(selectQuery,null)
+        if(c.moveToFirst()){
+            do{
+                dbImageId = c.getString(c.getColumnIndex(SIGNATURE_ID))
+                dbImageByteArray = c.getString(c.getColumnIndex(SIGNATURE_BITMAP)).toByteArray()
+                fkStudent = c.getString(c.getColumnIndex(FK_STUDENT_ID))
+                fkAddress = c.getInt(c.getColumnIndex(FK_LOCATION_ID))
+                var signature = SignatureHelper(dbImageId,dbImageByteArray,fkStudent,fkAddress)
+                signList.add(signature)
+            }while(c.moveToNext())
+        }
+        return signList
+    }
+
     fun insetImage(dbBitmap: String, imageId: String?, studentNr: String): Boolean {
         val db = this.writableDatabase
         val values = ContentValues()
@@ -134,7 +161,6 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         return !result .equals( -1)
     }
 
-    //TODO: complete function
     fun getAllLocations() : ArrayList<Address> {
         val locationList = ArrayList<Address>()
         var dbLat : Double
@@ -150,9 +176,8 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 dbLat = c.getDouble(c.getColumnIndex(LATTITUDE))
                 dbLon = c.getDouble(c.getColumnIndex(LONGITUDE))
                 date =   Date.valueOf(c.getString(c.getColumnIndex(TIMESTAMP)))
-                // date = c.get(c.getColumnIndex(TIMESTAMP))
                 fkSnumber = c.getString(c.getColumnIndex(FK_STUDENT_ID))
-                var location : Address = Address(dbLat, dbLon, date, fkSnumber)
+                var location = Address(dbLat, dbLon, date, fkSnumber)
                 locationList.add(location)
             }while(c.moveToNext())
         }

@@ -1,7 +1,6 @@
 package be.volders.integratedproject2020.Model
 
 import java.sql.Date
-import java.time.LocalDate
 
 class Address(
 

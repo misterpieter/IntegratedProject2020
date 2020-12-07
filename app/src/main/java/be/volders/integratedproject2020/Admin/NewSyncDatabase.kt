@@ -33,18 +33,22 @@ class NewSyncDatabase(context: Context) {
 */
 
     fun saveOrUpdateAllSignatures(){
+        val batch = mFirestore.batch()
+        val locationList = databaseHelper?.getAllSignatures()!!
+
 
     }
 
 
     fun saveOrUpdateAllLocations(){
-        val batch = mFirestore.batch()
+        // TESTDATA
+/*
         val millis = System.currentTimeMillis()
         val date = java.sql.Date(millis)
+        val testAdress = Address(55.1123 , 4.5645, date,  "S425316")
+*/
 
-        // TESTDATA
-//        val testAdress = Address(55.1123 , 4.5645, date,  "S425316")
-
+        val batch = mFirestore.batch()
         val locationList = databaseHelper?.getAllLocations()!!
         println("locationlist print empty? " + locationList.isEmpty() + "   size: " + locationList.size)
 
