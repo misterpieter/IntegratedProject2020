@@ -219,7 +219,6 @@ class MainActivity : AppCompatActivity(), LocationListener{
             val parser: Parser = Parser.default()
             val obj = parser.parse(jsonString) as JsonObject
             val address = obj["address"] as JsonObject
-
             try {
                 adres = Address(
                         lat,
@@ -231,7 +230,7 @@ class MainActivity : AppCompatActivity(), LocationListener{
                 databaseHelper?.insertLocation(adres)
                 tvAddress.text = adres.toString()
             }catch (e:Exception){
-                Log.d("TAG", "EXCEPTION: ${e.message}\n${e.stackTrace}")
+                Log.d("TAG", "EXCEPTION at Mainactivity R233: ${e.message}\n${e.stackTrace}")
             }
         }
     }

@@ -3,7 +3,6 @@ package be.volders.integratedproject2020.Admin
 import be.volders.integratedproject2020.DatabaseHelpe
 import be.volders.integratedproject2020.MainActivity
 import be.volders.integratedproject2020.Model.Student
-import be.volders.integratedproject2020.Students.studentlist
 import com.google.firebase.firestore.FirebaseFirestore
 import android.content.Context
 
@@ -44,23 +43,32 @@ class NewSyncDatabase(context: Context) {
 
 
     fun saveOrUpdateAllLocations(){
+        val batch = mFirestore.batch()
+        val locationList = databaseHelper?.getAllLocations()!!
+        println("locationlist print empty? " + locationList.isEmpty() + "   size: " + locationList.size)
 
+            for(address in locationList) {
+                //names the document to snumber
+                val locationRef = mFirestore.collection("Locations").document(address.fkSnumber)
+                batch[locationRef] = address
+            }
+            batch.commit()
     }
 
 
     //saves all students in this list. If changed it overwrites
     fun saveOrUpdateAllStudents(){
         val batch = mFirestore.batch()
-        studentlist = databaseHelper?.getAllStudent()!!
-        println("studerntlist print empty? " + studentlist.isEmpty() + "   size: " + studentlist.size)
+        val studentList = databaseHelper?.getAllStudent()!!
+        println("studerntlist print empty? " + studentList.isEmpty() + "   size: " + studentList.size)
 
-        for(student in studentlist) {
+        for(student in studentList) {
             //names the document to snumber
             val studentRef = mFirestore.collection("Students").document(student.snumber)
             batch[studentRef] = student
         }
             batch.commit()
-      }
+    }
 
 
     // isn't used delete later ?
