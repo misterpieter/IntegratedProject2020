@@ -56,10 +56,11 @@ class AdminActivity : AppCompatActivity() {
         }
 
         btnSync.setOnClickListener{
-            var newDBsyn = NewSyncDatabase(this)
+            val newDBsyn = NewSyncDatabase(this)
             newDBsyn.saveOrUpdateAllStudents()
             newDBsyn.saveOrUpdateAllLocations()
-           // newDBsyn.saveOrUpdateAllSignatures()
+            // newDBsyn.saveOrUpdateAllSignatures()
+            Toast.makeText(this, "Succesfully synchronized", Toast.LENGTH_SHORT).show()
         }
 
     }

@@ -2,14 +2,18 @@ package be.volders.integratedproject2020
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.graphics.Bitmap
 import android.util.Log
+import be.volders.integratedproject2020.Admin.AddressWithIdFirebase
 import be.volders.integratedproject2020.Model.Address
 import be.volders.integratedproject2020.Model.SignatureHelper
 import be.volders.integratedproject2020.Model.Student
 import java.sql.Date
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 
 class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
@@ -50,11 +54,11 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
 
         public val CREATE_TABLE_SIGNATURE = ( "CREATE TABLE IF not exists "
                 + TABLE_SIGNATURE + "(" + SIGNATURE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + FK_STUDENT_ID + " VARCHAR(20), "
                 + SIGNATURE_NAME + " VARCHAR(20), "
-                + FK_LOCATION_ID + "INTEGER"
                 + SIGNATURE_BITMAP + " TEXT ,"
-                + " FOREIGN KEY( " + FK_STUDENT_ID + " ) REFERENCES " + TABLE_STUDENTS + " ( " + STUDENT_ID + " ));"
+                + FK_LOCATION_ID + "INTEGER"
+                + FK_STUDENT_ID + " VARCHAR(20), "
+                + " FOREIGN KEY( " + FK_STUDENT_ID + " ) REFERENCES " + TABLE_STUDENTS + " ( " + STUDENT_ID + " ), "
                 + " FOREIGN KEY( " + FK_LOCATION_ID + " ) REFERENCES " + TABLE_LOCATION + " ( " + LOCATION_ID + " ));"
                 )
 
@@ -99,7 +103,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
 
 
     fun getAllStudent(): ArrayList<Student>{
-        val StudentList = ArrayList<Student>()
+        val studentList = ArrayList<Student>()
         var stname:String
         var stfirstname:String
         var stsnr:String
@@ -111,13 +115,24 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 stname = c.getString(c.getColumnIndex(LASTNAME))
                 stfirstname = c.getString(c.getColumnIndex(FIRSTNAME))
                 stsnr = c.getString(c.getColumnIndex(STUDENT_ID))
-                var s = Student(stname,stfirstname,stsnr,"password") //PASSWORD MAG WEG
-                StudentList.add(s)
+
+                val s : Student = Student(stname,stfirstname,stsnr, "password")
+                studentList.add(s)
             }while(c.moveToNext())
         }
-        return StudentList
+        c.close()
+        return studentList
     }
 
+    //TODO: fix error in cursor pointing to row 0 col -1 (cause => FK_LOCATION_ID column not in database)
+    /*
+        E/CursorWindow: Failed to read row 0, column -1 from a CursorWindow which has 13 rows, 4 columns.
+        D/AndroidRuntime: Shutting down VM
+        E/AndroidRuntime: FATAL EXCEPTION: main
+        Process: be.volders.integratedproject2020, PID: 18983
+        java.lang.IllegalStateException: Couldn't read row 0, col -1 from CursorWindow.  Make sure the Cursor is initialized correctly before accessing data from it.
+
+     */
     fun getAllSignatures() : ArrayList<SignatureHelper> {
         var signList = ArrayList<SignatureHelper>()
         var dbImageId : String
@@ -139,6 +154,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 signList.add(signature)
             }while(c.moveToNext())
         }
+        c.close()
         return signList
     }
 
@@ -155,8 +171,10 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         return !result .equals( -1)
     }
 
-    fun getAllLocations() : ArrayList<Address> {
-        val locationList = ArrayList<Address>()
+    fun getAllLocationsWithId() : ArrayList<AddressWithIdFirebase> {
+        val locationList = ArrayList<AddressWithIdFirebase>()
+        //adding location ID to this
+        var dbLocId: Int
         var dbLat : Double
         var dbLon : Double
         var date : LocalDate
@@ -167,14 +185,16 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         val c = db.rawQuery(selectQuery,null)
         if(c.moveToFirst()){
             do{
+                dbLocId = c.getInt(c.getColumnIndex(LOCATION_ID))
                 dbLat = c.getDouble(c.getColumnIndex(LATTITUDE))
                 dbLon = c.getDouble(c.getColumnIndex(LONGITUDE))
                 date =  LocalDate.parse(c.getString(c.getColumnIndex(TIMESTAMP)))
                 fkSnumber = c.getString(c.getColumnIndex(FK_STUDENT_ID))
-                var location = Address(dbLat, dbLon, date, fkSnumber)
+                val location = AddressWithIdFirebase(dbLocId, dbLat, dbLon, date, fkSnumber)
                 locationList.add(location)
             }while(c.moveToNext())
         }
+        c.close()
         return locationList
     }
 
