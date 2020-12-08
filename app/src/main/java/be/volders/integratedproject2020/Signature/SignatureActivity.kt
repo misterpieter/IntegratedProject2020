@@ -2,7 +2,11 @@ package be.volders.integratedproject2020.Signature
 
 import android.content.Intent
 import android.graphics.Bitmap
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.media.MediaScannerConnection
+import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
@@ -11,11 +15,19 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.drawToBitmap
 import be.volders.integratedproject2020.*
+import be.volders.integratedproject2020.Model.Address
 import be.volders.integratedproject2020.Model.Student
+import com.beust.klaxon.JsonObject
+import com.beust.klaxon.Parser
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.lang.StringBuilder
+import java.net.URL
+import java.time.LocalDate
 import java.util.*
 
 
@@ -25,8 +37,12 @@ lateinit var drawingView: DrawingView
 lateinit var btnStore: Button
 
 
-class SignatureActivity : AppCompatActivity() {
+class SignatureActivity : AppCompatActivity(), LocationListener {
     private val IMAGE_DIRECTORY = "/Pictures"
+    private lateinit var locationManager: LocationManager
+    private var lat : Double = 0.0
+    private var lon : Double = 0.0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         var databaseHelper: DatabaseHelpe? = DatabaseHelpe(this)
         super.onCreate(savedInstanceState)
@@ -100,4 +116,59 @@ class SignatureActivity : AppCompatActivity() {
         return ""
     }
 
+    override fun onLocationChanged(location: Location) {
+        lat = location.latitude
+        lon = location.longitude
+        //tvGpsLocation.text = "Latitude: " + location.latitude + " , Longitude: " + location.longitude
+        val urlReversedSearch = "https://nominatim.openstreetmap.org/reverse?format=json&lat=${location.latitude}&lon=${location.longitude}"
+        //val urlReversedSearch = "https://nominatim.openstreetmap.org/reverse?format=json&lat=51.2944529776287&lon=4.485295861959457\n"
+        val urlAdress = URL(urlReversedSearch)
+        //Toast.makeText(this, "${lat} - ${lon}", Toast.LENGTH_SHORT).show()
+        val task = MyAsyncTask()
+        task.execute(urlAdress)
+    }
+
+    inner class MyAsyncTask : AsyncTask<URL, Int, String>() {
+        var response = ""
+        override fun onPreExecute(){
+            super.onPreExecute()
+        }
+
+        override fun doInBackground(vararg params: URL?): String {
+            val client = OkHttpClient()
+            val request = Request.Builder()
+                    .url(params[0]!!)
+                    .build()
+            response = client.newCall(request).execute().body!!.string()
+            return response
+        }
+
+        override fun onProgressUpdate(vararg values: Int?) {
+            super.onProgressUpdate(*values)
+        }
+
+        override fun onPostExecute(result: String?) {
+            super.onPostExecute(result)
+
+            val jsonString = StringBuilder(result!!)
+
+            val parser: Parser = Parser.default()
+            val obj = parser.parse(jsonString) as JsonObject
+            val address = obj["address"] as JsonObject
+
+            try {
+                adres = Address(
+                        lat,
+                        lon,
+                        LocalDate.now(),
+                        "S425316"
+                )
+                Log.d("TAG", "Address object:\n$adres")
+                databaseHelper?.insertLocation(adres)
+                tvAddress.text = adres.toString()
+            }catch (e:Exception){
+                Log.d("TAG", "EXCEPTION at Mainactivity R233: ${e.message}\n${e.stackTrace}")
+            }
+        }
+    }
 }
