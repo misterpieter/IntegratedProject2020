@@ -56,7 +56,7 @@ class AdminActivity : AppCompatActivity() {
         }
 
         btnSync.setOnClickListener{
-            var newDBsyn = NewSyncDatabase(this)
+            val newDBsyn = NewSyncDatabase(this)
             newDBsyn.saveOrUpdateAllStudents()
             newDBsyn.saveOrUpdateAllLocations()
             newDBsyn.saveOrUpdateAllSignatures()

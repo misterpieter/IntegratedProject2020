@@ -95,10 +95,8 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         return db.insert(TABLE_STUDENTS, null, values)
     }
 
-
-    //TODO: rework password
     fun getAllStudent(): ArrayList<Student>{
-        val StudentList = ArrayList<Student>()
+        val studentList = ArrayList<Student>()
         var stname:String
         var stfirstname:String
         var stsnr:String
@@ -110,11 +108,12 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 stname = c.getString(c.getColumnIndex(LASTNAME))
                 stfirstname = c.getString(c.getColumnIndex(FIRSTNAME))
                 stsnr = c.getString(c.getColumnIndex(STUDENT_ID))
-                var s : Student = Student(stname,stfirstname,stsnr, "password")
-                StudentList.add(s)
+                val s : Student = Student(stname,stfirstname,stsnr, "password")
+                studentList.add(s)
             }while(c.moveToNext())
         }
-        return StudentList
+        c.close()
+        return studentList
     }
 
     fun getAllSignatures() : ArrayList<SignatureHelper> {
@@ -134,10 +133,11 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 dbImageByteArray = c.getString(c.getColumnIndex(SIGNATURE_BITMAP)).toByteArray()
                 fkStudent = c.getString(c.getColumnIndex(FK_STUDENT_ID))
                 fkAddress = c.getInt(c.getColumnIndex(FK_LOCATION_ID))
-                var signature = SignatureHelper(dbImageId,dbImageByteArray,fkStudent,fkAddress)
+                val signature = SignatureHelper(dbImageId,dbImageByteArray,fkStudent,fkAddress)
                 signList.add(signature)
             }while(c.moveToNext())
         }
+        c.close()
         return signList
     }
 
@@ -173,10 +173,11 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 dbLon = c.getDouble(c.getColumnIndex(LONGITUDE))
                 date =   Date.valueOf(c.getString(c.getColumnIndex(TIMESTAMP)))
                 fkSnumber = c.getString(c.getColumnIndex(FK_STUDENT_ID))
-                var location = AddressWithIdFirebase(dbLocId, dbLat, dbLon, date, fkSnumber)
+                val location = AddressWithIdFirebase(dbLocId, dbLat, dbLon, date, fkSnumber)
                 locationList.add(location)
             }while(c.moveToNext())
         }
+        c.close()
         return locationList
     }
 
