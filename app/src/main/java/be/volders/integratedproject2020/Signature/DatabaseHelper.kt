@@ -47,10 +47,10 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
 
         private val CREATE_TABLE_SIGNATURE = ( "CREATE TABLE IF not exists "
                 + TABLE_SIGNATURE + "(" + SIGNATURE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + FK_STUDENT_ID + " VARCHAR(20), "
                 + SIGNATURE_NAME + " VARCHAR(20), "
-                + FK_LOCATION_ID + "INTEGER"
                 + SIGNATURE_BITMAP + " TEXT ,"
+                + FK_LOCATION_ID + "INTEGER"
+                + FK_STUDENT_ID + " VARCHAR(20), "
                 + " FOREIGN KEY( " + FK_STUDENT_ID + " ) REFERENCES " + TABLE_STUDENTS + " ( " + STUDENT_ID + " ), "
                 + " FOREIGN KEY( " + FK_LOCATION_ID + " ) REFERENCES " + TABLE_LOCATION + " ( " + LOCATION_ID + " ));"
                 )
@@ -116,7 +116,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         return studentList
     }
 
-    //TODO: fix error in cursor pointing to row 0 col -1
+    //TODO: fix error in cursor pointing to row 0 col -1 (cause => FK_LOCATION_ID column not in database)
     /*
         E/CursorWindow: Failed to read row 0, column -1 from a CursorWindow which has 13 rows, 4 columns.
         D/AndroidRuntime: Shutting down VM
