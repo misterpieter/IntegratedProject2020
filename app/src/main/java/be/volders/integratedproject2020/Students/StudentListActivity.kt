@@ -14,6 +14,9 @@ import be.volders.integratedproject2020.R
 import be.volders.integratedproject2020.Students.rvPersons
 import kotlinx.android.synthetic.main.activity_student_list.ettFilter
 import java.util.*
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 import kotlin.collections.ArrayList
 
 
@@ -35,7 +38,7 @@ class StudentListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListe
         rvPersons.layoutManager = LinearLayoutManager(this)
 
         studentlist = databaseHelper!!.getAllStudent()
-        studentl = databaseHelper!!.filterStudent("2020-12-06")
+//        studentl = databaseHelper!!.filterStudent("2020-12-08")
         val spinner: Spinner = findViewById(R.id.spSorteren)
         val adapterSort = ArrayAdapter.createFromResource(
             this,
@@ -50,8 +53,11 @@ class StudentListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListe
         btfilter = findViewById(R.id.btFilter)
         btfilter?.setOnClickListener{
             etFilter = ettFilter.text.toString()
-            sortlist=  studentlist.filter { x -> x.name == etFilter || x.lastname == etFilter || x.snumber == etFilter }
-            //Log.d("LIST", "databaseHelper list of student: ${sortlist}")
+            if(filter(etFilter)){
+                sortlist = databaseHelper!!.filterStudent(etFilter)
+            }else{
+                sortlist=  studentlist.filter { x -> x.name == etFilter || x.lastname == etFilter || x.snumber == etFilter }
+            }
             val adapter = StudentAdapter(this, sortlist)
             rvPersons.adapter = adapter
         }
@@ -59,7 +65,19 @@ class StudentListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListe
         //databaseHelper!!.filterStudent()
         //val studentList = getStudentsFromLocalCSV(this)
     }
+    fun filter(f:String):Boolean{
+        var dateTrue: Boolean = true
+        val string = f //2017-07-25
 
+        try {
+            val date = LocalDate.parse(string, DateTimeFormatter.ISO_DATE)
+            Log.d("datum", "datum: ${dateTrue}")
+        }catch (e:Exception){
+            dateTrue = false
+            Log.d("datum", "geen datum: ${dateTrue}")
+        }
+        return dateTrue
+    }
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         var etFilter = ettFilter.text.toString()
         when (position) {

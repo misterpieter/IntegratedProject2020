@@ -5,6 +5,5 @@
         <item>firstname</item>
         <item>lastname</item>
         <item>student_id</item>
-        <item>locationTime</item>
     </string-array>
 </resources>

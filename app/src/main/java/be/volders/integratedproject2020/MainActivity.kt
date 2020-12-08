@@ -59,6 +59,7 @@ class MainActivity : AppCompatActivity(), LocationListener{
         studentList.add(Student("Pieter", "Volders","snumber5","password5"))
         studentList.add(Student("Jonas", "Adriaanssens","snumber6","password6"))
         studentList.add(Student("Halima", "Rahimi","S425316","halima"))
+        studentList.add(Student("Halima", "Rahimi","S425315","halima"))
 
 
         // lijst imported csv

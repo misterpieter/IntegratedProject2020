@@ -199,7 +199,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         var stname:String
         var stfirstname:String
         var stsnr:String
-        val selectQuery = JOIN+" where lo.locationTime = '2020-12-06' ORDER BY st.firstname"
+        val selectQuery = JOIN+" where lo.locationTime = '"+datum+"' ORDER BY st.firstname"
         val db = this.readableDatabase
         var c = db.rawQuery(selectQuery,null)
         if(c.moveToFirst()){
