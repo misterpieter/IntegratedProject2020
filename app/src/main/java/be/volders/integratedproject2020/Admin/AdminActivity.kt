@@ -55,7 +55,6 @@ class AdminActivity : AppCompatActivity() {
             btnSync.isEnabled = true
         }
 
-        //TODO: add succeslistener
         btnSync.setOnClickListener{
             var newDBsyn = NewSyncDatabase(this)
             newDBsyn.saveOrUpdateAllStudents()
