@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 import be.volders.integratedproject2020.Admin.AddressWithIdFirebase
 import be.volders.integratedproject2020.Model.Address
 import be.volders.integratedproject2020.Model.SignatureHelper
@@ -21,7 +22,6 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         private val TABLE_SIGNATURE = "signature"
         private val TABLE_LOCATION = "location"
         //STUDENT
-        private val KEY_ID = "id"
         private val STUDENT_ID = "student_id"
         private val FIRSTNAME = "firstname"
         private val LASTNAME = "lastname"
@@ -116,6 +116,15 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         return studentList
     }
 
+    //TODO: fix error in cursor pointing to row 0 col -1
+    /*
+        E/CursorWindow: Failed to read row 0, column -1 from a CursorWindow which has 13 rows, 4 columns.
+        D/AndroidRuntime: Shutting down VM
+        E/AndroidRuntime: FATAL EXCEPTION: main
+        Process: be.volders.integratedproject2020, PID: 18983
+        java.lang.IllegalStateException: Couldn't read row 0, col -1 from CursorWindow.  Make sure the Cursor is initialized correctly before accessing data from it.
+
+     */
     fun getAllSignatures() : ArrayList<SignatureHelper> {
         var signList = ArrayList<SignatureHelper>()
         var dbImageId : String
@@ -127,7 +136,8 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         val selectQuery ="SELECT * FROM $TABLE_SIGNATURE"
         val db = this.readableDatabase
         val c = db.rawQuery(selectQuery,null)
-        if(c.moveToFirst()){
+        Log.d("GETALLSIGNATURES", "row ammount: " + c.columnCount )
+        if(c.moveToFirst() && c.count != 0){
             do{
                 dbImageId = c.getString(c.getColumnIndex(SIGNATURE_ID))
                 dbImageByteArray = c.getString(c.getColumnIndex(SIGNATURE_BITMAP)).toByteArray()
