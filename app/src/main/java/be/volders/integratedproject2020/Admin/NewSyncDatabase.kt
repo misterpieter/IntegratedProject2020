@@ -5,6 +5,8 @@ import be.volders.integratedproject2020.DatabaseHelpe
 import be.volders.integratedproject2020.Model.SignatureHelper
 import be.volders.integratedproject2020.Model.Student
 import com.google.firebase.firestore.FirebaseFirestore
+import java.sql.Date
+import java.time.LocalDate
 import java.util.*
 
 class NewSyncDatabase(context: Context) {
@@ -16,6 +18,24 @@ class NewSyncDatabase(context: Context) {
         val encodedImage: String = Base64.getEncoder().encodeToString(signature.imageByteArray)
         return SignatureConvertedFirebase(signature.imageId, encodedImage, signature.fkStudent, signature.fkAddress)
     }
+
+    private fun locationConverter(address : AddressWithIdFirebase) : LocationUsingDate {
+        var newDate : Date = Date.valueOf(address.date.toString())
+        return LocationUsingDate(address.addressId, address.lat, address.lon, newDate, address.fkSnumber)
+    }
+
+
+
+    private class LocationUsingDate(
+            var addressId: Int,
+            var lat: Double,
+            var lon: Double,
+            var date: Date,
+            var fkSnumber: String
+    )
+
+
+
 
 
     fun saveOrUpdateAllSignatures(){
@@ -29,7 +49,6 @@ class NewSyncDatabase(context: Context) {
         val imgRef = mFirestore.collection("Students").document("S425316")
             .collection("Locations").document("2020-12-07").collection("Signatures").document(signature.imageId.toString())
         */
-
 
         val signList = databaseHelper?.getAllSignatures()!!
         println("locationlist print empty? " + signList.isEmpty() + "   size: " + signList.size)
@@ -58,7 +77,7 @@ class NewSyncDatabase(context: Context) {
             for(address in locationList) {
                 //names the document to snumber
                 val locationRef = mFirestore.collection("Students").document(address.fkSnumber).collection("Locations").document(address.addressId.toString())
-                batch[locationRef] = address
+                batch[locationRef] = locationConverter(address)
             }
             batch.commit()
     }

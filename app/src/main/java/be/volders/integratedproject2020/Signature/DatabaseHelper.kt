@@ -48,11 +48,11 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 + LASTNAME + " VARCHAR(20) );"
                 )
 
-        public val CREATE_TABLE_SIGNATURE = ( "CREATE TABLE IF not exists "
+        private val CREATE_TABLE_SIGNATURE = ( "CREATE TABLE IF not exists "
                 + TABLE_SIGNATURE + "(" + SIGNATURE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + SIGNATURE_NAME + " VARCHAR(20), "
-                + SIGNATURE_BITMAP + " TEXT ,"
-                + FK_LOCATION_ID + "INTEGER"
+                + SIGNATURE_BITMAP + " TEXT , "
+                + FK_LOCATION_ID + " INTEGER, "
                 + FK_STUDENT_ID + " VARCHAR(20), "
                 + " FOREIGN KEY( " + FK_STUDENT_ID + " ) REFERENCES " + TABLE_STUDENTS + " ( " + STUDENT_ID + " ), "
                 + " FOREIGN KEY( " + FK_LOCATION_ID + " ) REFERENCES " + TABLE_LOCATION + " ( " + LOCATION_ID + " ));"

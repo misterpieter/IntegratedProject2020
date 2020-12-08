@@ -59,7 +59,7 @@ class AdminActivity : AppCompatActivity() {
             val newDBsyn = NewSyncDatabase(this)
             newDBsyn.saveOrUpdateAllStudents()
             newDBsyn.saveOrUpdateAllLocations()
-            // newDBsyn.saveOrUpdateAllSignatures()
+            newDBsyn.saveOrUpdateAllSignatures()
             Toast.makeText(this, "Succesfully synchronized", Toast.LENGTH_SHORT).show()
         }
 

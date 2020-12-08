@@ -100,7 +100,7 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
             wallpaperDirectory.mkdirs()
             //Log.d("img", wallpaperDirectory.toString())
         }
-        try {
+       /* try {
             val f = File(wallpaperDirectory, Calendar.getInstance()
                     .getTimeInMillis().toString() + ".png")
             f.createNewFile()
@@ -112,7 +112,7 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
             return f.getAbsolutePath()
         } catch (e1: IOException) {
             e1.printStackTrace()
-        }
+        }*/
         return ""
     }
 
@@ -156,7 +156,7 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
             val obj = parser.parse(jsonString) as JsonObject
             val address = obj["address"] as JsonObject
 
-            try {
+            /*try {
                 adres = Address(
                         lat,
                         lon,
@@ -166,9 +166,9 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
                 Log.d("TAG", "Address object:\n$adres")
                 databaseHelper?.insertLocation(adres)
                 tvAddress.text = adres.toString()
-            }catch (e:Exception){
+            }catch (e:Exception) {
                 Log.d("TAG", "EXCEPTION at Mainactivity R233: ${e.message}\n${e.stackTrace}")
-            }
+            }*/
         }
     }
 }
