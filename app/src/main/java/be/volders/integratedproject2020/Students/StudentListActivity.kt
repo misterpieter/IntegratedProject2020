@@ -22,6 +22,7 @@ lateinit var etFilter: String
 lateinit var rvPersons: RecyclerView
 lateinit var sortlist: List<Student>
 lateinit var studentlist : ArrayList<Student>
+lateinit var studentl : ArrayList<Student>
 
 class StudentListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     var databaseHelper: DatabaseHelpe? = DatabaseHelpe(this)
@@ -34,7 +35,7 @@ class StudentListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListe
         rvPersons.layoutManager = LinearLayoutManager(this)
 
         studentlist = databaseHelper!!.getAllStudent()
-        //Log.d("TAG", "databaseHelper list of student: ${studentlist}")
+        studentl = databaseHelper!!.filterStudent("2020-12-06")
         val spinner: Spinner = findViewById(R.id.spSorteren)
         val adapterSort = ArrayAdapter.createFromResource(
             this,
@@ -46,17 +47,16 @@ class StudentListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListe
         spinner.adapter = adapterSort
         spinner.setOnItemSelectedListener(this)
 
-       // btfilter = findViewById(R.id.btFilter)
-      /*  btfilter?.setOnClickListener {
+        btfilter = findViewById(R.id.btFilter)
+        btfilter?.setOnClickListener{
             etFilter = ettFilter.text.toString()
-            sortlist =
-                studentlist.filter { x -> x.name == etFilter || x.lastname == etFilter || x.snumber == etFilter }
+            sortlist=  studentlist.filter { x -> x.name == etFilter || x.lastname == etFilter || x.snumber == etFilter }
             //Log.d("LIST", "databaseHelper list of student: ${sortlist}")
             val adapter = StudentAdapter(this, sortlist)
             rvPersons.adapter = adapter
-        }*/
+        }
 
-       // databaseHelper!!.filterStudent()
+        //databaseHelper!!.filterStudent()
         //val studentList = getStudentsFromLocalCSV(this)
     }
 
@@ -64,23 +64,24 @@ class StudentListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListe
         var etFilter = ettFilter.text.toString()
         when (position) {
             0 -> {
-                sortlist= studentlist.sortedWith(compareBy { it.lastname })
+                sortlist= studentlist.sortedWith(compareBy({it.lastname}))
+                //sortlist =  databaseHelper!!.filterStudent("firstname")
                 val adapter = StudentAdapter(this, sortlist)
                 rvPersons.adapter = adapter
 
             }
             1 -> { //lastname
-                sortlist = studentlist.sortedWith(compareBy({ it.lastname }))
+                sortlist= studentlist.sortedWith(compareBy({it.lastname}))
                 val adapter = StudentAdapter(this, sortlist)
                 rvPersons.adapter = adapter
             }
             2 -> { //student_id
-                sortlist = studentlist.sortedWith(compareBy({ it.snumber }))
+                sortlist= studentlist.sortedWith(compareBy({it.snumber}))
                 val adapter = StudentAdapter(this, sortlist)
                 rvPersons.adapter = adapter
             }
             3 -> { //locationTime
-                sortlist = studentlist.sortedWith(compareBy({ it.snumber }))
+                sortlist= studentlist.sortedWith(compareBy({it.snumber}))
                 val adapter = StudentAdapter(this, sortlist)
                 rvPersons.adapter = adapter
             }
@@ -92,11 +93,5 @@ class StudentListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListe
         rvPersons.adapter = adapter
     }
 
-    fun filterList(list: ArrayList<Student>, filter: String): Optional<Student> {
-        var listt = list.stream()
-            .filter { x -> x.name == filter || x.lastname == filter || x.snumber == filter }
-            .findAny()
-        return listt
-    }
 
 }

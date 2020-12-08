@@ -3,6 +3,7 @@ package be.volders.integratedproject2020.Admin
 import be.volders.integratedproject2020.DatabaseHelpe
 import be.volders.integratedproject2020.MainActivity
 import be.volders.integratedproject2020.Model.Student
+import be.volders.integratedproject2020.Students.studentlist
 import com.google.firebase.firestore.FirebaseFirestore
 import android.content.Context
 import be.volders.integratedproject2020.Model.Address
@@ -26,7 +27,7 @@ class NewSyncDatabase(context: Context) {
     fun deleteDocumentsStudent(){
     }
 
-/*  NICE TO HAVE
+/*
     //version control
     fun checkVersion() {
         val docRef = mFirestore.collection("DatabaseVersion").

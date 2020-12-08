@@ -2,36 +2,32 @@ package be.volders.integratedproject2020
 
 import android.content.ContentValues
 import android.content.Context
-import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.graphics.Bitmap
 import android.util.Log
 import be.volders.integratedproject2020.Model.Address
 import be.volders.integratedproject2020.Model.SignatureHelper
 import be.volders.integratedproject2020.Model.Student
-import be.volders.integratedproject2020.Signature.Location
-import be.volders.integratedproject2020.Students.studentlist
-import java.io.ByteArrayOutputStream
 import java.sql.Date
 import java.time.LocalDate
-import java.time.LocalDateTime
 
 
 class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     companion object{
         private var DATABASE_NAME = "studenten"
-        private val DATABASE_VERSION = 1
+        private val DATABASE_VERSION = 5
+
         //table
         private val TABLE_STUDENTS = "student"
         private val TABLE_SIGNATURE = "signature"
         private val TABLE_LOCATION = "location"
+
         //STUDENT
-        private val KEY_ID = "id"
         private val STUDENT_ID = "student_id"
         private val FIRSTNAME = "firstname"
         private val LASTNAME = "lastname"
+
         //SIGNATURE
         private val SIGNATURE_ID = "signature_id"
         private val SIGNATURE_NAME = "signature_name"
@@ -52,7 +48,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 + LASTNAME + " VARCHAR(20) );"
                 )
 
-        private val CREATE_TABLE_SIGNATURE = ( "CREATE TABLE IF not exists "
+        public val CREATE_TABLE_SIGNATURE = ( "CREATE TABLE IF not exists "
                 + TABLE_SIGNATURE + "(" + SIGNATURE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + FK_STUDENT_ID + " VARCHAR(20), "
                 + SIGNATURE_NAME + " VARCHAR(20), "
@@ -71,9 +67,8 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 + " FOREIGN KEY( " + FK_STUDENT_ID + " ) REFERENCES " + TABLE_STUDENTS + " ( " + STUDENT_ID + " ));"
                 )
         private val JOIN = (
-                "select st."+FIRSTNAME+", st."+LASTNAME+", st."+STUDENT_ID+", sg."+SIGNATURE_BITMAP+
+                "select st."+FIRSTNAME+", st."+LASTNAME+", st."+STUDENT_ID+
                         " from "+TABLE_STUDENTS+" as st " +
-                        " left join "+TABLE_SIGNATURE+" as sg on st."+STUDENT_ID+" = sg."+FK_STUDENT_ID +
                         " left join "+TABLE_LOCATION+" as lo on st."+STUDENT_ID+" = lo."+FK_STUDENT_ID
                 )
     }
@@ -103,7 +98,6 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
     }
 
 
-    //TODO: rework password
     fun getAllStudent(): ArrayList<Student>{
         val StudentList = ArrayList<Student>()
         var stname:String
@@ -117,7 +111,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 stname = c.getString(c.getColumnIndex(LASTNAME))
                 stfirstname = c.getString(c.getColumnIndex(FIRSTNAME))
                 stsnr = c.getString(c.getColumnIndex(STUDENT_ID))
-                var s : Student = Student(stname,stfirstname,stsnr, "password")
+                var s = Student(stname,stfirstname,stsnr,"password") //PASSWORD MAG WEG
                 StudentList.add(s)
             }while(c.moveToNext())
         }
@@ -165,7 +159,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         val locationList = ArrayList<Address>()
         var dbLat : Double
         var dbLon : Double
-        var date : Date
+        var date : LocalDate
         var fkSnumber : String
 
         val selectQuery ="SELECT * FROM $TABLE_LOCATION"
@@ -175,7 +169,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
             do{
                 dbLat = c.getDouble(c.getColumnIndex(LATTITUDE))
                 dbLon = c.getDouble(c.getColumnIndex(LONGITUDE))
-                date =   Date.valueOf(c.getString(c.getColumnIndex(TIMESTAMP)))
+                date =  LocalDate.parse(c.getString(c.getColumnIndex(TIMESTAMP)))
                 fkSnumber = c.getString(c.getColumnIndex(FK_STUDENT_ID))
                 var location = Address(dbLat, dbLon, date, fkSnumber)
                 locationList.add(location)
@@ -188,37 +182,39 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         val db = this.writableDatabase
         val values = ContentValues()
 
-        val millis = System.currentTimeMillis()
-        val date = Date(millis)
 
         values.put(LONGITUDE, adres.lon)
         values.put(LATTITUDE, adres.lat)
-        values.put(TIMESTAMP, date.toString())
-        values.put(STUDENT_ID,"snumber4")
+        values.put(TIMESTAMP, LocalDate.now().toString())
+        values.put(FK_STUDENT_ID,adres.fkSnumber)
 
         val result = db.insert(TABLE_LOCATION, null, values)
         db.close()
         return !result.equals( -1)
     }
 
-   /* fun filterStudent(filter: String) {
-        val db = this.readableDatabase
-        var c : SQLiteDatabase?
-        if(filter == "firstname" || filter == "lastname" || filter == "student_id"){
-            c = db.rawQuery(JOIN+" ORDER BY st."+filter,null)
-        }else{
-            c = db.rawQuery(JOIN+" ORDER BY lo."+filter,null)
-        }
+    fun filterStudent(datum: String): ArrayList<Student> {
 
-        //Log.d("FIL", "afterTextChanged: ${c.count}")
+        val StudentList = ArrayList<Student>()
+        var stname:String
+        var stfirstname:String
+        var stsnr:String
+        val selectQuery = JOIN+" where lo.locationTime = '2020-12-06' ORDER BY st.firstname"
+        val db = this.readableDatabase
+        var c = db.rawQuery(selectQuery,null)
         if(c.moveToFirst()){
-            //Log.d("FIL", "afterTextChanged: ${c.columnNames}")
             do{
-                var s = c.getString(c.getColumnIndex(STUDENT_ID))
-                //Log.d("FIL", "afterTextChanged: ${s}")
+                stname = c.getString(c.getColumnIndex(LASTNAME))
+                stfirstname = c.getString(c.getColumnIndex(FIRSTNAME))
+                stsnr = c.getString(c.getColumnIndex(STUDENT_ID))
+                var s = Student(stname,stfirstname,stsnr,"password") //PASSWORD MAG WEG
+                StudentList.add(s)
+                Log.d("FIL", "afterTextChanged: ${s.name}")
             }while(c.moveToNext())
         }
-    }*/
+        return StudentList
+    }
+
     /*
     fun getImage(imageId: String): SignatureHelper? {
         val db = this.writableDatabase

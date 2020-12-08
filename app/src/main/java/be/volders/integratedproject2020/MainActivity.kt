@@ -26,7 +26,6 @@ import be.volders.integratedproject2020.Signature.SignatureActivity
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_signature.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.lang.StringBuilder
@@ -220,14 +219,12 @@ class MainActivity : AppCompatActivity(), LocationListener{
             val parser: Parser = Parser.default()
             val obj = parser.parse(jsonString) as JsonObject
             val address = obj["address"] as JsonObject
-            val millis = System.currentTimeMillis()
-            val date = Date(millis)
 
             try {
                 adres = Address(
                         lat,
                         lon,
-                        date,
+                        LocalDate.now(),
                         "S425316"
                 )
                 Log.d("TAG", "Address object:\n$adres")
