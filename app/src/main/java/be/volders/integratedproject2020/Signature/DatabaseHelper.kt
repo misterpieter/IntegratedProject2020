@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import be.volders.integratedproject2020.Admin.AddressWithIdFirebase
 import be.volders.integratedproject2020.Model.Address
 import be.volders.integratedproject2020.Model.SignatureHelper
 import be.volders.integratedproject2020.Model.Student
@@ -116,7 +117,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         return StudentList
     }
 
-  /*  fun getAllSignatures() : ArrayList<SignatureHelper> {
+    fun getAllSignatures() : ArrayList<SignatureHelper> {
         var signList = ArrayList<SignatureHelper>()
         var dbImageId : String
         var dbImageByteArray : ByteArray
@@ -138,7 +139,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
             }while(c.moveToNext())
         }
         return signList
-    }*/
+    }
 
     fun insetImage(dbBitmap: String, imageId: String?, studentNr: String): Boolean {
         val db = this.writableDatabase
@@ -153,8 +154,10 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         return !result .equals( -1)
     }
 
-    fun getAllLocations() : ArrayList<Address> {
-        val locationList = ArrayList<Address>()
+    fun getAllLocationsWithId() : ArrayList<AddressWithIdFirebase> {
+        val locationList = ArrayList<AddressWithIdFirebase>()
+        //adding location ID to this
+        var dbLocId: Int
         var dbLat : Double
         var dbLon : Double
         var date : Date
@@ -165,11 +168,12 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         val c = db.rawQuery(selectQuery,null)
         if(c.moveToFirst()){
             do{
+                dbLocId = c.getInt(c.getColumnIndex(LOCATION_ID))
                 dbLat = c.getDouble(c.getColumnIndex(LATTITUDE))
                 dbLon = c.getDouble(c.getColumnIndex(LONGITUDE))
                 date =   Date.valueOf(c.getString(c.getColumnIndex(TIMESTAMP)))
                 fkSnumber = c.getString(c.getColumnIndex(FK_STUDENT_ID))
-                var location = Address(dbLat, dbLon, date, fkSnumber)
+                var location = AddressWithIdFirebase(dbLocId, dbLat, dbLon, date, fkSnumber)
                 locationList.add(location)
             }while(c.moveToNext())
         }

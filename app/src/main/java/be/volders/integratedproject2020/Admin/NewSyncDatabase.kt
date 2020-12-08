@@ -11,54 +11,37 @@ class NewSyncDatabase(context: Context) {
     private val mFirestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     var databaseHelper: DatabaseHelpe? = DatabaseHelpe(context)
 
-    //testFunction
-    fun addStudent() {
-        val batch = mFirestore.batch()
-        val studentRef = mFirestore.collection("Students").document()
-        val s = Student("123", "456", "789", "password")
-        batch[studentRef] = s
-        batch.commit()
+
+    private fun signatureConverter(signature : SignatureHelper) : SignatureConvertedFirebase {
+        val encodedImage: String = Base64.getEncoder().encodeToString(signature.imageByteArray)
+        return SignatureConvertedFirebase(signature.imageId, encodedImage, signature.fkStudent, signature.fkAddress)
     }
 
-    fun deleteDocumentsStudent(){
-    }
-
-/*  NICE TO HAVE
-    //version control
-    fun checkVersion() {
-        val docRef = mFirestore.collection("DatabaseVersion").
-    }
-*/
 
     fun saveOrUpdateAllSignatures(){
         val batch = mFirestore.batch()
-        // val signatureList = databaseHelper?.getAllSignatures()!!
-
-        // println("locationlist print empty? " + signatureList.isEmpty() + "   size: " + signatureList.size)
-
-        //TODO: fix error update signatures
-
-        /*
-            Process: be.volders.integratedproject2020, PID: 30944
-            java.lang.IllegalArgumentException: Could not serialize object. Serializing Arrays is not supported, please use Lists instead (found in field 'imageByteArray')
-
-        * */
 
         //TESTDATA
+      /*
         val bytes = byteArrayOf(0xA1.toByte(), 0x2E.toByte(), 0x38.toByte(), 0xD4.toByte(), 0x89.toByte(), 0xC3.toByte())
         val encodedImage: String = Base64.getEncoder().encodeToString(bytes)
-
         val signature = SignatureHelper("imageIdTest", encodedImage, "S425316", 7)
-
         val imgRef = mFirestore.collection("Students").document("S425316")
             .collection("Locations").document("2020-12-07").collection("Signatures").document(signature.imageId.toString())
+        */
 
 
-        batch[imgRef] = signature
+        val signList = databaseHelper?.getAllSignatures()!!
+        println("locationlist print empty? " + signList.isEmpty() + "   size: " + signList.size)
+
+        for(sign in signList) {
+            //names the document to snumber
+            val imgRef = mFirestore.collection("Students").document(sign.fkStudent)
+                    .collection("Locations").document(sign.fkAddress.toString()).collection("Signatures").document(sign.imageId.toString())
+            batch[imgRef] = signatureConverter(sign)
+        }
         batch.commit()
-
     }
-
 
     fun saveOrUpdateAllLocations(){
         // TESTDATA
@@ -69,12 +52,12 @@ class NewSyncDatabase(context: Context) {
 */
 
         val batch = mFirestore.batch()
-        val locationList = databaseHelper?.getAllLocations()!!
+        val locationList = databaseHelper?.getAllLocationsWithId()!!
         println("locationlist print empty? " + locationList.isEmpty() + "   size: " + locationList.size)
 
             for(address in locationList) {
                 //names the document to snumber
-                val locationRef = mFirestore.collection("Students").document(address.fkSnumber).collection("Locations").document(address.date.toString())
+                val locationRef = mFirestore.collection("Students").document(address.fkSnumber).collection("Locations").document(address.addressId.toString())
                 batch[locationRef] = address
             }
             batch.commit()
@@ -94,19 +77,5 @@ class NewSyncDatabase(context: Context) {
         }
             batch.commit()
     }
-
-
-    // isn't used delete later ?
-    fun Student.convertToMap(): MutableMap<String, Any> {
-        val map = mutableMapOf<String, Any>()
-        map["name"] = name
-        map["lastname"] = lastname
-        map["snumber"] = snumber
-        map["password"] = password
-
-        return map
-    }
-
-
 }
 

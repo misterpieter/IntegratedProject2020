@@ -55,11 +55,13 @@ class AdminActivity : AppCompatActivity() {
             btnSync.isEnabled = true
         }
 
+        //TODO: add succeslistener
         btnSync.setOnClickListener{
             var newDBsyn = NewSyncDatabase(this)
             newDBsyn.saveOrUpdateAllStudents()
             newDBsyn.saveOrUpdateAllLocations()
             newDBsyn.saveOrUpdateAllSignatures()
+            Toast.makeText(this, "Succesfully synchronized", Toast.LENGTH_SHORT).show()
         }
 
     }
