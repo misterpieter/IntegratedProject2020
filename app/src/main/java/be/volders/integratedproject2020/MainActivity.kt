@@ -33,7 +33,7 @@ import java.net.URL
 import java.sql.Date
 import java.time.LocalDate
 
-class MainActivity : AppCompatActivity(), LocationListener{
+class MainActivity : AppCompatActivity(){
     private lateinit var locationManager: LocationManager
     private lateinit var tvGpsLocation: TextView
     private lateinit var tvAddress: TextView
@@ -64,8 +64,6 @@ class MainActivity : AppCompatActivity(), LocationListener{
 
         // lijst imported csv
         var sList = getStudentsFromLocalCSV(this)
-
-
         parentView = findViewById(R.id.parentView)
 
         val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, studentList)
@@ -75,7 +73,6 @@ class MainActivity : AppCompatActivity(), LocationListener{
             selectedStudent = parent.getItemAtPosition(position) as Student
             Helper.hideKeyboard(parentView!!,this)
         }
-
 
         // LOGIN
         btnLogin.isEnabled = false
@@ -131,7 +128,7 @@ class MainActivity : AppCompatActivity(), LocationListener{
         btnCoordinates.setOnClickListener {
             tvGpsLocation.isVisible = true
             tvAddress.isVisible = true
-            getLocation()
+            //getLocation()
         }
     }
 
@@ -160,7 +157,7 @@ class MainActivity : AppCompatActivity(), LocationListener{
         etPassword.setText("")
     }
 
-
+/*
     private fun getLocation() {
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         if ((ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
@@ -182,7 +179,7 @@ class MainActivity : AppCompatActivity(), LocationListener{
         task.execute(urlAdress)
     }
 
-
+*/
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         if (requestCode == locationPermissionCode) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -192,7 +189,7 @@ class MainActivity : AppCompatActivity(), LocationListener{
             }
         }
     }
-
+/*
     inner class MyAsyncTask : AsyncTask<URL, Int, String>() {
         var response = ""
         override fun onPreExecute(){
@@ -235,7 +232,7 @@ class MainActivity : AppCompatActivity(), LocationListener{
                 Log.d("TAG", "EXCEPTION at Mainactivity R233: ${e.message}\n${e.stackTrace}")
             }
         }
-    }
+    }*/
 }
 
 

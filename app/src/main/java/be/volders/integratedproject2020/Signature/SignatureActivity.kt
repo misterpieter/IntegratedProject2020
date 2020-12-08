@@ -1,6 +1,9 @@
 package be.volders.integratedproject2020.Signature
 
+import android.Manifest
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.location.Location
 import android.location.LocationListener
@@ -13,6 +16,8 @@ import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.drawToBitmap
 import be.volders.integratedproject2020.*
 import be.volders.integratedproject2020.Model.Address
@@ -38,13 +43,17 @@ lateinit var btnStore: Button
 
 
 class SignatureActivity : AppCompatActivity(), LocationListener {
+    var databaseHelper: DatabaseHelpe? = DatabaseHelpe(this)
     private val IMAGE_DIRECTORY = "/Pictures"
     private lateinit var locationManager: LocationManager
+    private val locationPermissionCode = 2
     private var lat : Double = 0.0
     private var lon : Double = 0.0
+    private lateinit var adres : Address
+    private var snumber:String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        var databaseHelper: DatabaseHelpe? = DatabaseHelpe(this)
+        //var databaseHelper: DatabaseHelpe? = DatabaseHelpe(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signature)
         StrokeManager.download()
@@ -72,12 +81,13 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
             StrokeManager.clear()
         }
         btnStore.setOnClickListener{
+            snumber = saveStudent.snumber
             bitmap = drawingView.drawToBitmap()
             path = saveImage(bitmap)
             databaseHelper!!.addStudent(saveStudent)
             val bytes = convertSignatur(bitmap)
             databaseHelper!!.insetImage(bytes.toString(),saveStudent.name+ "_" + saveStudent.lastname, saveStudent.snumber)
-            //Log.d("check",databaseHelper!!.insetImage(bytes.toString(),saveStudent.name+ "_" + saveStudent.lastname, saveStudent.snumber).toString().plus(" "));
+            getLocation()
             Log.d("ST", "Signature ok!")
             intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
@@ -114,6 +124,15 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
             e1.printStackTrace()
         }
         return ""
+    }
+
+    private fun getLocation() {
+        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        if ((ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), locationPermissionCode)
+        }
+
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5f, this)
     }
 
     override fun onLocationChanged(location: Location) {
@@ -161,11 +180,11 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
                         lat,
                         lon,
                         LocalDate.now(),
-                        "S425316"
+                        snumber
                 )
                 Log.d("TAG", "Address object:\n$adres")
                 databaseHelper?.insertLocation(adres)
-                tvAddress.text = adres.toString()
+                //tvAddress.text = adres.toString()
             }catch (e:Exception){
                 Log.d("TAG", "EXCEPTION at Mainactivity R233: ${e.message}\n${e.stackTrace}")
             }
