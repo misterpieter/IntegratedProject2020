@@ -1,13 +1,10 @@
 package be.volders.integratedproject2020.Admin
 
+import android.content.Context
 import be.volders.integratedproject2020.DatabaseHelpe
-import be.volders.integratedproject2020.MainActivity
+import be.volders.integratedproject2020.Model.SignatureHelper
 import be.volders.integratedproject2020.Model.Student
 import com.google.firebase.firestore.FirebaseFirestore
-import android.content.Context
-import be.volders.integratedproject2020.Model.Address
-import be.volders.integratedproject2020.Model.SignatureHelper
-import java.time.LocalDate
 import java.util.*
 
 class NewSyncDatabase(context: Context) {
@@ -49,7 +46,9 @@ class NewSyncDatabase(context: Context) {
 
         //TESTDATA
         val bytes = byteArrayOf(0xA1.toByte(), 0x2E.toByte(), 0x38.toByte(), 0xD4.toByte(), 0x89.toByte(), 0xC3.toByte())
-        val signature = SignatureHelper("imageIdTest", bytes, "S425316", 7 )
+        val encodedImage: String = Base64.getEncoder().encodeToString(bytes)
+
+        val signature = SignatureHelper("imageIdTest", encodedImage, "S425316", 7)
 
         val imgRef = mFirestore.collection("Students").document("S425316")
             .collection("Locations").document("2020-12-07").collection("Signatures").document(signature.imageId.toString())

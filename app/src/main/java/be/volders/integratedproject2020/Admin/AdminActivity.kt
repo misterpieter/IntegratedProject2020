@@ -59,7 +59,7 @@ class AdminActivity : AppCompatActivity() {
             var newDBsyn = NewSyncDatabase(this)
             newDBsyn.saveOrUpdateAllStudents()
             newDBsyn.saveOrUpdateAllLocations()
-           // newDBsyn.saveOrUpdateAllSignatures()
+            newDBsyn.saveOrUpdateAllSignatures()
         }
 
     }

@@ -2,20 +2,12 @@ package be.volders.integratedproject2020
 
 import android.content.ContentValues
 import android.content.Context
-import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.graphics.Bitmap
-import android.util.Log
 import be.volders.integratedproject2020.Model.Address
 import be.volders.integratedproject2020.Model.SignatureHelper
 import be.volders.integratedproject2020.Model.Student
-import be.volders.integratedproject2020.Signature.Location
-import be.volders.integratedproject2020.Students.studentlist
-import java.io.ByteArrayOutputStream
 import java.sql.Date
-import java.time.LocalDate
-import java.time.LocalDateTime
 
 
 class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
@@ -124,7 +116,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         return StudentList
     }
 
-    fun getAllSignatures() : ArrayList<SignatureHelper> {
+  /*  fun getAllSignatures() : ArrayList<SignatureHelper> {
         var signList = ArrayList<SignatureHelper>()
         var dbImageId : String
         var dbImageByteArray : ByteArray
@@ -146,7 +138,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
             }while(c.moveToNext())
         }
         return signList
-    }
+    }*/
 
     fun insetImage(dbBitmap: String, imageId: String?, studentNr: String): Boolean {
         val db = this.writableDatabase
