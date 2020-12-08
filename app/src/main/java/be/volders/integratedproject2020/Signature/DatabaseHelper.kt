@@ -51,7 +51,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 + SIGNATURE_NAME + " VARCHAR(20), "
                 + FK_LOCATION_ID + "INTEGER"
                 + SIGNATURE_BITMAP + " TEXT ,"
-                + " FOREIGN KEY( " + FK_STUDENT_ID + " ) REFERENCES " + TABLE_STUDENTS + " ( " + STUDENT_ID + " ));"
+                + " FOREIGN KEY( " + FK_STUDENT_ID + " ) REFERENCES " + TABLE_STUDENTS + " ( " + STUDENT_ID + " ), "
                 + " FOREIGN KEY( " + FK_LOCATION_ID + " ) REFERENCES " + TABLE_LOCATION + " ( " + LOCATION_ID + " ));"
                 )
 
@@ -136,8 +136,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         val selectQuery ="SELECT * FROM $TABLE_SIGNATURE"
         val db = this.readableDatabase
         val c = db.rawQuery(selectQuery,null)
-        Log.d("GETALLSIGNATURES", "row ammount: " + c.columnCount )
-        if(c.moveToFirst() && c.count != 0){
+        if(c.moveToFirst()){
             do{
                 dbImageId = c.getString(c.getColumnIndex(SIGNATURE_ID))
                 dbImageByteArray = c.getString(c.getColumnIndex(SIGNATURE_BITMAP)).toByteArray()
