@@ -14,7 +14,6 @@ import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import android.widget.Button
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -86,7 +85,7 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
             path = saveImage(bitmap)
             databaseHelper!!.addStudent(saveStudent)
             val bytes = convertSignatur(bitmap)
-            databaseHelper!!.insetImage(bytes.toString(),saveStudent.name+ "_" + saveStudent.lastname, saveStudent.snumber)
+            databaseHelper!!.insetImage(bytes.toString(),saveStudent.name+ "_" + saveStudent.lastname, saveStudent.snumber,)
             getLocation()
             Log.d("ST", "Signature ok!")
             intent = Intent(this, MainActivity::class.java)
@@ -94,7 +93,7 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
         }
 
     }
-    //convert
+    //convert img
     private  fun convertSignatur(myBitmap: Bitmap): ByteArray {
         val bytes = ByteArrayOutputStream()
         myBitmap.compress(Bitmap.CompressFormat.PNG, 90, bytes)

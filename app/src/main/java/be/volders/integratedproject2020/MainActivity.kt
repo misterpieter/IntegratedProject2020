@@ -33,7 +33,7 @@ import java.net.URL
 import java.sql.Date
 import java.time.LocalDate
 
-class MainActivity : AppCompatActivity(), LocationListener {
+class MainActivity : AppCompatActivity() {
     private lateinit var locationManager: LocationManager
     private lateinit var tvGpsLocation: TextView
     private lateinit var tvAddress: TextView
@@ -107,15 +107,6 @@ class MainActivity : AppCompatActivity(), LocationListener {
 
         etPassword.addTextChangedListener(textWatcher)
 
-        tvAddress = findViewById(R.id.tvAddress)
-        tvGpsLocation = findViewById(R.id.tvCoorddinates)
-
-        //tvGpsLocation.isVisible = false
-        //tvAddress.isVisible = false
-
-        //btnSignature.isVisible = false
-        //btnCoordinates.isVisible = false
-
         btnAdmin.setOnClickListener {
             intent = Intent(this, AdminActivity::class.java)
             startActivity(intent)
@@ -126,11 +117,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
             startActivity(intent)
         }
 
-        btnCoordinates.setOnClickListener {
-            tvGpsLocation.isVisible = true
-            tvAddress.isVisible = true
-            //getLocation()
-        }
+
     }
 
     private val textWatcher = object : TextWatcher {
@@ -158,79 +145,12 @@ class MainActivity : AppCompatActivity(), LocationListener {
         etPassword.setText("")
     }
 
-/*
-    private fun getLocation() {
-        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        if ((ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), locationPermissionCode)
-        }
-
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5f, this)
-    }
-
-    override fun onLocationChanged(location: Location) {
-        lat = location.latitude
-        lon = location.longitude
-        tvGpsLocation.text = "Latitude: " + location.latitude + " , Longitude: " + location.longitude
-        val urlReversedSearch = "https://nominatim.openstreetmap.org/reverse?format=json&lat=${location.latitude}&lon=${location.longitude}"
-        //val urlReversedSearch = "https://nominatim.openstreetmap.org/reverse?format=json&lat=51.2944529776287&lon=4.485295861959457\n"
-        val urlAdress = URL(urlReversedSearch)
-        //Toast.makeText(this, "${lat} - ${lon}", Toast.LENGTH_SHORT).show()
-        val task = MyAsyncTask()
-        task.execute(urlAdress)
-    }
-
-*/
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         if (requestCode == locationPermissionCode) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-    inner class MyAsyncTask : AsyncTask<URL, Int, String>() {
-        var response = ""
-        override fun onPreExecute(){
-            super.onPreExecute()
-        }
-
-        override fun doInBackground(vararg params: URL?): String {
-            val client = OkHttpClient()
-            val request = Request.Builder()
-                    .url(params[0]!!)
-                    .build()
-            response = client.newCall(request).execute().body!!.string()
-            return response
-        }
-
-        override fun onProgressUpdate(vararg values: Int?) {
-            super.onProgressUpdate(*values)
-        }
-
-        override fun onPostExecute(result: String?) {
-            super.onPostExecute(result)
-
-            val jsonString = StringBuilder(result!!)
-
-            val parser: Parser = Parser.default()
-            val obj = parser.parse(jsonString) as JsonObject
-            val address = obj["address"] as JsonObject
-
-            try {
-                adres = Address(
-                        lat,
-                        lon,
-                        LocalDate.now(),
-                        "S425316"
-                )
-                Log.d("TAG", "Address object:\n$adres")
-                databaseHelper?.insertLocation(adres)
-                tvAddress.text = adres.toString()
-            }catch (e:Exception){
-                Log.d("TAG", "EXCEPTION at Mainactivity R233: ${e.message}\n${e.stackTrace}")
             }
         }
     }

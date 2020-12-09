@@ -13,8 +13,7 @@ import be.volders.integratedproject2020.Model.Student
 import be.volders.integratedproject2020.R
 
 
-class StudentAdapter(context:Context, private val students: List<Student>) :
-    RecyclerView.Adapter<StudentAdapter.ViewHolder>() {
+class StudentAdapter(context:Context, private val students: List<Student>) : RecyclerView.Adapter<StudentAdapter.ViewHolder>() {
 
     val context = context
 
@@ -29,7 +28,6 @@ class StudentAdapter(context:Context, private val students: List<Student>) :
         holder.tvLastName.text = student.lastname
         holder.tvName.text = student.name
         holder.tvSnumber.text = student.snumber
-        holder.tvPassword.text = student.password
 
         // click listener op item
         holder.itemView.setOnClickListener{
@@ -45,9 +43,8 @@ class StudentAdapter(context:Context, private val students: List<Student>) :
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var tvLastName: TextView = itemView.findViewById(R.id.tvLastName)
-        var tvName: TextView = itemView.findViewById(R.id.tvName)
-        var tvSnumber: TextView = itemView.findViewById(R.id.tvSnumber)
-        var tvPassword: TextView = itemView.findViewById(R.id.tvPassword)
+        var tvLastName: TextView = itemView.findViewById(R.id.tvFirstname)
+        var tvName: TextView = itemView.findViewById(R.id.tvLastname)
+        var tvSnumber: TextView = itemView.findViewById(R.id.tvSnummer)
     }
 }

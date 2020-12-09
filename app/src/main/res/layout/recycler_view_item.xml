@@ -16,7 +16,7 @@
         android:padding="16dp">
 
         <TextView
-            android:id="@+id/tvLastName"
+            android:id="@+id/tvFirstname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Naam"
@@ -24,36 +24,29 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+
         <TextView
-            android:id="@+id/tvName"
+            android:id="@+id/tvLastname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginEnd="196dp"
             android:text="Voornaam"
             android:textSize="20sp"
-            android:layout_marginLeft="5dp"
-            app:layout_constraintStart_toEndOf="@+id/tvLastName"
-            app:layout_constraintTop_toTopOf="parent" />
-
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tvStraat"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.095" />
 
         <TextView
-            android:id="@+id/tvSnumber"
+            android:id="@+id/tvSnummer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="S-nummer"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/tvPassword"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="paswoord"
-            android:textSize="20sp"
-            android:layout_marginTop="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvLastName" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
