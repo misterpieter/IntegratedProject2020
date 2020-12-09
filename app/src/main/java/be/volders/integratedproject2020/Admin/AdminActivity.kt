@@ -4,9 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import be.volders.integratedproject2020.Helper.getStudentsFromCSVString
+import be.volders.integratedproject2020.Helper.getStudentsFromLocalCSV
 import be.volders.integratedproject2020.Helper.loadDataFromIntent
 import be.volders.integratedproject2020.MainActivity
 import be.volders.integratedproject2020.R
@@ -59,7 +61,7 @@ class AdminActivity : AppCompatActivity() {
             val newDBsyn = NewSyncDatabase(this)
             newDBsyn.saveOrUpdateAllStudents()
             newDBsyn.saveOrUpdateAllLocations()
-            // newDBsyn.saveOrUpdateAllSignatures()
+            newDBsyn.saveOrUpdateAllSignatures()
             Toast.makeText(this, "Succesfully synchronized", Toast.LENGTH_SHORT).show()
         }
 

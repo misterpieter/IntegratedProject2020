@@ -33,7 +33,7 @@ import java.net.URL
 import java.sql.Date
 import java.time.LocalDate
 
-class MainActivity : AppCompatActivity(){
+class MainActivity : AppCompatActivity(), LocationListener {
     private lateinit var locationManager: LocationManager
     private lateinit var tvGpsLocation: TextView
     private lateinit var tvAddress: TextView
@@ -73,6 +73,7 @@ class MainActivity : AppCompatActivity(){
             selectedStudent = parent.getItemAtPosition(position) as Student
             Helper.hideKeyboard(parentView!!,this)
         }
+
 
         // LOGIN
         btnLogin.isEnabled = false
@@ -189,7 +190,7 @@ class MainActivity : AppCompatActivity(){
             }
         }
     }
-/*
+
     inner class MyAsyncTask : AsyncTask<URL, Int, String>() {
         var response = ""
         override fun onPreExecute(){
@@ -232,7 +233,7 @@ class MainActivity : AppCompatActivity(){
                 Log.d("TAG", "EXCEPTION at Mainactivity R233: ${e.message}\n${e.stackTrace}")
             }
         }
-    }*/
+    }
 }
 
 
