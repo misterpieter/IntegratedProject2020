@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "869612287439",
+    "firebase_url": "https://integratedprojectmobile.firebaseio.com",
+    "project_id": "integratedprojectmobile",
+    "storage_bucket": "integratedprojectmobile.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:869612287439:android:4c62b9c6154517fb87ceba",
+        "android_client_info": {
+          "package_name": "be.volders.integratedproject2020"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "869612287439-i8bgmbcrcgt7vtkkor28rp7pj6gamokb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCz9dFHQO1m0tEi3dJdM4izNBWF3-wp1QI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "869612287439-i8bgmbcrcgt7vtkkor28rp7pj6gamokb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,9 +1,9 @@
-package be.volders.integratedproject2020.Model
+package be.volders.integratedproject2020.Admin
 
 import java.time.LocalDate
 
-class Address(
-
+class AddressWithIdFirebase(
+        var addressId: Int,
         var lat: Double,
         var lon: Double,
         var date: LocalDate,
