@@ -15,6 +15,7 @@ import be.volders.integratedproject2020.Model.Student
 import be.volders.integratedproject2020.R
 import java.util.*
 
+//
 
 class StudentAdapter(context:Context, private val students: ArrayList<Student>) :
     RecyclerView.Adapter<StudentAdapter.ViewHolder>() {
