@@ -60,6 +60,7 @@ class AdminActivity : AppCompatActivity() {
 
         if (haveNetworkConnection()){
             btnSync.isEnabled = true
+            btnUpdateLocation.isEnabled = true
         }
 
         btnSync.setOnClickListener{
@@ -70,9 +71,8 @@ class AdminActivity : AppCompatActivity() {
             Toast.makeText(this, "Succesfully synchronized", Toast.LENGTH_SHORT).show()
         }
 
-
-        if (haveNetworkConnection()) {
-            // UpdateAddresses()
+        btnUpdateLocation.setOnClickListener{
+                UpdateAddresses()
         }
 
 
