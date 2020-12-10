@@ -171,13 +171,14 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         return signList
     }
 
-    fun insetImage(dbBitmap: String, imageId: String?, studentNr: String): Boolean {
+    fun insetImage(dbBitmap: String, imageId: String?, studentNr: String, fkAddress : Int): Boolean {
         val db = this.writableDatabase
         val values = ContentValues()
 
         values.put(SIGNATURE_NAME, imageId)
         values.put(FK_STUDENT_ID, studentNr)
         values.put(SIGNATURE_BITMAP, dbBitmap)
+        values.put(FK_LOCATION_ID, fkAddress)
 
         val result = db.insert(TABLE_SIGNATURE, null, values)
         db.close()
