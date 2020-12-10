@@ -234,6 +234,26 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         return locationList
     }
 
+
+    //update location based on id
+    fun updateLocation(adres: AddressWithIdFirebase){
+
+        val db = this.writableDatabase
+        val values = ContentValues()
+        values.put(LONGITUDE, adres.lon)
+        values.put(LATTITUDE, adres.lat)
+        values.put(TIMESTAMP, LocalDate.now().toString())
+        values.put(FK_STUDENT_ID,adres.fkSnumber)
+        values.put(ROAD, adres.road)
+        values.put(HOUSE_NUMBER, adres.houseNumber)
+        values.put(POSTCODE, adres.postcode)
+        values.put(TOWN, adres.town)
+        values.put(NEIGHBOURHOOD, adres.neighbourhood)
+        values.put(COUNTRY, adres.county)
+        db.update(TABLE_LOCATION, values, "location_id=" + adres.addressId, null)
+
+    }
+
     fun insertLocation(adres : Address): Boolean{
         val db = this.writableDatabase
         val values = ContentValues()

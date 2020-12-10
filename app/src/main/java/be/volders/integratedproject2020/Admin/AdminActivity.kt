@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.activity_admin.*
 import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException
+import java.time.LocalDate
 
 
 class AdminActivity : AppCompatActivity() {
@@ -103,11 +104,8 @@ class AdminActivity : AppCompatActivity() {
 
     //loops over all locations and if postcode = 0 => update adress
     private fun UpdateAddresses() {
-
         val locationList = databaseHelper?.getAllLocationsWithId()!!
-
         for (location in locationList){
-
             if(location.postcode == 0){
                 UpdateAdress(location)
             }
@@ -115,41 +113,36 @@ class AdminActivity : AppCompatActivity() {
     }
 
 
-    //Use reverse search to save streetname
+    //Use reverse search to save streetname and update the in the database
     private fun UpdateAdress(location : AddressWithIdFirebase)  /* : AddressWithIdFirebase */ {
         val urlReversedSearch = "https://nominatim.openstreetmap.org/reverse?format=json&lat=${location.lat}&lon=${location.lon}"
         val client = OkHttpClient()
         val request = Request.Builder().url(urlReversedSearch).build()
-
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 e.printStackTrace()
             }
-
             override fun onResponse(call: Call, response: Response) {
                 if (!response.isSuccessful) {
                     Log.e("getStreetName", "response failed")
                     return
                 }
-
-
                 val jsonData = response.body!!.string()
                 val jsonObject = JSONObject(jsonData)
-
                 Log.d("jsonobjectarray", "jsondata: $jsonData")
                 Log.d("jsonobjectarray", "jsonobject: $jsonObject")
+                val adresObject = jsonObject.getJSONObject("address")
 
+                location.road = adresObject.getString("road")
+                // gives value 0 if not found
+                location.houseNumber = adresObject.optInt("house_number", 0)
+                location.postcode = adresObject.getInt("postcode")
+                location.town = adresObject.getString("town")
+                location.neighbourhood = adresObject.getString("neighbourhood")
+                location.county = adresObject.getString("county")
 
-                /*
-                    val adresObject = jsonObject.getJSONObject("address")
-                    Log.d("adressobject", "print a state " + adresObject.getString("state"))
-                    streetName = adresObject.getString("country") + " " + adresObject.getString("state") + " " +
-                            adresObject.getString("town")
-                */
-
-
-
-
+                //calls update method
+                databaseHelper?.updateLocation(location)
             }
         })
         client.dispatcher.executorService.shutdown()

@@ -21,4 +21,3 @@ class AddressWithIdFirebase(
         return "${road} ${houseNumber}\n${postcode} ${town} (${neighbourhood})\n${county}"
     }
 }
-
