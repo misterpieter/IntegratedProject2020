@@ -21,7 +21,7 @@ class NewSyncDatabase(context: Context) {
 
     private fun locationConverter(address : AddressWithIdFirebase) : LocationUsingDate {
         var newDate : Date = Date.valueOf(address.date.toString())
-        return LocationUsingDate(address.addressId, address.lat, address.lon, newDate, address.fkSnumber)
+        return LocationUsingDate(address.addressId, address.lat, address.lon, newDate, address.fkSnumber, address.road, address.houseNumber, address.postcode, address.town, address.neighbourhood, address.county)
     }
 
 
@@ -31,7 +31,13 @@ class NewSyncDatabase(context: Context) {
             var lat: Double,
             var lon: Double,
             var date: Date,
-            var fkSnumber: String
+            var fkSnumber: String,
+            var road: String? = "NO road",
+            var houseNumber: Int? = 0,
+            var postcode: Int? = 0,
+            var town: String? = "NO town",
+            var neighbourhood: String? = "NO neighbourhood",
+            var county: String? = "NO county"
     )
 
 

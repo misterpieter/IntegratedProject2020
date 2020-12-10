@@ -40,6 +40,12 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         private val TIMESTAMP = "locationTime"
         private val LONGITUDE = "longitude"
         private val LATTITUDE = "latitude"
+        private val ROAD = "road"
+        private val HOUSE_NUMBER = "house_number"
+        private val POSTCODE = "postcode"
+        private val TOWN = "town"
+        private val NEIGHBOURHOOD = "neighbourhood"
+        private val COUNTRY = "country"
 
         val selectQuery = "SELECT + FROM $TABLE_STUDENTS"
         private val CREATE_TABLE_STUDENTS = ("CREATE TABLE IF not exists "
@@ -58,11 +64,21 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 + " FOREIGN KEY( " + FK_LOCATION_ID + " ) REFERENCES " + TABLE_LOCATION + " ( " + LOCATION_ID + " ));"
                 )
 
+
+
+
+
         private val CREATE_TABLE_LOCATION = ("CREATE TABLE IF not exists "
                 + TABLE_LOCATION + " ( " + LOCATION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + TIMESTAMP + " DATE, "
                 + LONGITUDE + " DOUBLE, "
                 + LATTITUDE + " DOUBLE, "
+                + ROAD + " VARCHAR(100), "
+                + HOUSE_NUMBER + " INTEGER, "
+                + POSTCODE + " INTEGER, "
+                + TOWN + " VARCHAR(40), "
+                + NEIGHBOURHOOD + " VARCHAR(40), "
+                + COUNTRY + " VARCHAR(40), "
                 + FK_STUDENT_ID + " VARCHAR(20),"
                 + " FOREIGN KEY( " + FK_STUDENT_ID + " ) REFERENCES " + TABLE_STUDENTS + " ( " + STUDENT_ID + " ));"
                 )
@@ -167,26 +183,50 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         return !result .equals( -1)
     }
 
+
+/*    private val ROAD = "road"
+    private val HOUSE_NUMBER = "house_number"
+    private val POSTCODE = "postcode"
+    private val TOWN = "town"
+    private val NEIGHBOURHOOD = "neighbourhood"
+    private val COUNTRY = "country"*/
+
     fun getAllLocationsWithId() : ArrayList<AddressWithIdFirebase> {
         val locationList = ArrayList<AddressWithIdFirebase>()
+
         //adding location ID to this
         var dbLocId: Int
         var dbLat : Double
         var dbLon : Double
         var date : LocalDate
         var fkSnumber : String
+        var dbRoad : String
+        var dbHouseNubmer : Int
+        var dbPostCode : Int
+        var dbTown : String
+        var dbNeibhourhood : String
+        var dbCountry : String
 
         val selectQuery ="SELECT * FROM $TABLE_LOCATION"
         val db = this.readableDatabase
         val c = db.rawQuery(selectQuery,null)
         if(c.moveToFirst()){
             do{
+
                 dbLocId = c.getInt(c.getColumnIndex(LOCATION_ID))
                 dbLat = c.getDouble(c.getColumnIndex(LATTITUDE))
                 dbLon = c.getDouble(c.getColumnIndex(LONGITUDE))
                 date =  LocalDate.parse(c.getString(c.getColumnIndex(TIMESTAMP)))
                 fkSnumber = c.getString(c.getColumnIndex(FK_STUDENT_ID))
-                val location = AddressWithIdFirebase(dbLocId, dbLat, dbLon, date, fkSnumber)
+                dbRoad = c.getString(c.getColumnIndex(ROAD))
+                dbHouseNubmer = c.getInt(c.getColumnIndex(HOUSE_NUMBER))
+                dbPostCode = c.getInt(c.getColumnIndex(POSTCODE))
+                dbTown = c.getString(c.getColumnIndex(TOWN))
+                dbNeibhourhood = c.getString(c.getColumnIndex(NEIGHBOURHOOD))
+                dbCountry = c.getString(c.getColumnIndex(COUNTRY))
+
+
+                val location = AddressWithIdFirebase(dbLocId, dbLat, dbLon, date, fkSnumber, dbRoad, dbHouseNubmer, dbPostCode, dbTown, dbNeibhourhood, dbCountry)
                 locationList.add(location)
             }while(c.moveToNext())
         }
@@ -197,12 +237,16 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
     fun insertLocation(adres : Address): Boolean{
         val db = this.writableDatabase
         val values = ContentValues()
-
-
         values.put(LONGITUDE, adres.lon)
         values.put(LATTITUDE, adres.lat)
         values.put(TIMESTAMP, LocalDate.now().toString())
         values.put(FK_STUDENT_ID,adres.fkSnumber)
+        values.put(ROAD, adres.road)
+        values.put(HOUSE_NUMBER, adres.houseNumber)
+        values.put(POSTCODE, adres.postcode)
+        values.put(TOWN, adres.town)
+        values.put(NEIGHBOURHOOD, adres.neighbourhood)
+        values.put(COUNTRY, adres.county)
 
         val result = db.insert(TABLE_LOCATION, null, values)
         db.close()
