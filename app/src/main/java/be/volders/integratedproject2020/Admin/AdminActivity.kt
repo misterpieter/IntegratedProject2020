@@ -72,7 +72,8 @@ class AdminActivity : AppCompatActivity() {
         }
 
         btnUpdateLocation.setOnClickListener{
-                UpdateAddresses()
+            UpdateAddresses()
+            Toast.makeText(this, "Succesfully updated locations", Toast.LENGTH_SHORT).show()
         }
 
 
@@ -133,18 +134,6 @@ class AdminActivity : AppCompatActivity() {
                 Log.d("jsonobjectarray", "jsonobject: $jsonObject")
                 val adresObject = jsonObject.getJSONObject("address")
 
-/*                var addressId: Int,
-                var lat: Double,
-                var lon: Double,
-                var date: LocalDate,
-                var fkSnumber: String,
-
-                var road: String? = "NO road",
-                var houseNumber: Int? = 0,
-                var postcode: Int? = 0,
-                var town: String? = "NO town",
-                var neighbourhood: String? = "NO neighbourhood",
-                var county: String? = "NO county"*/
 
 
                 //only gives value when field is found
