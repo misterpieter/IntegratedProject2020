@@ -41,9 +41,6 @@ class NewSyncDatabase(context: Context) {
     )
 
 
-
-
-
     fun saveOrUpdateAllSignatures(){
         val batch = mFirestore.batch()
 

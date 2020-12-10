@@ -47,11 +47,6 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
     private val locationPermissionCode = 2
     private var lat : Double = 0.0
     private var lon : Double = 0.0
-
-
-    // save streetname here
-    private var streetName : String = ""
-
     private lateinit var adres : Address
     private var snumber:String = ""
 
@@ -137,49 +132,6 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
     }
 
 
-    //Use reverse search to save streetname
-    private fun getAddressDisplayName(lattitude: Double, longitude: Double) {
-        val urlReversedSearch = "https://nominatim.openstreetmap.org/reverse?format=json&lat=${lattitude}&lon=${longitude}"
-        val client = OkHttpClient()
-        val request = Request.Builder().url(urlReversedSearch).build()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                e.printStackTrace()
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                if (!response.isSuccessful) {
-                    Log.e("getStreetName", "response failed")
-                    return
-                }
-
-                val jsonData = response.body!!.string()
-                val jsonObject = JSONObject(jsonData)
-
-                Log.d("jsonobjectarray", "jsondata: $jsonData")
-                Log.d("jsonobjectarray", "jsonobject: $jsonObject")
-
-                streetName = jsonObject.getString("display_name")
-
-                Log.d("STREETNAME", "display name : $streetName")
-
-            /*
-
-                val adresObject = jsonObject.getJSONObject("address")
-
-                Log.d("adressobject", "print a state " + adresObject.getString("state"))
-
-                streetName = adresObject.getString("country") + " " + adresObject.getString("state") + " " +
-                        adresObject.getString("town")
-            */
-
-            }
-        })
-
-
-        client.dispatcher.executorService.shutdown()
-    }
 
 
     override fun onLocationChanged(location: Location) {

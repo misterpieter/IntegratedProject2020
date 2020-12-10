@@ -7,18 +7,22 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import be.volders.integratedproject2020.DatabaseHelpe
 import be.volders.integratedproject2020.Helper.getStudentsFromCSVString
-import be.volders.integratedproject2020.Helper.getStudentsFromLocalCSV
 import be.volders.integratedproject2020.Helper.loadDataFromIntent
 import be.volders.integratedproject2020.MainActivity
 import be.volders.integratedproject2020.R
 import be.volders.integratedproject2020.Students.StudentListActivity
 import kotlinx.android.synthetic.main.activity_admin.*
+import okhttp3.*
+import org.json.JSONObject
+import java.io.IOException
 
 
 class AdminActivity : AppCompatActivity() {
     val REQUEST_CODE = 1
     lateinit var dataString:String
+    var databaseHelper: DatabaseHelpe? = DatabaseHelpe(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,6 +69,12 @@ class AdminActivity : AppCompatActivity() {
             Toast.makeText(this, "Succesfully synchronized", Toast.LENGTH_SHORT).show()
         }
 
+
+        if (haveNetworkConnection()) {
+            // UpdateAddresses()
+        }
+
+
     }
 
 
@@ -89,6 +99,62 @@ class AdminActivity : AppCompatActivity() {
             }
         }
     }
+
+
+    //loops over all locations and if postcode = 0 => update adress
+    private fun UpdateAddresses() {
+
+        val locationList = databaseHelper?.getAllLocationsWithId()!!
+
+        for (location in locationList){
+
+            if(location.postcode == 0){
+                UpdateAdress(location)
+            }
+        }
+    }
+
+
+    //Use reverse search to save streetname
+    private fun UpdateAdress(location : AddressWithIdFirebase)  /* : AddressWithIdFirebase */ {
+        val urlReversedSearch = "https://nominatim.openstreetmap.org/reverse?format=json&lat=${location.lat}&lon=${location.lon}"
+        val client = OkHttpClient()
+        val request = Request.Builder().url(urlReversedSearch).build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (!response.isSuccessful) {
+                    Log.e("getStreetName", "response failed")
+                    return
+                }
+
+
+                val jsonData = response.body!!.string()
+                val jsonObject = JSONObject(jsonData)
+
+                Log.d("jsonobjectarray", "jsondata: $jsonData")
+                Log.d("jsonobjectarray", "jsonobject: $jsonObject")
+
+
+                /*
+                    val adresObject = jsonObject.getJSONObject("address")
+                    Log.d("adressobject", "print a state " + adresObject.getString("state"))
+                    streetName = adresObject.getString("country") + " " + adresObject.getString("state") + " " +
+                            adresObject.getString("town")
+                */
+
+
+
+
+            }
+        })
+        client.dispatcher.executorService.shutdown()
+    }
+
 
 
     //Checks if connectedvia WIFI or Mobile to Internet
