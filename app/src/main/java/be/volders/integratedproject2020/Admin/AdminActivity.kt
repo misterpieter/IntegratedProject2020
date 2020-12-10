@@ -133,13 +133,27 @@ class AdminActivity : AppCompatActivity() {
                 Log.d("jsonobjectarray", "jsonobject: $jsonObject")
                 val adresObject = jsonObject.getJSONObject("address")
 
-                location.road = adresObject.getString("road")
-                // gives value 0 if not found
+/*                var addressId: Int,
+                var lat: Double,
+                var lon: Double,
+                var date: LocalDate,
+                var fkSnumber: String,
+
+                var road: String? = "NO road",
+                var houseNumber: Int? = 0,
+                var postcode: Int? = 0,
+                var town: String? = "NO town",
+                var neighbourhood: String? = "NO neighbourhood",
+                var county: String? = "NO county"*/
+
+
+                //only gives value when field is found
+                location.road = adresObject.optString("road", "No road")
                 location.houseNumber = adresObject.optInt("house_number", 0)
-                location.postcode = adresObject.getInt("postcode")
-                location.town = adresObject.getString("town")
-                location.neighbourhood = adresObject.getString("neighbourhood")
-                location.county = adresObject.getString("county")
+                location.postcode = adresObject.optInt("postcode", 0)
+                location.town = adresObject.optString("town", "NO town")
+                location.neighbourhood = adresObject.optString("neighbourhood", "NO neighbourhood")
+                location.county = adresObject.optString("county", "NO county")
 
                 //calls update method
                 databaseHelper?.updateLocation(location)
