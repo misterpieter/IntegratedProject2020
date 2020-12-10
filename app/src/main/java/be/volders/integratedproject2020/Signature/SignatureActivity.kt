@@ -23,13 +23,12 @@ import be.volders.integratedproject2020.Model.Address
 import be.volders.integratedproject2020.Model.Student
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
-import okhttp3.OkHttpClient
-import okhttp3.Request
+import okhttp3.*
+import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.lang.StringBuilder
 import java.net.URL
 import java.time.LocalDate
 import java.util.*
@@ -48,6 +47,11 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
     private val locationPermissionCode = 2
     private var lat : Double = 0.0
     private var lon : Double = 0.0
+
+
+    // save streetname here
+    private var streetName : String = ""
+
     private lateinit var adres : Address
     private var snumber:String = ""
 
@@ -56,13 +60,12 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signature)
         StrokeManager.download()
-
         var bitmap : Bitmap
         var path : String
 
         val saveStudent = Student(intent.getStringExtra("studentFirstname").toString(),
-                                  intent.getStringExtra("studentLastname").toString(),
-                                  intent.getStringExtra("studentSnr").toString(), "halima")
+                intent.getStringExtra("studentLastname").toString(),
+                intent.getStringExtra("studentSnr").toString(), "halima")
 
         btnStore = findViewById(R.id.buttonSave)
         recognize = findViewById(R.id.recognize)
@@ -85,7 +88,7 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
             path = saveImage(bitmap)
             databaseHelper!!.addStudent(saveStudent)
             val bytes = convertSignatur(bitmap)
-            databaseHelper!!.insetImage(bytes.toString(),saveStudent.name+ "_" + saveStudent.lastname, saveStudent.snumber,)
+            databaseHelper!!.insetImage(bytes.toString(), saveStudent.name + "_" + saveStudent.lastname, saveStudent.snumber)
             getLocation()
             Log.d("ST", "Signature ok!")
             intent = Intent(this, MainActivity::class.java)
@@ -130,13 +133,61 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
         if ((ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), locationPermissionCode)
         }
-
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5f, this)
     }
+
+
+    //Use reverse search to save streetname
+    private fun getAddressDisplayName(lattitude: Double, longitude: Double) {
+        val urlReversedSearch = "https://nominatim.openstreetmap.org/reverse?format=json&lat=${lattitude}&lon=${longitude}"
+        val client = OkHttpClient()
+        val request = Request.Builder().url(urlReversedSearch).build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (!response.isSuccessful) {
+                    Log.e("getStreetName", "response failed")
+                    return
+                }
+
+                val jsonData = response.body!!.string()
+                val jsonObject = JSONObject(jsonData)
+
+                Log.d("jsonobjectarray", "jsondata: $jsonData")
+                Log.d("jsonobjectarray", "jsonobject: $jsonObject")
+
+                streetName = jsonObject.getString("display_name")
+
+                Log.d("STREETNAME", "display name : $streetName")
+
+            /*
+
+                val adresObject = jsonObject.getJSONObject("address")
+
+                Log.d("adressobject", "print a state " + adresObject.getString("state"))
+
+                streetName = adresObject.getString("country") + " " + adresObject.getString("state") + " " +
+                        adresObject.getString("town")
+            */
+
+            }
+        })
+
+
+        client.dispatcher.executorService.shutdown()
+    }
+
 
     override fun onLocationChanged(location: Location) {
         lat = location.latitude
         lon = location.longitude
+
+
+
         //tvGpsLocation.text = "Latitude: " + location.latitude + " , Longitude: " + location.longitude
         val urlReversedSearch = "https://nominatim.openstreetmap.org/reverse?format=json&lat=${location.latitude}&lon=${location.longitude}"
         //val urlReversedSearch = "https://nominatim.openstreetmap.org/reverse?format=json&lat=51.2944529776287&lon=4.485295861959457\n"
@@ -174,6 +225,8 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
             val obj = parser.parse(jsonString) as JsonObject
             val address = obj["address"] as JsonObject
 
+            // getAddressDisplayName(lat, lon)
+
             try {
                 adres = Address(
                         lat,
@@ -184,7 +237,7 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
                 Log.d("TAG", "Address object:\n$adres")
                 databaseHelper?.insertLocation(adres)
                 //tvAddress.text = adres.toString()
-            }catch (e:Exception){
+            }catch (e: Exception){
                 Log.d("TAG", "EXCEPTION at Mainactivity R233: ${e.message}\n${e.stackTrace}")
             }
         }
