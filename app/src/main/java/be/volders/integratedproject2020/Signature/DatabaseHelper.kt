@@ -2,6 +2,7 @@ package be.volders.integratedproject2020
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.DatabaseUtils
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
@@ -232,6 +233,15 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         }
         c.close()
         return locationList
+    }
+
+
+
+    fun getLatestLocation(studentNr: String) : Int{
+        val db = this.readableDatabase
+        val selectQuerry = "SELECT  MAX($LOCATION_ID) FROM $TABLE_LOCATION WHERE $FK_STUDENT_ID=$studentNr"
+        val result = DatabaseUtils.stringForQuery(db, selectQuerry, null)
+        return result.toInt()
     }
 
 

@@ -83,6 +83,7 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
             path = saveImage(bitmap)
             databaseHelper!!.addStudent(saveStudent)
             val bytes = convertSignatur(bitmap)
+            databaseHelper!!.getLatestLocation(saveStudent.snumber)
             databaseHelper!!.insetImage(bytes.toString(), saveStudent.name + "_" + saveStudent.lastname, saveStudent.snumber)
             getLocation()
             Log.d("ST", "Signature ok!")
