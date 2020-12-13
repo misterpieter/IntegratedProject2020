@@ -131,20 +131,11 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5f, this)
     }
 
-
-
-
     override fun onLocationChanged(location: Location) {
         lat = location.latitude
         lon = location.longitude
-
-
-
-        //tvGpsLocation.text = "Latitude: " + location.latitude + " , Longitude: " + location.longitude
         val urlReversedSearch = "https://nominatim.openstreetmap.org/reverse?format=json&lat=${location.latitude}&lon=${location.longitude}"
-        //val urlReversedSearch = "https://nominatim.openstreetmap.org/reverse?format=json&lat=51.2944529776287&lon=4.485295861959457\n"
         val urlAdress = URL(urlReversedSearch)
-        //Toast.makeText(this, "${lat} - ${lon}", Toast.LENGTH_SHORT).show()
         val task = MyAsyncTask()
         task.execute(urlAdress)
     }
@@ -184,7 +175,13 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
                         lat,
                         lon,
                         LocalDate.now(),
-                        snumber
+                        snumber,
+                        address["road"]?.toString(),
+                        address["house_number"]?.toString()?.toInt(),
+                        address["postcode"]?.toString()?.toInt(),
+                        address["town"]?.toString(),
+                        address["neighbourhood"]?.toString(),
+                        address["county"]?.toString()
                 )
                 Log.d("TAG", "Address object:\n$adres")
                 databaseHelper?.insertLocation(adres)

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import be.volders.integratedproject2020.DatabaseHelpe
 import be.volders.integratedproject2020.MainActivity
 import be.volders.integratedproject2020.Model.Student
 import be.volders.integratedproject2020.R
@@ -15,6 +16,7 @@ import be.volders.integratedproject2020.R
 
 class StudentAdapter(context:Context, private val students: List<Student>) : RecyclerView.Adapter<StudentAdapter.ViewHolder>() {
 
+    var databaseHelper: DatabaseHelpe? = DatabaseHelpe(context)
     val context = context
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -32,7 +34,9 @@ class StudentAdapter(context:Context, private val students: List<Student>) : Rec
         // click listener op item
         holder.itemView.setOnClickListener{
             //toast + redirect naar home (enkel als voorbeeld om naar een andere activity te gaan wanneer geklikt )
-            Toast.makeText(context, "${student} clicked", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "${student.snumber} clicked", Toast.LENGTH_SHORT).show()
+            databaseHelper?.getSignatureForDetailsList(student.snumber)
+            //Toast.makeText(context, "${student.snumber} clicked", Toast.LENGTH_SHORT).show()
             val intent = Intent(context, MainActivity::class.java)
             context.startActivity(intent)
         }
@@ -44,7 +48,7 @@ class StudentAdapter(context:Context, private val students: List<Student>) : Rec
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var tvLastName: TextView = itemView.findViewById(R.id.tvFirstname)
-        var tvName: TextView = itemView.findViewById(R.id.tvLastname)
+        var tvName: TextView = itemView.findViewById(R.id.tvDatum)
         var tvSnumber: TextView = itemView.findViewById(R.id.tvSnummer)
     }
 }
