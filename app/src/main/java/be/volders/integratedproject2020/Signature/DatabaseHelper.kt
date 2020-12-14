@@ -2,7 +2,6 @@ package be.volders.integratedproject2020
 
 import android.content.ContentValues
 import android.content.Context
-import android.database.DatabaseUtils
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
@@ -65,10 +64,6 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 + " FOREIGN KEY( " + FK_LOCATION_ID + " ) REFERENCES " + TABLE_LOCATION + " ( " + LOCATION_ID + " ));"
                 )
 
-
-
-
-
         private val CREATE_TABLE_LOCATION = ("CREATE TABLE IF not exists "
                 + TABLE_LOCATION + " ( " + LOCATION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + TIMESTAMP + " DATE, "
@@ -87,6 +82,11 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 "select st."+FIRSTNAME+", st."+LASTNAME+", st."+STUDENT_ID+
                         " from "+TABLE_STUDENTS+" as st " +
                         " left join "+TABLE_LOCATION+" as lo on st."+STUDENT_ID+" = lo."+FK_STUDENT_ID
+                )
+        private  val GETSIGNATURE = (
+                "select s."+SIGNATURE_BITMAP+", l."+ ROAD+",  l."+HOUSE_NUMBER+", l."+POSTCODE+
+                        ", l."+TOWN+", l."+NEIGHBOURHOOD+", l."+COUNTRY+" from "+TABLE_SIGNATURE+" as s "+
+                        "left join "+TABLE_LOCATION+" as l on l."+FK_STUDENT_ID+" = s."+FK_STUDENT_ID
                 )
     }
 
@@ -113,7 +113,6 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         }
         return db.insert(TABLE_STUDENTS, null, values)
     }
-
 
     fun getAllStudent(): ArrayList<Student>{
         val studentList = ArrayList<Student>()
@@ -171,14 +170,13 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         return signList
     }
 
-    fun insetImage(dbBitmap: String, imageId: String?, studentNr: String, fkAddress : Int): Boolean {
+    fun insetImage(dbBitmap: String, imageId: String?, studentNr: String): Boolean {
         val db = this.writableDatabase
         val values = ContentValues()
 
         values.put(SIGNATURE_NAME, imageId)
         values.put(FK_STUDENT_ID, studentNr)
         values.put(SIGNATURE_BITMAP, dbBitmap)
-        values.put(FK_LOCATION_ID, fkAddress)
 
         val result = db.insert(TABLE_SIGNATURE, null, values)
         db.close()
@@ -236,16 +234,6 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         return locationList
     }
 
-
-
-    fun getLatestLocation(studentNr: String) : Int{
-        val db = this.readableDatabase
-        val selectQuerry = "SELECT  MAX($LOCATION_ID) FROM $TABLE_LOCATION WHERE $FK_STUDENT_ID=$studentNr"
-        val result = DatabaseUtils.stringForQuery(db, selectQuerry, null)
-        return result.toInt()
-    }
-
-
     //update location based on id
     fun updateLocation(adres: AddressWithIdFirebase){
 
@@ -280,6 +268,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         values.put(COUNTRY, adres.county)
 
         val result = db.insert(TABLE_LOCATION, null, values)
+        Log.d("FIL", "location opgeslagen: ${values}")
         db.close()
         return !result.equals( -1)
     }
@@ -306,22 +295,46 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         return StudentList
     }
 
-    /*
-    fun getImage(imageId: String): SignatureHelper? {
-        val db = this.writableDatabase
-        val cursor2: Cursor = db.query(TABLE_SIGNATURE, arrayOf(SIGNATURE_ID, SIGNATURE_NAME, SIGNATURE_BITMAP), SIGNATURE_NAME
-                + " LIKE '" + imageId + "%'", null, null, null, null)
-        val imageHelper = SignatureHelper()
-        if (cursor2.moveToFirst()) {
-            do {
-                imageHelper.setImageId(cursor2.getString(1))
-                imageHelper.setImageByteArray(cursor2.getBlob(2))
-            } while (cursor2.moveToNext())
-        }
-        cursor2.close()
-        db.close()
-        return imageHelper
-    }
-*/
 
+    fun getSignatureForDetailsList(snumber: String): ArrayList<Signatur>  {
+        val signatureList = ArrayList<Signatur>()
+        var imageByteArray: ByteArray
+        var dbRoad : String
+        var dbHouseNubmer : Int
+        var dbPostCode : Int
+        var dbTown : String
+        var dbNeibhourhood : String
+        var dbCountry : String
+        val selectQuery = GETSIGNATURE+" where s."+FK_STUDENT_ID+" = '"+snumber+"'"
+
+
+        val db = this.readableDatabase
+        var c = db.rawQuery(selectQuery,null)
+        if(c.moveToFirst()){
+            do{
+                imageByteArray = c.getString(c.getColumnIndex(SIGNATURE_BITMAP)).toByteArray()
+                dbRoad = c.getString(c.getColumnIndex(ROAD))
+                dbHouseNubmer = c.getInt(c.getColumnIndex(HOUSE_NUMBER))
+                dbPostCode = c.getInt(c.getColumnIndex(POSTCODE))
+                dbTown = c.getString(c.getColumnIndex(TOWN))
+                dbNeibhourhood = c.getString(c.getColumnIndex(NEIGHBOURHOOD))
+                dbCountry = c.getString(c.getColumnIndex(COUNTRY))
+                var s = Signatur(imageByteArray,dbRoad,dbHouseNubmer,dbPostCode,dbTown,dbNeibhourhood,dbCountry)
+                signatureList.add(s)
+                Log.d("sig", "adres: ${s.imageByteArray}")
+            }while(c.moveToNext())
+        }
+        return signatureList
+    }
 }
+
+class Signatur(
+
+        var imageByteArray: ByteArray,
+        var dbRoad : String,
+        var dbHouseNubmer : Int,
+        var dbPostCode : Int,
+        var dbTown : String,
+        var dbNeibhourhood : String,
+        var dbCountry : String
+)
