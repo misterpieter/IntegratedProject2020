@@ -240,6 +240,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
 
     fun insertLocation(adres : Address): Boolean{
         val db = this.writableDatabase
+
         val values = ContentValues()
         values.put(LONGITUDE, adres.lon)
         values.put(LATTITUDE, adres.lat)
@@ -300,12 +301,12 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
             do{
                 imageByteArray = c.getBlob(0)//c.getColumnIndex(SIGNATURE_BITMAP))
                 val img = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.size)
-                dbRoad = c.getString(c.getColumnIndex(ROAD))
-                dbHouseNubmer = c.getInt(c.getColumnIndex(HOUSE_NUMBER))
-                dbPostCode = c.getInt(c.getColumnIndex(POSTCODE))
-                dbTown = c.getString(c.getColumnIndex(TOWN))
-                dbNeibhourhood = c.getString(c.getColumnIndex(NEIGHBOURHOOD))
-                dbCountry = c.getString(c.getColumnIndex(COUNTRY))
+                dbRoad = c.getString(c.getColumnIndex(ROAD))?:""
+                dbHouseNubmer = c.getInt(c.getColumnIndex(HOUSE_NUMBER))?:0
+                dbPostCode = c.getInt(c.getColumnIndex(POSTCODE))?:0
+                dbTown = c.getString(c.getColumnIndex(TOWN))?:""
+                dbNeibhourhood = c.getString(c.getColumnIndex(NEIGHBOURHOOD))?:""
+                dbCountry = c.getString(c.getColumnIndex(COUNTRY))?:""
                 dbDatum = c.getString(c.getColumnIndex(TIMESTAMP))
                 var s = SignatureList(img,dbRoad,dbHouseNubmer,dbPostCode,dbTown,dbNeibhourhood,dbCountry,dbDatum)
                 signatureList.add(s)

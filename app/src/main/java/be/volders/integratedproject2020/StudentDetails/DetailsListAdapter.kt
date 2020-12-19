@@ -34,6 +34,9 @@ class DetailsListAdapter(context: Context, private val signatuurList: List<Signa
         holder.tvroad?.text = signature.dbRoad
         holder.tvhousenumber?.text = signature.dbHouseNubmer.toString()
         holder.tvdatum?.text = signature.dbDatum.toString()
+        holder.tvpostcode.text = signature.dbPostCode.toString()
+        holder.tvtown.text = signature.dbTown
+        holder.tvcountry.text = signature.dbCountry
     }
 
     override fun getItemCount(): Int {
@@ -44,9 +47,9 @@ class DetailsListAdapter(context: Context, private val signatuurList: List<Signa
         var tvroad: TextView? = itemView.findViewById(R.id.tvStraat)
         var tvhousenumber: TextView? = itemView.findViewById(R.id.tvHuisnumer)
         var tvdatum: TextView? = itemView.findViewById(R.id.tvDatum)
-        //var tvpostcode: TextView = itemView.findViewById(R.id.tvHuisnr)
-        //var tvtown: TextView = itemView.findViewById(R.id.tvHuisnr)
+        var tvpostcode: TextView = itemView.findViewById(R.id.tvpostcode)
+        var tvtown: TextView = itemView.findViewById(R.id.tvTown)
         //var tvneibhourhood: TextView = itemView.findViewById(R.id.tvHuisnr)
-        //var tvcountry: TextView = itemView.findViewById(R.id.tvHuisnr)
+        var tvcountry: TextView = itemView.findViewById(R.id.tvCountry)
     }
 }
