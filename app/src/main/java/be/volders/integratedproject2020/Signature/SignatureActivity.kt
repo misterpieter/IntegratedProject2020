@@ -24,7 +24,6 @@ import be.volders.integratedproject2020.Model.Student
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
 import okhttp3.*
-import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -83,7 +82,7 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
             path = saveImage(bitmap)
             databaseHelper!!.addStudent(saveStudent)
             val bytes = convertSignatur(bitmap)
-            databaseHelper!!.insetImage(bytes.toString(), saveStudent.name + "_" + saveStudent.lastname, saveStudent.snumber)
+            databaseHelper!!.insetImage(bytes, saveStudent.name + "_" + saveStudent.lastname, saveStudent.snumber)
             getLocation()
             Log.d("ST", "Signature ok!")
             intent = Intent(this, MainActivity::class.java)

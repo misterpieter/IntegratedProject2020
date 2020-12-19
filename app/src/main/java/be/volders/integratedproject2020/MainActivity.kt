@@ -1,13 +1,8 @@
 package be.volders.integratedproject2020
 
-import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.Location
-import android.location.LocationListener
 import android.location.LocationManager
-import android.os.AsyncTask
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,40 +10,22 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import be.volders.integratedproject2020.Admin.AdminActivity
 import be.volders.integratedproject2020.Helper.getStudentsFromLocalCSV
 import be.volders.integratedproject2020.Model.Address
 import be.volders.integratedproject2020.Model.Student
 import be.volders.integratedproject2020.Signature.SignatureActivity
-import com.beust.klaxon.JsonObject
-import com.beust.klaxon.Parser
 import kotlinx.android.synthetic.main.activity_main.*
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import java.lang.StringBuilder
-import java.net.URL
-import java.sql.Date
-import java.time.LocalDate
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var locationManager: LocationManager
-    private lateinit var tvGpsLocation: TextView
-    private lateinit var tvAddress: TextView
     private val locationPermissionCode = 2
     var parentView:View?=null
     private lateinit var adres : Address
-    private var lat : Double = 0.0
-    private var lon : Double = 0.0
     private lateinit var selectedStudent:Student
-    var databaseHelper: DatabaseHelpe? = DatabaseHelpe(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        var adres : Address
         // lijst hardcoded van studenten
         val studentList = ArrayList<Student>()
         studentList.add(Student( "Admin","Admin","pnumber","admin"))
@@ -61,7 +38,6 @@ class MainActivity : AppCompatActivity() {
         studentList.add(Student("Halima", "Rahimi","S425316","halima"))
         studentList.add(Student("Halima", "Rahimi","S425315","halima"))
 
-
         // lijst imported csv
         var sList = getStudentsFromLocalCSV(this)
         parentView = findViewById(R.id.parentView)
@@ -73,7 +49,6 @@ class MainActivity : AppCompatActivity() {
             selectedStudent = parent.getItemAtPosition(position) as Student
             Helper.hideKeyboard(parentView!!,this)
         }
-
 
         // LOGIN
         btnLogin.isEnabled = false

@@ -4,10 +4,13 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.util.Log
 import be.volders.integratedproject2020.Admin.AddressWithIdFirebase
 import be.volders.integratedproject2020.Model.Address
 import be.volders.integratedproject2020.Model.SignatureHelper
+import be.volders.integratedproject2020.Model.SignatureList
 import be.volders.integratedproject2020.Model.Student
 import java.time.LocalDate
 
@@ -57,7 +60,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         private val CREATE_TABLE_SIGNATURE = ( "CREATE TABLE IF not exists "
                 + TABLE_SIGNATURE + "(" + SIGNATURE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + SIGNATURE_NAME + " VARCHAR(20), "
-                + SIGNATURE_BITMAP + " TEXT , "
+                + SIGNATURE_BITMAP + " BLOB , "
                 + FK_LOCATION_ID + " INTEGER, "
                 + FK_STUDENT_ID + " VARCHAR(20), "
                 + " FOREIGN KEY( " + FK_STUDENT_ID + " ) REFERENCES " + TABLE_STUDENTS + " ( " + STUDENT_ID + " ), "
@@ -84,7 +87,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                         " left join "+TABLE_LOCATION+" as lo on st."+STUDENT_ID+" = lo."+FK_STUDENT_ID
                 )
         private  val GETSIGNATURE = (
-                "select s."+SIGNATURE_BITMAP+", l."+ ROAD+",  l."+HOUSE_NUMBER+", l."+POSTCODE+
+                "select s."+SIGNATURE_BITMAP+", l."+ ROAD+",  l."+HOUSE_NUMBER+", l."+POSTCODE+", l."+TIMESTAMP+
                         ", l."+TOWN+", l."+NEIGHBOURHOOD+", l."+COUNTRY+" from "+TABLE_SIGNATURE+" as s "+
                         "left join "+TABLE_LOCATION+" as l on l."+FK_STUDENT_ID+" = s."+FK_STUDENT_ID
                 )
@@ -135,16 +138,6 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         c.close()
         return studentList
     }
-
-    //TODO: fix error in cursor pointing to row 0 col -1 (cause => FK_LOCATION_ID column not in database)
-    /*
-        E/CursorWindow: Failed to read row 0, column -1 from a CursorWindow which has 13 rows, 4 columns.
-        D/AndroidRuntime: Shutting down VM
-        E/AndroidRuntime: FATAL EXCEPTION: main
-        Process: be.volders.integratedproject2020, PID: 18983
-        java.lang.IllegalStateException: Couldn't read row 0, col -1 from CursorWindow.  Make sure the Cursor is initialized correctly before accessing data from it.
-
-     */
     fun getAllSignatures() : ArrayList<SignatureHelper> {
         var signList = ArrayList<SignatureHelper>()
         var dbImageId : String
@@ -170,7 +163,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         return signList
     }
 
-    fun insetImage(dbBitmap: String, imageId: String?, studentNr: String): Boolean {
+    fun insetImage(dbBitmap: ByteArray, imageId: String?, studentNr: String): Boolean {
         val db = this.writableDatabase
         val values = ContentValues()
 
@@ -182,14 +175,6 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         db.close()
         return !result .equals( -1)
     }
-
-
-/*    private val ROAD = "road"
-    private val HOUSE_NUMBER = "house_number"
-    private val POSTCODE = "postcode"
-    private val TOWN = "town"
-    private val NEIGHBOURHOOD = "neighbourhood"
-    private val COUNTRY = "country"*/
 
     fun getAllLocationsWithId() : ArrayList<AddressWithIdFirebase> {
         val locationList = ArrayList<AddressWithIdFirebase>()
@@ -292,12 +277,12 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 Log.d("FIL", "afterTextChanged: ${s.name}")
             }while(c.moveToNext())
         }
+        db.close()
         return StudentList
     }
 
-
-    fun getSignatureForDetailsList(snumber: String): ArrayList<Signatur>  {
-        val signatureList = ArrayList<Signatur>()
+    fun getSignatureForDetailsList(snumber: String): ArrayList<SignatureList>  {
+        val signatureList = ArrayList<SignatureList>()
         var imageByteArray: ByteArray
         var dbRoad : String
         var dbHouseNubmer : Int
@@ -305,36 +290,29 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         var dbTown : String
         var dbNeibhourhood : String
         var dbCountry : String
+        var dbDatum: String
+        var i = 0
         val selectQuery = GETSIGNATURE+" where s."+FK_STUDENT_ID+" = '"+snumber+"'"
-
 
         val db = this.readableDatabase
         var c = db.rawQuery(selectQuery,null)
         if(c.moveToFirst()){
             do{
-                imageByteArray = c.getString(c.getColumnIndex(SIGNATURE_BITMAP)).toByteArray()
+                imageByteArray = c.getBlob(0)//c.getColumnIndex(SIGNATURE_BITMAP))
+                val img = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.size)
                 dbRoad = c.getString(c.getColumnIndex(ROAD))
                 dbHouseNubmer = c.getInt(c.getColumnIndex(HOUSE_NUMBER))
                 dbPostCode = c.getInt(c.getColumnIndex(POSTCODE))
                 dbTown = c.getString(c.getColumnIndex(TOWN))
                 dbNeibhourhood = c.getString(c.getColumnIndex(NEIGHBOURHOOD))
                 dbCountry = c.getString(c.getColumnIndex(COUNTRY))
-                var s = Signatur(imageByteArray,dbRoad,dbHouseNubmer,dbPostCode,dbTown,dbNeibhourhood,dbCountry)
+                dbDatum = c.getString(c.getColumnIndex(TIMESTAMP))
+                var s = SignatureList(img,dbRoad,dbHouseNubmer,dbPostCode,dbTown,dbNeibhourhood,dbCountry,dbDatum)
                 signatureList.add(s)
-                Log.d("sig", "adres: ${s.imageByteArray}")
+                Log.d("sig", "adres: ${s.imageByteArray.toString()}")
             }while(c.moveToNext())
         }
+        db.close()
         return signatureList
     }
 }
-
-class Signatur(
-
-        var imageByteArray: ByteArray,
-        var dbRoad : String,
-        var dbHouseNubmer : Int,
-        var dbPostCode : Int,
-        var dbTown : String,
-        var dbNeibhourhood : String,
-        var dbCountry : String
-)

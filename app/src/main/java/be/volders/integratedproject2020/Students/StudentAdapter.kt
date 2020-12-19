@@ -7,11 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import be.volders.integratedproject2020.DatabaseHelpe
-import be.volders.integratedproject2020.MainActivity
 import be.volders.integratedproject2020.Model.Student
 import be.volders.integratedproject2020.R
+import be.volders.integratedproject2020.StudentDetails.StudentDetailsActivity
 
 
 class StudentAdapter(context:Context, private val students: List<Student>) : RecyclerView.Adapter<StudentAdapter.ViewHolder>() {
@@ -37,7 +38,8 @@ class StudentAdapter(context:Context, private val students: List<Student>) : Rec
             Toast.makeText(context, "${student.snumber} clicked", Toast.LENGTH_SHORT).show()
             databaseHelper?.getSignatureForDetailsList(student.snumber)
             //Toast.makeText(context, "${student.snumber} clicked", Toast.LENGTH_SHORT).show()
-            val intent = Intent(context, MainActivity::class.java)
+            val intent = Intent(context, StudentDetailsActivity::class.java)
+            intent.putExtra("studentSnr",student.snumber)
             context.startActivity(intent)
         }
     }

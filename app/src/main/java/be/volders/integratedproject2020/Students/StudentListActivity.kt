@@ -33,19 +33,16 @@ class StudentListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListe
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_student_list)
 
-
         rvPersons = findViewById<RecyclerView>(R.id.rvPersons)
         rvPersons.layoutManager = LinearLayoutManager(this)
 
         studentlist = databaseHelper!!.getAllStudent()
-//        studentl = databaseHelper!!.filterStudent("2020-12-08")
         val spinner: Spinner = findViewById(R.id.spSorteren)
         val adapterSort = ArrayAdapter.createFromResource(
             this,
             R.array.sort_list,
             android.R.layout.simple_spinner_item
         )
-
         adapterSort.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner.adapter = adapterSort
         spinner.setOnItemSelectedListener(this)
@@ -61,12 +58,10 @@ class StudentListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListe
             val adapter = StudentAdapter(this, sortlist)
             rvPersons.adapter = adapter
         }
-
-        //databaseHelper!!.filterStudent()
-        //val studentList = getStudentsFromLocalCSV(this)
     }
+
     fun filter(f:String):Boolean{
-        var dateTrue: Boolean = true
+        var dateTrue = true
         val string = f //2017-07-25
 
         try {
@@ -78,15 +73,14 @@ class StudentListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListe
         }
         return dateTrue
     }
+
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         var etFilter = ettFilter.text.toString()
         when (position) {
             0 -> {
                 sortlist= studentlist.sortedWith(compareBy({it.lastname}))
-                //sortlist =  databaseHelper!!.filterStudent("firstname")
                 val adapter = StudentAdapter(this, sortlist)
                 rvPersons.adapter = adapter
-
             }
             1 -> { //lastname
                 sortlist= studentlist.sortedWith(compareBy({it.lastname}))
@@ -110,6 +104,4 @@ class StudentListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListe
         val adapter = StudentAdapter(this, studentlist)
         rvPersons.adapter = adapter
     }
-
-
 }
