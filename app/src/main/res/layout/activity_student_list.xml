@@ -36,7 +36,7 @@
         android:layout_width="298dp"
         android:layout_height="47dp"
         android:ems="10"
-        android:hint="filter op: firstname, lastname, snumber"
+        android:hint="17/12/2020"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -107,6 +107,14 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         onCreate(db)
     }
 
+    fun  clearDatabase(){
+        val db = this.readableDatabase
+        val selectQuery = "DROP TABLE "
+        db.execSQL(selectQuery+TABLE_LOCATION)
+        db.execSQL(selectQuery+TABLE_SIGNATURE)
+        db.execSQL(selectQuery+TABLE_STUDENTS)
+        db.close()
+    }
     fun addStudent(student: Student): Long{
         val db = this.writableDatabase
         val values = ContentValues().apply {
@@ -114,7 +122,9 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
             put(FIRSTNAME, student.name)
             put(LASTNAME, student.lastname)
         }
-        return db.insert(TABLE_STUDENTS, null, values)
+        val result = db.insert(TABLE_STUDENTS, null, values)
+        db.close()
+        return result
     }
 
     fun getAllStudent(): ArrayList<Student>{
@@ -127,9 +137,9 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         val c = db.rawQuery(selectQuery,null)
         if(c.moveToFirst()){
             do{
-                stname = c.getString(c.getColumnIndex(LASTNAME))
-                stfirstname = c.getString(c.getColumnIndex(FIRSTNAME))
-                stsnr = c.getString(c.getColumnIndex(STUDENT_ID))
+                stname = c.getString(c.getColumnIndex(LASTNAME))?:""
+                stfirstname = c.getString(c.getColumnIndex(FIRSTNAME))?:""
+                stsnr = c.getString(c.getColumnIndex(STUDENT_ID))?:""
 
                 val s : Student = Student(stname,stfirstname,stsnr, "password")
                 studentList.add(s)
@@ -138,6 +148,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         c.close()
         return studentList
     }
+
     fun getAllSignatures() : ArrayList<SignatureHelper> {
         var signList = ArrayList<SignatureHelper>()
         var dbImageId : String
@@ -235,7 +246,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         values.put(NEIGHBOURHOOD, adres.neighbourhood)
         values.put(COUNTRY, adres.county)
         db.update(TABLE_LOCATION, values, "location_id=" + adres.addressId, null)
-
+        db.close()
     }
 
     fun insertLocation(adres : Address): Boolean{

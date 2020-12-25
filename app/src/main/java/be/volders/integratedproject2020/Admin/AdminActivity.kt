@@ -29,13 +29,6 @@ class AdminActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_admin)
 
-
-
-//        btnExportCSV.isVisible = false
-//        btnImportCSV.isVisible = false
-//        btnShowAllStudents.isVisible = false
-
-
         btnExportCSV.setOnClickListener {
             Toast.makeText(this, "Nog niet geimplementeerd", Toast.LENGTH_SHORT).show()
         }
@@ -45,6 +38,8 @@ class AdminActivity : AppCompatActivity() {
             intent.addCategory(Intent.CATEGORY_OPENABLE)
             intent.type = "*/*"
             startActivityForResult(intent, REQUEST_CODE)
+            btnShowAllStudents.isEnabled = true
+            btnClearDB.isEnabled = true
         }
 
         btnShowAllStudents.setOnClickListener {
@@ -57,6 +52,12 @@ class AdminActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        btnClearDB.setOnClickListener{
+            databaseHelper?.clearDatabase()
+            Toast.makeText(this, "DB is leeg gemaakt", Toast.LENGTH_SHORT).show()
+            btnShowAllStudents.isEnabled = false
+            btnClearDB.isEnabled = false
+        }
 
         if (haveNetworkConnection()){
             btnSync.isEnabled = true
@@ -75,10 +76,7 @@ class AdminActivity : AppCompatActivity() {
             UpdateAddresses()
             Toast.makeText(this, "Succesfully updated locations", Toast.LENGTH_SHORT).show()
         }
-
-
     }
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -112,7 +110,6 @@ class AdminActivity : AppCompatActivity() {
             }
         }
     }
-
 
     //Use reverse search to save streetname and update the in the database
     private fun UpdateAdress(location : AddressWithIdFirebase)  /* : AddressWithIdFirebase */ {
@@ -151,8 +148,6 @@ class AdminActivity : AppCompatActivity() {
         client.dispatcher.executorService.shutdown()
     }
 
-
-
     //Checks if connectedvia WIFI or Mobile to Internet
     private fun haveNetworkConnection(): Boolean {
         var haveConnectedWifi = false
@@ -173,29 +168,4 @@ class AdminActivity : AppCompatActivity() {
         }
         return haveConnectedWifi || haveConnectedMobile
     }
-
-
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
-//            try {
-//                data?.data?.let {
-//                    contentResolver.openInputStream(it)
-//                }?.let {
-//                    val r = BufferedReader(InputStreamReader(it))
-//                    while (true) {
-//                        val line: String? = r.readLine() ?: break
-//                        println(line)
-//                    }
-//                }
-//            } catch (e: Exception) {
-//                Toast.makeText(
-//                        this,
-//                        "Probleem bij het lezen van het bestand",
-//                        Toast.LENGTH_SHORT
-//                ).show()
-//            }
-//        }
-//    }
-
 }

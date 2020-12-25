@@ -29,6 +29,18 @@
 
 
     <Button
+        android:id="@+id/btnClearDB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="404dp"
+        android:text="Clean DB"
+        android:enabled="false"
+        app:layout_constraintHorizontal_bias="0.517"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/Welcome" />
+
+    <Button
         android:id="@+id/btnExportCSV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -45,6 +57,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="Show Student List"
+        android:enabled="false"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnExportCSV" />
@@ -74,17 +87,14 @@
         />
 
 
-
-
-
     <Button
         android:id="@+id/btnHome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="28dp"
         android:text="Home"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginBottom="50dp"
-        />
+        app:layout_constraintRight_toRightOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

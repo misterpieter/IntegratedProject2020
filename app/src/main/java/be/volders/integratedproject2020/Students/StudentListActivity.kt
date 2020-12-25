@@ -25,7 +25,7 @@ lateinit var etFilter: String
 lateinit var rvPersons: RecyclerView
 lateinit var sortlist: List<Student>
 lateinit var studentlist : ArrayList<Student>
-lateinit var studentl : ArrayList<Student>
+lateinit var result : ArrayList<Student>
 
 class StudentListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     var databaseHelper: DatabaseHelpe? = DatabaseHelpe(this)
@@ -49,14 +49,20 @@ class StudentListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListe
 
         btfilter = findViewById(R.id.btFilter)
         btfilter?.setOnClickListener{
-            etFilter = ettFilter.text.toString()
-            if(filter(etFilter)){
-                sortlist = databaseHelper!!.filterStudent(etFilter)
+            result = databaseHelper!!.filterStudent(etFilter)
+            if(result.size != null){
+                etFilter = ettFilter.text.toString()
+                if(filter(etFilter)){
+                    sortlist = databaseHelper!!.filterStudent(etFilter)
+                }else{
+                    sortlist=  studentlist.filter { x -> x.name == etFilter || x.lastname == etFilter || x.snumber == etFilter }
+                }
+                val adapter = StudentAdapter(this, sortlist)
+                rvPersons.adapter = adapter
             }else{
-                sortlist=  studentlist.filter { x -> x.name == etFilter || x.lastname == etFilter || x.snumber == etFilter }
+                Toast.makeText(this, "Zijn geen studenten", Toast.LENGTH_SHORT).show()
             }
-            val adapter = StudentAdapter(this, sortlist)
-            rvPersons.adapter = adapter
+
         }
     }
 
