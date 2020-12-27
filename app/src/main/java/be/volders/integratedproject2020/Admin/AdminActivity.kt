@@ -88,6 +88,8 @@ class AdminActivity : AppCompatActivity() {
                     dataString = loadDataFromIntent(it)!!
                     getStudentsFromCSVString(dataString)
                     Toast.makeText(this, "CSV is ingeladen", Toast.LENGTH_SHORT).show()
+                    Log.e("getCSV", dataString
+                    )
                 }
 
             } catch (e: Exception) {
