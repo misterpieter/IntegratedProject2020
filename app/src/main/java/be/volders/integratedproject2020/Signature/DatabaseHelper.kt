@@ -3,10 +3,12 @@ package be.volders.integratedproject2020
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
+import android.database.sqlite.SQLiteException
 import android.database.sqlite.SQLiteOpenHelper
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
+import android.widget.Toast
 import be.volders.integratedproject2020.Admin.AddressWithIdFirebase
 import be.volders.integratedproject2020.Model.Address
 import be.volders.integratedproject2020.Model.SignatureHelper
@@ -109,11 +111,16 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
 
     fun  clearDatabase(){
         val db = this.readableDatabase
-        val selectQuery = "DROP TABLE "
+        val selectQuery = "DROP TABLE IF EXISTS "
         db.execSQL(selectQuery+TABLE_LOCATION)
         db.execSQL(selectQuery+TABLE_SIGNATURE)
         db.execSQL(selectQuery+TABLE_STUDENTS)
+        onCreate(db)
         db.close()
+    }
+
+    fun tabelexist(tabel: String){
+
     }
     fun addStudent(student: Student): Long{
         val db = this.writableDatabase
@@ -133,19 +140,24 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         var stfirstname:String
         var stsnr:String
         val selectQuery ="SELECT * FROM $TABLE_STUDENTS"
-        val db = this.readableDatabase
-        val c = db.rawQuery(selectQuery,null)
-        if(c.moveToFirst()){
-            do{
-                stname = c.getString(c.getColumnIndex(LASTNAME))?:""
-                stfirstname = c.getString(c.getColumnIndex(FIRSTNAME))?:""
-                stsnr = c.getString(c.getColumnIndex(STUDENT_ID))?:""
+        try {
+            val db = this.readableDatabase
+            val c = db.rawQuery(selectQuery,null)
+            if(c.moveToFirst()){
+                do{
+                    stname = c.getString(c.getColumnIndex(LASTNAME))?:""
+                    stfirstname = c.getString(c.getColumnIndex(FIRSTNAME))?:""
+                    stsnr = c.getString(c.getColumnIndex(STUDENT_ID))?:""
 
-                val s : Student = Student(stname,stfirstname,stsnr, "password")
-                studentList.add(s)
-            }while(c.moveToNext())
+                    val s : Student = Student(stname,stfirstname,stsnr, "password")
+                    studentList.add(s)
+                }while(c.moveToNext())
+            }
+            c.close()
+        }catch (e: SQLiteException){
+
         }
-        c.close()
+
         return studentList
     }
 
@@ -277,19 +289,24 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         var stfirstname:String
         var stsnr:String
         val selectQuery = JOIN+" where lo.locationTime = '"+datum+"' ORDER BY st.firstname"
-        val db = this.readableDatabase
-        var c = db.rawQuery(selectQuery,null)
-        if(c.moveToFirst()){
-            do{
-                stname = c.getString(c.getColumnIndex(LASTNAME))
-                stfirstname = c.getString(c.getColumnIndex(FIRSTNAME))
-                stsnr = c.getString(c.getColumnIndex(STUDENT_ID))
-                var s = Student(stname,stfirstname,stsnr,"password") //PASSWORD MAG WEG
-                StudentList.add(s)
-                Log.d("FIL", "afterTextChanged: ${s.name}")
-            }while(c.moveToNext())
+        try {
+            val db = this.readableDatabase
+            var c = db.rawQuery(selectQuery,null)
+            if(c.moveToFirst()){
+                do{
+                    stname = c.getString(c.getColumnIndex(LASTNAME))
+                    stfirstname = c.getString(c.getColumnIndex(FIRSTNAME))
+                    stsnr = c.getString(c.getColumnIndex(STUDENT_ID))
+                    var s = Student(stname,stfirstname,stsnr,"password") //PASSWORD MAG WEG
+                    StudentList.add(s)
+                    Log.d("FIL", "afterTextChanged: ${s.name}")
+                }while(c.moveToNext())
+            }
+            db.close()
+        }catch (e: SQLiteException){
+
         }
-        db.close()
+
         return StudentList
     }
 

@@ -51,13 +51,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         // LOGIN
-        btnLogin.isEnabled = false
+        //btnLogin.isEnabled = false
 
         btnLogin?.setOnClickListener {
             var password:String = etPassword.text.toString()
-            var boolAdmin = selectedStudent.name == "Admin"
-
-            if (!boolAdmin && selectedStudent.password == password){
+            var studentname = selectedStudent.name
+            var boolAdmin = studentname == "Admin"
+            //not admin
+            if (!boolAdmin ){
                 intent = Intent(this, SignatureActivity::class.java)
                 intent.putExtra("studentSnr",selectedStudent.snumber)
                 intent.putExtra("studentFirstname",selectedStudent.name)
@@ -74,13 +75,13 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "ADMIN", Toast.LENGTH_SHORT).show()
             }
             else {
-                Toast.makeText(this, "FOUTE INPUT! (${password} (fout) - ${selectedStudent.password} (correct)", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "FOUTE INPUT!", Toast.LENGTH_SHORT).show()
             }
         }
 
         // DEV  => visibility in comment zetten
 
-        etPassword.addTextChangedListener(textWatcher)
+        //etPassword.addTextChangedListener(textWatcher)
 
         btnAdmin.setOnClickListener {
             intent = Intent(this, AdminActivity::class.java)
@@ -94,7 +95,7 @@ class MainActivity : AppCompatActivity() {
 
 
     }
-
+/*
     private val textWatcher = object : TextWatcher {
 
         override fun afterTextChanged(s: Editable?) {
@@ -109,11 +110,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun isPasswordEmpty(string:String, minimumPasswordLength:Int = 5) {
+    private fun isPasswordEmpty(string:String, minimumPasswordLength:Int = 0) {
         var length = string.trim().length
         btnLogin.isEnabled = length >= minimumPasswordLength
     }
-
+*/
     private fun resetPage(){
         btnLogin.isEnabled = false
         actvStudents.setText("")

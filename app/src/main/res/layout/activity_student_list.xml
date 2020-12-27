@@ -33,29 +33,26 @@
 
     <EditText
         android:id="@+id/ettFilter"
-        android:layout_width="298dp"
-        android:layout_height="47dp"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
         android:ems="10"
         android:hint="17/12/2020"
         android:inputType="textPersonName"
+        android:text="17/12/2020"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.023"
+        app:layout_constraintEnd_toStartOf="@+id/btFilter"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.118" />
+        app:layout_constraintVertical_bias="0.117" />
 
     <Button
         android:id="@+id/btFilter"
-        android:layout_width="88dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="22dp"
+        android:layout_width="104dp"
+        android:layout_height="48dp"
         android:text="Button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/ettFilter"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.111" />
+        app:layout_constraintVertical_bias="0.118" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

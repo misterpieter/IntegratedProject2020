@@ -182,7 +182,7 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
                         address["neighbourhood"]?.toString(),
                         address["county"]?.toString()
                 )
-                Log.d("TAG", "Address object:\n$adres")
+                Log.d("TAG", "Address object:\n${adres.date}")
                 databaseHelper?.insertLocation(adres)
                 //tvAddress.text = adres.toString()
             }catch (e: Exception){

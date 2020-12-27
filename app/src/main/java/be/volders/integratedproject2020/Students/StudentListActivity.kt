@@ -1,5 +1,6 @@
 package be.volders.integratedproject2020.Students
 
+import android.database.sqlite.SQLiteException
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -48,23 +49,23 @@ class StudentListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListe
         spinner.setOnItemSelectedListener(this)
 
         btfilter = findViewById(R.id.btFilter)
-        btfilter?.setOnClickListener{
-            result = databaseHelper!!.filterStudent(etFilter)
-            if(result.size != null){
+            btfilter?.setOnClickListener{
                 etFilter = ettFilter.text.toString()
-                if(filter(etFilter)){
-                    sortlist = databaseHelper!!.filterStudent(etFilter)
+                result = databaseHelper!!.filterStudent(etFilter)
+                if(result.size != 0){
+                    if(filter(etFilter)){
+                        sortlist = databaseHelper!!.filterStudent(etFilter)
+                    }else{
+                        sortlist=  studentlist.filter { x -> x.name == etFilter || x.lastname == etFilter || x.snumber == etFilter }
+                    }
+                    val adapter = StudentAdapter(this, sortlist)
+                    rvPersons.adapter = adapter
                 }else{
-                    sortlist=  studentlist.filter { x -> x.name == etFilter || x.lastname == etFilter || x.snumber == etFilter }
+                    Toast.makeText(this, "Zijn geen studenten", Toast.LENGTH_SHORT).show()
                 }
-                val adapter = StudentAdapter(this, sortlist)
-                rvPersons.adapter = adapter
-            }else{
-                Toast.makeText(this, "Zijn geen studenten", Toast.LENGTH_SHORT).show()
-            }
 
+            }
         }
-    }
 
     fun filter(f:String):Boolean{
         var dateTrue = true
