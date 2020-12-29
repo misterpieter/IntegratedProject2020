@@ -16,6 +16,10 @@ Crash lat en Lon bij afwezigheid van wifi/mobile oplossen: JONAS
 
 
 
+
+
+
+
 SAMENVATTING
 voormalig “I was there” (app om een student in te loggen met handtekening)
 
