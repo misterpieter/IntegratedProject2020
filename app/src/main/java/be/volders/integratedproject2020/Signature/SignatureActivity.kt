@@ -14,6 +14,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -48,6 +49,7 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
     private var lon : Double = 0.0
     private lateinit var adres : Address
     private var snumber:String = ""
+    private var sigAndLocationLink = UUID.randomUUID()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         //var databaseHelper: DatabaseHelpe? = DatabaseHelpe(this)
@@ -77,12 +79,15 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
             StrokeManager.clear()
         }
         btnStore.setOnClickListener{
+
+            //sigAndLocationLink = UUID.randomUUID()
+
             snumber = saveStudent.snumber
             bitmap = drawingView.drawToBitmap()
             path = saveImage(bitmap)
             databaseHelper!!.addStudent(saveStudent)
             val bytes = convertSignatur(bitmap)
-            databaseHelper!!.insetImage(bytes, saveStudent.name + "_" + saveStudent.lastname, saveStudent.snumber)
+            databaseHelper!!.insetImage(bytes, saveStudent.name + "_" + saveStudent.lastname, saveStudent.snumber, sigAndLocationLink.toString())
             getLocation()
             Log.d("ST", "Signature ok!")
             intent = Intent(this, MainActivity::class.java)
@@ -169,19 +174,15 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
 
             // getAddressDisplayName(lat, lon)
 
+
+
             try {
                 adres = Address(
                         lat,
                         lon,
                         LocalDate.now(),
-                        snumber
-                   /*     ,
-                        address["road"]?.toString(),
-                        address["house_number"]?.toString()?.toInt(),
-                        address["postcode"]?.toString()?.toInt(),
-                        address["town"]?.toString(),
-                        address["neighbourhood"]?.toString(),
-                        address["county"]?.toString()*/
+                        snumber,
+                        sigAndLocationLink.toString()
                 )
                 Log.d("TAG", "Address object:\n${adres.date}")
                 databaseHelper?.insertLocation(adres)

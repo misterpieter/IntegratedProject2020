@@ -39,6 +39,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         private val SIGNATURE_BITMAP = "signature_bitmap"
         private val FK_STUDENT_ID = "fk_student_id"
         private val FK_LOCATION_ID = "fk_location_id"
+        private val LOCATION_LINK = "location_link"
 
         //LOCATIE
         private val LOCATION_ID = "location_id"
@@ -51,6 +52,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         private val TOWN = "town"
         private val NEIGHBOURHOOD = "neighbourhood"
         private val COUNTRY = "country"
+        private val SIGNATURE_LINK = "signature_link"
 
         val selectQuery = "SELECT + FROM $TABLE_STUDENTS"
         private val CREATE_TABLE_STUDENTS = ("CREATE TABLE IF not exists "
@@ -65,6 +67,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 + SIGNATURE_BITMAP + " BLOB , "
                 + FK_LOCATION_ID + " INTEGER, "
                 + FK_STUDENT_ID + " VARCHAR(20), "
+                + LOCATION_LINK + " VARCHAR(50), "
                 + " FOREIGN KEY( " + FK_STUDENT_ID + " ) REFERENCES " + TABLE_STUDENTS + " ( " + STUDENT_ID + " ), "
                 + " FOREIGN KEY( " + FK_LOCATION_ID + " ) REFERENCES " + TABLE_LOCATION + " ( " + LOCATION_ID + " ));"
                 )
@@ -80,7 +83,8 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 + TOWN + " VARCHAR(40), "
                 + NEIGHBOURHOOD + " VARCHAR(40), "
                 + COUNTRY + " VARCHAR(40), "
-                + FK_STUDENT_ID + " VARCHAR(20),"
+                + SIGNATURE_LINK + " VARCHAR(50), "
+                + FK_STUDENT_ID + " VARCHAR(20), "
                 + " FOREIGN KEY( " + FK_STUDENT_ID + " ) REFERENCES " + TABLE_STUDENTS + " ( " + STUDENT_ID + " ));"
                 )
         private val JOIN = (
@@ -166,7 +170,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         var dbImageId : String
         var dbImageByteArray : ByteArray
         var fkStudent : String
-        var fkAddress : Int
+        var locationLink: String
 
 
         val selectQuery ="SELECT * FROM $TABLE_SIGNATURE"
@@ -176,12 +180,9 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
             do{
                 dbImageId = c.getString(c.getColumnIndex(SIGNATURE_ID))
                 dbImageByteArray = c.getBlob(c.getColumnIndex(SIGNATURE_BITMAP))//c.getColumnIndex(SIGNATURE_BITMAP))
-              //  val img = BitmapFactory.decodeByteArray(dbImageByteArray, 0, dbImageByteArray.size)
-
-                //dbImageByteArray = c.getString(c.getColumnIndex(SIGNATURE_BITMAP)).toByteArray()
                 fkStudent = c.getString(c.getColumnIndex(FK_STUDENT_ID))
-                fkAddress = c.getInt(c.getColumnIndex(FK_LOCATION_ID))
-                var signature = SignatureHelper(dbImageId, dbImageByteArray ,fkStudent,fkAddress)
+                locationLink = c.getString(c.getColumnIndex(LOCATION_LINK))
+                var signature = SignatureHelper(dbImageId, dbImageByteArray ,fkStudent, locationLink)
                 signList.add(signature)
             }while(c.moveToNext())
         }
@@ -189,13 +190,14 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         return signList
     }
 
-    fun insetImage(dbBitmap: ByteArray, imageId: String?, studentNr: String): Boolean {
+    fun insetImage(dbBitmap: ByteArray, imageId: String?, studentNr: String, locationLink: String): Boolean {
         val db = this.writableDatabase
         val values = ContentValues()
 
         values.put(SIGNATURE_NAME, imageId)
         values.put(FK_STUDENT_ID, studentNr)
         values.put(SIGNATURE_BITMAP, dbBitmap)
+        values.put(LOCATION_LINK, locationLink)
 
         val result = db.insert(TABLE_SIGNATURE, null, values)
         db.close()
@@ -217,6 +219,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         var dbTown : String
         var dbNeibhourhood : String
         var dbCountry : String
+        var signatureLink : String
 
         val selectQuery ="SELECT * FROM $TABLE_LOCATION"
         val db = this.readableDatabase
@@ -235,9 +238,10 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 dbTown = c.getString(c.getColumnIndex(TOWN))
                 dbNeibhourhood = c.getString(c.getColumnIndex(NEIGHBOURHOOD))
                 dbCountry = c.getString(c.getColumnIndex(COUNTRY))
+                signatureLink = c.getString(c.getColumnIndex(SIGNATURE_LINK))
 
 
-                val location = AddressWithIdFirebase(dbLocId, dbLat, dbLon, date, fkSnumber, dbRoad, dbHouseNubmer, dbPostCode, dbTown, dbNeibhourhood, dbCountry)
+                val location = AddressWithIdFirebase(dbLocId, dbLat, dbLon, date, fkSnumber , signatureLink, dbRoad, dbHouseNubmer, dbPostCode, dbTown, dbNeibhourhood, dbCountry)
                 locationList.add(location)
             }while(c.moveToNext())
         }
@@ -278,6 +282,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         values.put(TOWN, adres.town)
         values.put(NEIGHBOURHOOD, adres.neighbourhood)
         values.put(COUNTRY, adres.county)
+        values.put(SIGNATURE_LINK, adres.signatureLink)
 
         val result = db.insert(TABLE_LOCATION, null, values)
         Log.d("FIL", "location opgeslagen: ${values}")
