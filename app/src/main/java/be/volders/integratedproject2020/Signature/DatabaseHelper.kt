@@ -175,10 +175,13 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         if(c.moveToFirst()){
             do{
                 dbImageId = c.getString(c.getColumnIndex(SIGNATURE_ID))
-                dbImageByteArray = c.getString(c.getColumnIndex(SIGNATURE_BITMAP)).toByteArray()
+                dbImageByteArray = c.getBlob(c.getColumnIndex(SIGNATURE_BITMAP))//c.getColumnIndex(SIGNATURE_BITMAP))
+              //  val img = BitmapFactory.decodeByteArray(dbImageByteArray, 0, dbImageByteArray.size)
+
+                //dbImageByteArray = c.getString(c.getColumnIndex(SIGNATURE_BITMAP)).toByteArray()
                 fkStudent = c.getString(c.getColumnIndex(FK_STUDENT_ID))
                 fkAddress = c.getInt(c.getColumnIndex(FK_LOCATION_ID))
-                var signature = SignatureHelper(dbImageId,dbImageByteArray,fkStudent,fkAddress)
+                var signature = SignatureHelper(dbImageId, dbImageByteArray ,fkStudent,fkAddress)
                 signList.add(signature)
             }while(c.moveToNext())
         }
@@ -196,7 +199,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
 
         val result = db.insert(TABLE_SIGNATURE, null, values)
         db.close()
-        return !result .equals( -1)
+        return !result.equals( -1)
     }
 
     fun getAllLocationsWithId() : ArrayList<AddressWithIdFirebase> {

@@ -39,7 +39,6 @@ class AdminActivity : AppCompatActivity() {
             intent.type = "*/*"
             startActivityForResult(intent, REQUEST_CODE)
             btnShowAllStudents.isEnabled = true
-            btnClearDB.isEnabled = true
         }
 
         btnShowAllStudents.setOnClickListener {
@@ -56,7 +55,6 @@ class AdminActivity : AppCompatActivity() {
             databaseHelper?.clearDatabase()
             Toast.makeText(this, "DB is leeg gemaakt", Toast.LENGTH_SHORT).show()
             btnShowAllStudents.isEnabled = false
-            btnClearDB.isEnabled = false
         }
 
         if (haveNetworkConnection()){

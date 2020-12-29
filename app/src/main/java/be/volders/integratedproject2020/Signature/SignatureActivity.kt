@@ -174,13 +174,14 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
                         lat,
                         lon,
                         LocalDate.now(),
-                        snumber,
+                        snumber
+                   /*     ,
                         address["road"]?.toString(),
                         address["house_number"]?.toString()?.toInt(),
                         address["postcode"]?.toString()?.toInt(),
                         address["town"]?.toString(),
                         address["neighbourhood"]?.toString(),
-                        address["county"]?.toString()
+                        address["county"]?.toString()*/
                 )
                 Log.d("TAG", "Address object:\n${adres.date}")
                 databaseHelper?.insertLocation(adres)
