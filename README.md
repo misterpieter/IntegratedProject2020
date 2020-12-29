@@ -2,24 +2,17 @@ Integrated Project 2020
 
 
 TO DO:
-- Data lokaal wegschrijven, hoe je de sign kunt opslaan (SQLight of JSON via Shared Preferences ) - HALIMA
-- Firebase synchronisatie - JONAS
 
-- CSV/XLS/JSON importeren / exporteren
-- Lokaal inloggen
-- Detail lijst van studenten: handtekening - locatie - datum - (suspecion level)
-- Opzoeken mogelijkheid tot machine learning voor handtekeningen
-- TablevIew van studenten in Admin pagina met zoek/filter/order (filteren - halima)
-- Open van bestandsbeheer -> file zoeken om in te laden
+Paswoord weg bij student: PIETER
+Signature risico JONAS
+PAD LAYOUT aanpassen: PIETER
+Bij importeren csv: automatisch lokaal opslaan: HALIMA en PIETER
+Exporteren van de lijst in xls + csv: PIETER en HALIMA
 
-
-DATA/MODEL:
-Student:  (id:Long) - studentnr:String - name:String - list<Autograph>
-Autograph: (id:Long) - image:BLOB (of BASE64 string?) - date: Date - suspicionLevel:Enm
-suspicionLevel: notRelevant - low  - high
-
-
-
+BUG : 
+detail Listview student heeft duplicaten
+Obama crash oplossen: JONAS
+Crash lat en Lon bij afwezigheid van wifi/mobile oplossen: JONAS
 
 
 
