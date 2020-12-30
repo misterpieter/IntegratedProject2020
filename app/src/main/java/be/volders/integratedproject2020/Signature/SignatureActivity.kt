@@ -59,13 +59,12 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
 
         val saveStudent = Student(intent.getStringExtra("studentFirstname").toString(),
                 intent.getStringExtra("studentLastname").toString(),
-                intent.getStringExtra("studentSnr").toString(), "halima")
+                intent.getStringExtra("studentSnr").toString())
 
         btnStore = findViewById(R.id.buttonSave)
         recognize = findViewById(R.id.recognize)
         clear = findViewById(R.id.clear)
         drawingView = findViewById(R.id.drawingView)
-
 
         recognize.setOnClickListener {
             StrokeManager.recognize(this)
@@ -80,11 +79,10 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
             snumber = saveStudent.snumber
             bitmap = drawingView.drawToBitmap()
             path = saveImage(bitmap)
-            databaseHelper!!.addStudent(saveStudent)
+            //databaseHelper!!.addStudent(saveStudent)
             val bytes = convertSignatur(bitmap)
             databaseHelper!!.insetImage(bytes, saveStudent.name + "_" + saveStudent.lastname, saveStudent.snumber)
             getLocation()
-            Log.d("ST", "Signature ok!")
             intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
@@ -160,27 +158,22 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
 
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
-
             val jsonString = StringBuilder(result!!)
-
             val parser: Parser = Parser.default()
             val obj = parser.parse(jsonString) as JsonObject
-            val address = obj["address"] as JsonObject
-
-            // getAddressDisplayName(lat, lon)
-
+           // val address = obj["address"] as JsonObject
             try {
                 adres = Address(
                         lat,
                         lon,
                         LocalDate.now(),
-                        snumber,
-                        address["road"]?.toString(),
+                        snumber
+                      /*  address["road"]?.toString(),
                         address["house_number"]?.toString()?.toInt(),
                         address["postcode"]?.toString()?.toInt(),
                         address["town"]?.toString(),
-                        address["neighbourhood"]?.toString(),
-                        address["county"]?.toString()
+                        address["neighbourhood"]?.toString()?:"no data",
+                        address["county"]?.toString()*/
                 )
                 Log.d("TAG", "Address object:\n${adres.date}")
                 databaseHelper?.insertLocation(adres)

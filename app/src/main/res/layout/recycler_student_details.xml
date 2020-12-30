@@ -15,8 +15,8 @@
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="286dp"
-            android:layout_height="141dp"
+            android:layout_width="243dp"
+            android:layout_height="185dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_launcher_foreground"
@@ -75,8 +75,8 @@
 
         <TextView
             android:id="@+id/tvCountry"
-            android:layout_width="157dp"
-            android:layout_height="35dp"
+            android:layout_width="199dp"
+            android:layout_height="34dp"
             android:text="country"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"

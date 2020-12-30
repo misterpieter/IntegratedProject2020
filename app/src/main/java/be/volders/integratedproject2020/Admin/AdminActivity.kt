@@ -11,6 +11,7 @@ import be.volders.integratedproject2020.DatabaseHelpe
 import be.volders.integratedproject2020.Helper.getStudentsFromCSVString
 import be.volders.integratedproject2020.Helper.loadDataFromIntent
 import be.volders.integratedproject2020.MainActivity
+import be.volders.integratedproject2020.Model.Student
 import be.volders.integratedproject2020.R
 import be.volders.integratedproject2020.Students.StudentListActivity
 import kotlinx.android.synthetic.main.activity_admin.*
@@ -39,7 +40,6 @@ class AdminActivity : AppCompatActivity() {
             intent.type = "*/*"
             startActivityForResult(intent, REQUEST_CODE)
             btnShowAllStudents.isEnabled = true
-            btnClearDB.isEnabled = true
         }
 
         btnShowAllStudents.setOnClickListener {
@@ -56,7 +56,6 @@ class AdminActivity : AppCompatActivity() {
             databaseHelper?.clearDatabase()
             Toast.makeText(this, "DB is leeg gemaakt", Toast.LENGTH_SHORT).show()
             btnShowAllStudents.isEnabled = false
-            btnClearDB.isEnabled = false
         }
 
         if (haveNetworkConnection()){
@@ -86,10 +85,23 @@ class AdminActivity : AppCompatActivity() {
                     contentResolver.openInputStream(it)
                 }?.let {
                     dataString = loadDataFromIntent(it)!!
-                    getStudentsFromCSVString(dataString)
+
+                    var str = getStudentsFromCSVString(dataString)
+                    for(s in str){
+                        Log.d("getCSV", s.name)
+                        val firstname = s.name
+                        val lasstname = s.lastname
+                        val snr = s.snumber
+                        val saveStudent = Student(firstname, lasstname,snr)
+                        databaseHelper!!.addStudent(saveStudent)
+                    }
+                    /*
+                    var str = dataString.split(",").toTypedArray()
+                    for(s in str){
+
+
+                    }*/
                     Toast.makeText(this, "CSV is ingeladen", Toast.LENGTH_SHORT).show()
-                    Log.e("getCSV", dataString
-                    )
                 }
 
             } catch (e: Exception) {
