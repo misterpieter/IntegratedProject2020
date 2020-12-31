@@ -53,6 +53,10 @@ class DrawingView @JvmOverloads constructor(
             }
         }
         StrokeManager.addNewTouchEvent(event)
+        //TODO: IMPLEMENT VECTOR COUNT
+        // here it'll show the ammount of movements. Sort of a vector amount
+        println("Wubba lubba dubdub: vectorCount ")
+
         invalidate()
         return true
     }

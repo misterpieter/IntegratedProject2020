@@ -83,6 +83,7 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
             //sigAndLocationLink = UUID.randomUUID()
 
             snumber = saveStudent.snumber
+
             bitmap = drawingView.drawToBitmap()
             path = saveImage(bitmap)
             databaseHelper!!.addStudent(saveStudent)
