@@ -35,9 +35,6 @@ object StrokeManager {
                 inkBuilder.addStroke(strokeBuilder.build())
                 strokeBuilder = Ink.Stroke.builder()
 
-                //TODO: ammount of releases
-                println("Wubba lubba dubdub: I just released a moving stroke pendrop")
-
                 releases++
 
             }

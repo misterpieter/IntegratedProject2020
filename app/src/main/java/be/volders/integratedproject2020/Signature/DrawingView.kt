@@ -55,12 +55,11 @@ class DrawingView @JvmOverloads constructor(
             else -> {
             }
         }
+        // Is to count releases
         releaseCounter = StrokeManager.addNewTouchEvent(event, releaseCounter)
-        //TODO: IMPLEMENT VECTOR COUNT
         // here it'll show the ammount of movements. Sort of a vector amount
         vectorCounter++
         Log.d("VECTORCOUNTER", "vectorcounter : $vectorCounter")
-
         Log.d("RELEASECOUNTER", "releasecounter: $releaseCounter")
 
 
@@ -97,4 +96,13 @@ class DrawingView @JvmOverloads constructor(
             canvasBitmap.height
         )
     }
+
+    fun getReleaseCounter() : Int {
+        return releaseCounter
+    }
+
+    fun getVectorCounter() : Int {
+        return vectorCounter
+    }
+
 }
