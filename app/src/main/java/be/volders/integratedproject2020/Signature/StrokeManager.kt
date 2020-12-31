@@ -15,11 +15,12 @@ object StrokeManager {
     private var strokeBuilder = Ink.Stroke.builder()
     private lateinit var model: DigitalInkRecognitionModel
 
-    fun addNewTouchEvent(event: MotionEvent) {
+    fun addNewTouchEvent(event: MotionEvent, releaseCounter : Int) : Int  {
         val action = event.actionMasked
         val x = event.x
         val y = event.y
         val t = System.currentTimeMillis()
+        var releases = releaseCounter
 
         when (action) {
             MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> strokeBuilder.addPoint(
@@ -37,13 +38,16 @@ object StrokeManager {
                 //TODO: ammount of releases
                 println("Wubba lubba dubdub: I just released a moving stroke pendrop")
 
-
+                releases++
 
             }
             else -> {
                 // Action not relevant for ink construction
             }
         }
+
+        return releases
+
     }
 
     fun download() {
