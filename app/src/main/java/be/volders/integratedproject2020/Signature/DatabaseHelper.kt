@@ -10,10 +10,7 @@ import android.graphics.BitmapFactory
 import android.util.Log
 import android.widget.Toast
 import be.volders.integratedproject2020.Admin.AddressWithIdFirebase
-import be.volders.integratedproject2020.Model.Address
-import be.volders.integratedproject2020.Model.SignatureHelper
-import be.volders.integratedproject2020.Model.SignatureList
-import be.volders.integratedproject2020.Model.Student
+import be.volders.integratedproject2020.Model.*
 import java.time.LocalDate
 
 
@@ -358,4 +355,24 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         db.close()
         return signatureList
     }
+
+    /*fun getFirstSignature(snumber: String): SignatureCheck {
+        var imageId: String?,
+        var imageByteArray: ByteArray,
+        var fkStudent: String,
+        var releaseCounter: Int,
+        var vectorCounter: Int
+
+        val selectQuery = "SELECT * FROM " + TABLE_SIGNATURE + " WHERE " + FK_STUDENT_ID + " = " + snumber
+
+
+
+
+
+
+
+
+    }*/
+
+
 }
