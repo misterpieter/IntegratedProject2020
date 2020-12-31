@@ -40,6 +40,8 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         private val FK_STUDENT_ID = "fk_student_id"
         private val FK_LOCATION_ID = "fk_location_id"
         private val LOCATION_LINK = "location_link"
+        private val RELEASE_COUNT = "release_count"
+        private val VECTOR_COUNT = "vector_count"
 
         //LOCATIE
         private val LOCATION_ID = "location_id"
@@ -68,6 +70,8 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 + FK_LOCATION_ID + " INTEGER, "
                 + FK_STUDENT_ID + " VARCHAR(20), "
                 + LOCATION_LINK + " VARCHAR(50), "
+                + RELEASE_COUNT + " INTEGER, "
+                + VECTOR_COUNT + " INTEGER, "
                 + " FOREIGN KEY( " + FK_STUDENT_ID + " ) REFERENCES " + TABLE_STUDENTS + " ( " + STUDENT_ID + " ), "
                 + " FOREIGN KEY( " + FK_LOCATION_ID + " ) REFERENCES " + TABLE_LOCATION + " ( " + LOCATION_ID + " ));"
                 )
