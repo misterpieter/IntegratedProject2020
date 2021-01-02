@@ -363,7 +363,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
     // SELECT  * from signature where fk_student_id='snumber6'  ORDER by signature_id ASC limit 1
 
     fun getFirstSignature(snumber: String): SignatureCheck {
-        var imageId = ""
+        var imageId : String? = null
         var imageByteArray: ByteArray = byteArrayOf()
         var fkStudent = ""
         var releaseCounter = 0

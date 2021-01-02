@@ -21,6 +21,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.drawToBitmap
 import be.volders.integratedproject2020.*
 import be.volders.integratedproject2020.Model.Address
+import be.volders.integratedproject2020.Model.SignatureCheck
 import be.volders.integratedproject2020.Model.Student
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
@@ -86,6 +87,12 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
             snumber = saveStudent.snumber
 
             bitmap = drawingView.drawToBitmap()
+
+            //Method that checks suspicion level and sets suspicion value
+            CheckSuspicion(snumber, drawingView.getReleaseCounter(), drawingView.getVectorCounter())
+            Log.d("SUSPISION", "Is this signature suspiscious ?     $suspiciousSignature")
+
+
             path = saveImage(bitmap)
             databaseHelper!!.addStudent(saveStudent)
             val bytes = convertSignatur(bitmap)
@@ -99,6 +106,32 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
         }
 
     }
+
+    private fun CheckSuspicion(snumber: String, releases: Int, vectors: Int) {
+
+        val signatureCheck = databaseHelper!!.getFirstSignature(snumber)
+        // if there is a first signature
+        if (signatureCheck.imageId != null){
+
+            // if amount of releases do not match => suspicious
+            if (signatureCheck.releaseCounter != releases) {
+                suspiciousSignature = true
+            }
+
+            // if vector deviation is > 20 => suspicious
+            val absDifference : Int = Math.abs(signatureCheck.vectorCounter - vectors)
+            if (absDifference > 20) {
+                suspiciousSignature = true
+            }
+
+        } else {
+            //first signature => not suspicious
+            suspiciousSignature = false
+        }
+
+
+    }
+
     //convert img
     private  fun convertSignatur(myBitmap: Bitmap): ByteArray {
         val bytes = ByteArrayOutputStream()
