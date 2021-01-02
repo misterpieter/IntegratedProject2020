@@ -39,6 +39,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         private val LOCATION_LINK = "location_link"
         private val RELEASE_COUNT = "release_count"
         private val VECTOR_COUNT = "vector_count"
+        private val SUSPICIOUS = "supsicious"
 
         //LOCATIE
         private val LOCATION_ID = "location_id"
@@ -69,6 +70,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 + LOCATION_LINK + " VARCHAR(50), "
                 + RELEASE_COUNT + " INTEGER, "
                 + VECTOR_COUNT + " INTEGER, "
+                + SUSPICIOUS + " BOOL, "
                 + " FOREIGN KEY( " + FK_STUDENT_ID + " ) REFERENCES " + TABLE_STUDENTS + " ( " + STUDENT_ID + " ), "
                 + " FOREIGN KEY( " + FK_LOCATION_ID + " ) REFERENCES " + TABLE_LOCATION + " ( " + LOCATION_ID + " ));"
                 )
@@ -127,6 +129,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
     fun tabelexist(tabel: String){
 
     }
+
     fun addStudent(student: Student): Long{
         val db = this.writableDatabase
         val values = ContentValues().apply {
@@ -191,7 +194,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         return signList
     }
 
-    fun insetImage(dbBitmap: ByteArray, imageId: String?, studentNr: String, locationLink: String, releaseCount: Int, vectorCount: Int): Boolean {
+    fun insetImage(dbBitmap: ByteArray, imageId: String?, studentNr: String, locationLink: String, releaseCount: Int, vectorCount: Int, suspiscious: Boolean): Boolean {
         val db = this.writableDatabase
         val values = ContentValues()
 
@@ -201,6 +204,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         values.put(LOCATION_LINK, locationLink)
         values.put(RELEASE_COUNT, releaseCount)
         values.put(VECTOR_COUNT, vectorCount)
+        values.put(SUSPICIOUS, suspiscious)
 
         val result = db.insert(TABLE_SIGNATURE, null, values)
         db.close()
@@ -317,7 +321,6 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         }catch (e: SQLiteException){
 
         }
-
         return StudentList
     }
 
@@ -356,23 +359,44 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         return signatureList
     }
 
-    /*fun getFirstSignature(snumber: String): SignatureCheck {
-        var imageId: String?,
-        var imageByteArray: ByteArray,
-        var fkStudent: String,
-        var releaseCounter: Int,
-        var vectorCounter: Int
 
-        val selectQuery = "SELECT * FROM " + TABLE_SIGNATURE + " WHERE " + FK_STUDENT_ID + " = " + snumber
+    // SELECT  * from signature where fk_student_id='snumber6'  ORDER by signature_id ASC limit 1
 
-
-
+    fun getFirstSignature(snumber: String): SignatureCheck {
+        var imageId = ""
+        var imageByteArray: ByteArray = byteArrayOf()
+        var fkStudent = ""
+        var releaseCounter = 0
+        var vectorCounter = 0
 
 
+        val selectQuery = "SELECT * FROM " + TABLE_SIGNATURE + " WHERE " + FK_STUDENT_ID +
+                " = '" + snumber + "' order by " + SIGNATURE_ID + " ASC LIMIT 1"
 
+        val db = this.readableDatabase
+        var c = db.rawQuery(selectQuery, null)
+        if(c.moveToFirst()) {
+            do {
+                imageId = c.getString(c.getColumnIndex(SIGNATURE_ID))
+                imageByteArray = c.getBlob(c.getColumnIndex(SIGNATURE_BITMAP))
+                fkStudent = c.getString(c.getColumnIndex(FK_STUDENT_ID))
+                releaseCounter = c.getInt(c.getColumnIndex(RELEASE_COUNT))
+                vectorCounter = c.getInt(c.getColumnIndex(VECTOR_COUNT))
+            }while (c.moveToNext())
+        }
+        db.close()
+        return SignatureCheck(imageId, imageByteArray, fkStudent, releaseCounter, vectorCounter)
 
+    }
 
-    }*/
-
+/*
+    class SignatureCheck (
+            var imageId: String?,
+            var imageByteArray: ByteArray,
+            var fkStudent: String,
+            var releaseCounter: Int,
+            var vectorCounter: Int
+    )
+    */
 
 }

@@ -50,6 +50,7 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
     private lateinit var adres : Address
     private var snumber:String = ""
     private var sigAndLocationLink = UUID.randomUUID()
+    private var suspiciousSignature = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         //var databaseHelper: DatabaseHelpe? = DatabaseHelpe(this)
@@ -80,7 +81,7 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
         }
         btnStore.setOnClickListener{
 
-            //sigAndLocationLink = UUID.randomUUID()
+
 
             snumber = saveStudent.snumber
 
@@ -88,7 +89,7 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
             path = saveImage(bitmap)
             databaseHelper!!.addStudent(saveStudent)
             val bytes = convertSignatur(bitmap)
-            databaseHelper!!.insetImage(bytes, saveStudent.name + "_" + saveStudent.lastname, saveStudent.snumber, sigAndLocationLink.toString(), drawingView.getReleaseCounter(), drawingView.getVectorCounter())
+            databaseHelper!!.insetImage(bytes, saveStudent.name + "_" + saveStudent.lastname, saveStudent.snumber, sigAndLocationLink.toString(), drawingView.getReleaseCounter(), drawingView.getVectorCounter(), suspiciousSignature)
             Log.d("InsertImageCounterValues", "releases: ${drawingView.getReleaseCounter()}     vectors: ${drawingView.getVectorCounter()} ")
 
             getLocation()
