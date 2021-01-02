@@ -9,6 +9,7 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.media.MediaScannerConnection
+import android.net.ConnectivityManager
 import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Environment
@@ -99,8 +100,10 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
             databaseHelper!!.insetImage(bytes, saveStudent.name + "_" + saveStudent.lastname, saveStudent.snumber, sigAndLocationLink.toString(), drawingView.getReleaseCounter(), drawingView.getVectorCounter(), suspiciousSignature)
             Log.d("InsertImageCounterValues", "releases: ${drawingView.getReleaseCounter()}     vectors: ${drawingView.getVectorCounter()} ")
 
-            //TODO: ADD INTERNET CHECK
-            getLocation()
+            
+            if (haveNetworkConnection()) {
+                getLocation()
+            }
 
             Log.d("ST", "Signature ok!")
             intent = Intent(this, MainActivity::class.java)
@@ -181,6 +184,27 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
         val urlAdress = URL(urlReversedSearch)
         val task = MyAsyncTask()
         task.execute(urlAdress)
+    }
+
+    //Checks if connectedvia WIFI or Mobile to Internet
+    private fun haveNetworkConnection(): Boolean {
+        var haveConnectedWifi = false
+        var haveConnectedMobile = false
+        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val netInfo = cm.allNetworkInfo
+        for (ni in netInfo) {
+            if (ni.typeName.equals(
+                            "WIFI",
+                            ignoreCase = true
+                    )
+            ) if (ni.isConnected) haveConnectedWifi = true
+            if (ni.typeName.equals(
+                            "MOBILE",
+                            ignoreCase = true
+                    )
+            ) if (ni.isConnected) haveConnectedMobile = true
+        }
+        return haveConnectedWifi || haveConnectedMobile
     }
 
     inner class MyAsyncTask : AsyncTask<URL, Int, String>() {
