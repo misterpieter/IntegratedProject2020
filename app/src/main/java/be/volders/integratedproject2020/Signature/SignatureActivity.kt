@@ -9,6 +9,7 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.media.MediaScannerConnection
+import android.net.ConnectivityManager
 import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Environment
@@ -21,6 +22,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.drawToBitmap
 import be.volders.integratedproject2020.*
 import be.volders.integratedproject2020.Model.Address
+import be.volders.integratedproject2020.Model.SignatureCheck
 import be.volders.integratedproject2020.Model.Student
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
@@ -50,6 +52,7 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
     private lateinit var adres : Address
     private var snumber:String = ""
     private var sigAndLocationLink = UUID.randomUUID()
+    private var suspiciousSignature = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         //var databaseHelper: DatabaseHelpe? = DatabaseHelpe(this)
@@ -80,21 +83,60 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
         }
         btnStore.setOnClickListener{
 
-            //sigAndLocationLink = UUID.randomUUID()
+
 
             snumber = saveStudent.snumber
+
             bitmap = drawingView.drawToBitmap()
+
+            //Method that checks suspicion level and sets suspicion value
+            CheckSuspicion(snumber, drawingView.getReleaseCounter(), drawingView.getVectorCounter())
+            Log.d("SUSPISION", "Is this signature suspiscious ?     $suspiciousSignature")
+
+
             path = saveImage(bitmap)
             databaseHelper!!.addStudent(saveStudent)
             val bytes = convertSignatur(bitmap)
-            databaseHelper!!.insetImage(bytes, saveStudent.name + "_" + saveStudent.lastname, saveStudent.snumber, sigAndLocationLink.toString())
-            getLocation()
+            databaseHelper!!.insetImage(bytes, saveStudent.name + "_" + saveStudent.lastname, saveStudent.snumber, sigAndLocationLink.toString(), drawingView.getReleaseCounter(), drawingView.getVectorCounter(), suspiciousSignature)
+            Log.d("InsertImageCounterValues", "releases: ${drawingView.getReleaseCounter()}     vectors: ${drawingView.getVectorCounter()} ")
+
+
+//            if (haveNetworkConnection()) {
+                getLocation()
+            //}
+
             Log.d("ST", "Signature ok!")
             intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
 
     }
+
+    private fun CheckSuspicion(snumber: String, releases: Int, vectors: Int) {
+
+        val signatureCheck = databaseHelper!!.getFirstSignature(snumber)
+        // if there is a first signature
+        if (signatureCheck.imageId != null){
+
+            // if amount of releases do not match => suspicious
+            if (signatureCheck.releaseCounter != releases) {
+                suspiciousSignature = true
+            }
+
+            // if vector deviation is > 20 => suspicious
+            val absDifference : Int = Math.abs(signatureCheck.vectorCounter - vectors)
+            if (absDifference > 20) {
+                suspiciousSignature = true
+            }
+
+        } else {
+            //first signature => not suspicious
+            suspiciousSignature = false
+        }
+
+
+    }
+
     //convert img
     private  fun convertSignatur(myBitmap: Bitmap): ByteArray {
         val bytes = ByteArrayOutputStream()
@@ -136,45 +178,70 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
     }
 
     override fun onLocationChanged(location: Location) {
-        lat = location.latitude
-        lon = location.longitude
-        val urlReversedSearch = "https://nominatim.openstreetmap.org/reverse?format=json&lat=${location.latitude}&lon=${location.longitude}"
-        val urlAdress = URL(urlReversedSearch)
+        var urlAdress : URL? = null
         val task = MyAsyncTask()
+
+        if (haveNetworkConnection()){
+            lat = location.latitude
+            lon = location.longitude
+            val urlReversedSearch = "https://nominatim.openstreetmap.org/reverse?format=json&lat=${location.latitude}&lon=${location.longitude}"
+            urlAdress = URL(urlReversedSearch)
+        }
+
         task.execute(urlAdress)
     }
 
-    inner class MyAsyncTask : AsyncTask<URL, Int, String>() {
-        var response = ""
-        override fun onPreExecute(){
-            super.onPreExecute()
+    //Checks if connectedvia WIFI or Mobile to Internet
+    private fun haveNetworkConnection(): Boolean {
+        var haveConnectedWifi = false
+        var haveConnectedMobile = false
+        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val netInfo = cm.allNetworkInfo
+        for (ni in netInfo) {
+            if (ni.typeName.equals(
+                            "WIFI",
+                            ignoreCase = true
+                    )
+            ) if (ni.isConnected) haveConnectedWifi = true
+            if (ni.typeName.equals(
+                            "MOBILE",
+                            ignoreCase = true
+                    )
+            ) if (ni.isConnected) haveConnectedMobile = true
         }
+        return haveConnectedWifi || haveConnectedMobile
+    }
 
-        override fun doInBackground(vararg params: URL?): String {
-            val client = OkHttpClient()
-            val request = Request.Builder()
-                    .url(params[0]!!)
-                    .build()
-            response = client.newCall(request).execute().body!!.string()
+
+
+    inner class MyAsyncTask : AsyncTask<URL, Int, String>() {
+        var response : String? = null
+
+        override fun doInBackground(vararg params: URL?): String? {
+
+            if(haveNetworkConnection()) {
+                val client = OkHttpClient()
+                val request = Request.Builder()
+                        .url(params[0]!!)
+                        .build()
+                response = client.newCall(request).execute().body!!.string()
+            }
+
+
             return response
         }
 
-        override fun onProgressUpdate(vararg values: Int?) {
-            super.onProgressUpdate(*values)
-        }
 
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
 
-            val jsonString = StringBuilder(result!!)
+         /*   val jsonString = StringBuilder(result!!)
 
             val parser: Parser = Parser.default()
             val obj = parser.parse(jsonString) as JsonObject
             val address = obj["address"] as JsonObject
-
+         */
             // getAddressDisplayName(lat, lon)
-
-
 
             try {
                 adres = Address(
@@ -186,7 +253,6 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
                 )
                 Log.d("TAG", "Address object:\n${adres.date}")
                 databaseHelper?.insertLocation(adres)
-                //tvAddress.text = adres.toString()
             }catch (e: Exception){
                 Log.d("TAG", "EXCEPTION at Mainactivity R233: ${e.message}\n${e.stackTrace}")
             }

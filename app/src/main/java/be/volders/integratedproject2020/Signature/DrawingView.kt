@@ -6,6 +6,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
 import android.util.AttributeSet
+import android.util.Log
 import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
@@ -20,6 +21,8 @@ class DrawingView @JvmOverloads constructor(
     private val currentStroke: Path
     private lateinit var drawCanvas: Canvas
     private lateinit var canvasBitmap: Bitmap
+    private var releaseCounter = 0
+    private var vectorCounter = 0
 
     override fun onSizeChanged(
         width: Int,
@@ -52,7 +55,14 @@ class DrawingView @JvmOverloads constructor(
             else -> {
             }
         }
-        StrokeManager.addNewTouchEvent(event)
+        // Is to count releases
+        releaseCounter = StrokeManager.addNewTouchEvent(event, releaseCounter)
+        // here it'll show the ammount of movements. Sort of a vector amount
+        vectorCounter++
+        Log.d("VECTORCOUNTER", "vectorcounter : $vectorCounter")
+        Log.d("RELEASECOUNTER", "releasecounter: $releaseCounter")
+
+
         invalidate()
         return true
     }
@@ -86,4 +96,13 @@ class DrawingView @JvmOverloads constructor(
             canvasBitmap.height
         )
     }
+
+    fun getReleaseCounter() : Int {
+        return releaseCounter
+    }
+
+    fun getVectorCounter() : Int {
+        return vectorCounter
+    }
+
 }
