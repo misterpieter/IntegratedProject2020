@@ -99,7 +99,9 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
             databaseHelper!!.insetImage(bytes, saveStudent.name + "_" + saveStudent.lastname, saveStudent.snumber, sigAndLocationLink.toString(), drawingView.getReleaseCounter(), drawingView.getVectorCounter(), suspiciousSignature)
             Log.d("InsertImageCounterValues", "releases: ${drawingView.getReleaseCounter()}     vectors: ${drawingView.getVectorCounter()} ")
 
+            //TODO: ADD INTERNET CHECK
             getLocation()
+
             Log.d("ST", "Signature ok!")
             intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
@@ -212,7 +214,7 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
             // getAddressDisplayName(lat, lon)
 
 
-
+            //TODO: FIX OBAMA BUG
             try {
                 adres = Address(
                         lat,
