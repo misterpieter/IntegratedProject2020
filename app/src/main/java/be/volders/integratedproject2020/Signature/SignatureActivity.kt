@@ -100,10 +100,10 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
             databaseHelper!!.insetImage(bytes, saveStudent.name + "_" + saveStudent.lastname, saveStudent.snumber, sigAndLocationLink.toString(), drawingView.getReleaseCounter(), drawingView.getVectorCounter(), suspiciousSignature)
             Log.d("InsertImageCounterValues", "releases: ${drawingView.getReleaseCounter()}     vectors: ${drawingView.getVectorCounter()} ")
 
-            
-            if (haveNetworkConnection()) {
+
+//            if (haveNetworkConnection()) {
                 getLocation()
-            }
+            //}
 
             Log.d("ST", "Signature ok!")
             intent = Intent(this, MainActivity::class.java)
@@ -178,11 +178,16 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
     }
 
     override fun onLocationChanged(location: Location) {
-        lat = location.latitude
-        lon = location.longitude
-        val urlReversedSearch = "https://nominatim.openstreetmap.org/reverse?format=json&lat=${location.latitude}&lon=${location.longitude}"
-        val urlAdress = URL(urlReversedSearch)
+        var urlAdress : URL? = null
         val task = MyAsyncTask()
+
+        if (haveNetworkConnection()){
+            lat = location.latitude
+            lon = location.longitude
+            val urlReversedSearch = "https://nominatim.openstreetmap.org/reverse?format=json&lat=${location.latitude}&lon=${location.longitude}"
+            urlAdress = URL(urlReversedSearch)
+        }
+
         task.execute(urlAdress)
     }
 
@@ -207,38 +212,37 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
         return haveConnectedWifi || haveConnectedMobile
     }
 
-    inner class MyAsyncTask : AsyncTask<URL, Int, String>() {
-        var response = ""
-        override fun onPreExecute(){
-            super.onPreExecute()
-        }
 
-        override fun doInBackground(vararg params: URL?): String {
-            val client = OkHttpClient()
-            val request = Request.Builder()
-                    .url(params[0]!!)
-                    .build()
-            response = client.newCall(request).execute().body!!.string()
+
+    inner class MyAsyncTask : AsyncTask<URL, Int, String>() {
+        var response : String? = null
+
+        override fun doInBackground(vararg params: URL?): String? {
+
+            if(haveNetworkConnection()) {
+                val client = OkHttpClient()
+                val request = Request.Builder()
+                        .url(params[0]!!)
+                        .build()
+                response = client.newCall(request).execute().body!!.string()
+            }
+
+
             return response
         }
 
-        override fun onProgressUpdate(vararg values: Int?) {
-            super.onProgressUpdate(*values)
-        }
 
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
 
-            val jsonString = StringBuilder(result!!)
+         /*   val jsonString = StringBuilder(result!!)
 
             val parser: Parser = Parser.default()
             val obj = parser.parse(jsonString) as JsonObject
             val address = obj["address"] as JsonObject
-
+         */
             // getAddressDisplayName(lat, lon)
 
-
-            //TODO: FIX OBAMA BUG
             try {
                 adres = Address(
                         lat,
@@ -249,7 +253,6 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
                 )
                 Log.d("TAG", "Address object:\n${adres.date}")
                 databaseHelper?.insertLocation(adres)
-                //tvAddress.text = adres.toString()
             }catch (e: Exception){
                 Log.d("TAG", "EXCEPTION at Mainactivity R233: ${e.message}\n${e.stackTrace}")
             }
