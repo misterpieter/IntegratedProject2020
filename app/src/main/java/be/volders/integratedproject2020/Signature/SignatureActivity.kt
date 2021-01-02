@@ -32,7 +32,6 @@ import java.net.URL
 import java.time.LocalDate
 import java.util.*
 
-
 lateinit var recognize:Button
 lateinit var clear:Button
 lateinit var drawingView: DrawingView

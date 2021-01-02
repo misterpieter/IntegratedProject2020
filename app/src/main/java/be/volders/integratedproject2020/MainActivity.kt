@@ -22,12 +22,15 @@ class MainActivity : AppCompatActivity() {
     var parentView:View?=null
     private lateinit var adres : Address
     private lateinit var selectedStudent:Student
+    var databaseHelper: DatabaseHelpe? = DatabaseHelpe(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         // lijst hardcoded van studenten
-        val studentList = ArrayList<Student>()
+        val studentList: ArrayList<Student>
+        studentList = databaseHelper!!.getAllStudent()
+        /*
         studentList.add(Student( "Admin","Admin","pnumber"))
         studentList.add(Student( "Barrack","Obama","snumber1"))
         studentList.add(Student("Angela", "Merkel","snumber2"))
@@ -36,7 +39,7 @@ class MainActivity : AppCompatActivity() {
         studentList.add(Student("Pieter", "Volders","snumber5"))
         studentList.add(Student("Jonas", "Adriaanssens","snumber6"))
         studentList.add(Student("Halima", "Rahimi","S425316"))
-        studentList.add(Student("Halima", "Rahimi","S425315"))
+        studentList.add(Student("Halima", "Rahimi","S425315"))*/
 
         // lijst imported csv
         var sList = getStudentsFromLocalCSV(this)
