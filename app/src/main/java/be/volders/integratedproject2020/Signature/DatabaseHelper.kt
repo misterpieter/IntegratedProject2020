@@ -130,16 +130,17 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
 
     }
 
-    fun addStudent(student: Student): Long{
-        val db = this.writableDatabase
-        val values = ContentValues().apply {
-            put(STUDENT_ID, student.snumber)
-            put(FIRSTNAME, student.name)
-            put(LASTNAME, student.lastname)
-        }
-        val result = db.insert(TABLE_STUDENTS, null, values)
-        db.close()
-        return result
+
+    fun addStudent(student: Student){
+            val db = this.writableDatabase
+            val values = ContentValues().apply {
+                put(STUDENT_ID, student.snumber)
+                put(FIRSTNAME, student.name)
+                put(LASTNAME, student.lastname)
+            }
+            // inserts new if not exists. If exists => replace
+            db.replace(TABLE_STUDENTS, null, values)
+            db.close()
     }
 
     fun getAllStudent(): ArrayList<Student>{

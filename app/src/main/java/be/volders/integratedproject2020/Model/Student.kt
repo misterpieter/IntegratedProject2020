@@ -13,7 +13,7 @@ data class Student(
     val name: String,
     val lastname: String,
     val snumber: String,
-    val password: String
+    val password: String? = ""
 ){
 
     override fun toString(): String {
