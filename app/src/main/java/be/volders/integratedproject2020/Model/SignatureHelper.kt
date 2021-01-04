@@ -4,5 +4,8 @@ class SignatureHelper(
         var imageId: String?,
         var imageByteArray: ByteArray,
         var fkStudent: String,
-        var locationLink: String
+        var locationLink: String,
+        var releaseCounter: Int,
+        var vectorCounter: Int,
+        var suspicion : Boolean
 )
