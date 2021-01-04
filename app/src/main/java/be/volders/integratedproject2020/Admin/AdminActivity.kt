@@ -18,7 +18,8 @@ import kotlinx.android.synthetic.main.activity_admin.*
 import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException
-import java.time.LocalDate
+import kotlinx.coroutines.*
+import okhttp3.internal.wait
 
 
 class AdminActivity : AppCompatActivity() {
@@ -64,11 +65,11 @@ class AdminActivity : AppCompatActivity() {
         }
 
         btnSync.setOnClickListener{
-            val newDBsyn = NewSyncDatabase(this)
-            newDBsyn.saveOrUpdateAllStudents()
-            newDBsyn.saveOrUpdateAllLocations()
-            newDBsyn.saveOrUpdateAllSignatures()
-            Toast.makeText(this, "Succesfully synchronized", Toast.LENGTH_SHORT).show()
+            //Coroutine : pauses main thread untill update UpdateAdressesBeforeUpload is done
+            runBlocking {
+                UpdateAdressesBeforeUpload()
+            }
+            BackupToFirebase()
         }
 
         btnUpdateLocation.setOnClickListener{
@@ -76,6 +77,30 @@ class AdminActivity : AppCompatActivity() {
             Toast.makeText(this, "Succesfully updated locations", Toast.LENGTH_SHORT).show()
         }
     }
+
+    fun UpdateAdressesBeforeUpload() {
+        try {
+            UpdateAddresses()
+        } catch (e: Exception) {
+            Toast.makeText(this, "Could not update adresses", Toast.LENGTH_SHORT).show()
+            Log.e("Error while updating adresses", e.stackTraceToString())
+        }
+    }
+
+    fun BackupToFirebase(){
+        try {
+            val newDBsyn = NewSyncDatabase(this)
+            newDBsyn.saveOrUpdateAllStudents()
+            newDBsyn.saveOrUpdateAllLocations()
+            newDBsyn.saveOrUpdateAllSignatures()
+        }
+        catch (e: Exception) {
+            Toast.makeText(this, "Could not synchronize to firebase", Toast.LENGTH_SHORT).show()
+            Log.e("Error while synchronizing to firebase", e.stackTraceToString())
+        }
+        Log.d("SYNCBUTTON", "backed up to firebase" )
+    }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -114,19 +139,19 @@ class AdminActivity : AppCompatActivity() {
         }
     }
 
-
     //loops over all locations and if postcode = 0 => update adress
     private fun UpdateAddresses() {
         val locationList = databaseHelper?.getAllLocationsWithId()!!
         for (location in locationList){
             if(location.postcode == 0){
                 UpdateAdress(location)
+                Log.d("SYNCBUTTON", "updated ${location.signatureLink}")
             }
         }
     }
 
     //Use reverse search to save streetname and update the in the database
-    private fun UpdateAdress(location : AddressWithIdFirebase)  /* : AddressWithIdFirebase */ {
+    private fun UpdateAdress(location : AddressWithIdFirebase) {
         val urlReversedSearch = "https://nominatim.openstreetmap.org/reverse?format=json&lat=${location.lat}&lon=${location.lon}"
         val client = OkHttpClient()
         val request = Request.Builder().url(urlReversedSearch).build()
@@ -144,8 +169,6 @@ class AdminActivity : AppCompatActivity() {
                 Log.d("jsonobjectarray", "jsondata: $jsonData")
                 Log.d("jsonobjectarray", "jsonobject: $jsonObject")
                 val adresObject = jsonObject.getJSONObject("address")
-
-
 
                 //only gives value when field is found
                 location.road = adresObject.optString("road", "No road")
