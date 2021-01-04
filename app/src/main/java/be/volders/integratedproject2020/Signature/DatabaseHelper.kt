@@ -176,6 +176,9 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         var dbImageByteArray : ByteArray
         var fkStudent : String
         var locationLink: String
+        var releaseCount: Int
+        var vectorCount: Int
+        var suspiscious = false
 
 
         val selectQuery ="SELECT * FROM $TABLE_SIGNATURE"
@@ -187,7 +190,14 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 dbImageByteArray = c.getBlob(c.getColumnIndex(SIGNATURE_BITMAP))//c.getColumnIndex(SIGNATURE_BITMAP))
                 fkStudent = c.getString(c.getColumnIndex(FK_STUDENT_ID))
                 locationLink = c.getString(c.getColumnIndex(LOCATION_LINK))
-                var signature = SignatureHelper(dbImageId, dbImageByteArray ,fkStudent, locationLink)
+                releaseCount = c.getInt(c.getColumnIndex(RELEASE_COUNT))
+                vectorCount = c.getInt(c.getColumnIndex(VECTOR_COUNT))
+                val tmp = c.getInt(c.getColumnIndex(SUSPICIOUS))
+                if (tmp == 1) {
+                    suspiscious = true
+                }
+
+                var signature = SignatureHelper(dbImageId, dbImageByteArray ,fkStudent, locationLink, releaseCount, vectorCount, suspiscious)
                 signList.add(signature)
             }while(c.moveToNext())
         }
