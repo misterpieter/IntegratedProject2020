@@ -94,7 +94,7 @@ class AdminActivity : AppCompatActivity() {
                 Toast.makeText(
                     this,
                     "Probleem bij het lezen van het bestand",
-                    Toast.LENGTH_SHORT
+                    Toast.LENGTH_LONG
                 ).show()
             }
         }

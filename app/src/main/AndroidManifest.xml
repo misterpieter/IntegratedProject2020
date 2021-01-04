@@ -30,14 +30,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.IntegratedProject2020">
-        <activity android:name=".Admin.AdminActivity"></activity>
+        <activity android:name=".Admin.AdminActivity">
+
+        </activity>
         <activity android:name=".Students.StudentListActivity" />
         <activity android:name=".Signature.SignatureActivity" />
         <activity android:name=".StudentDetails.StudentDetailsActivity"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

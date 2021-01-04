@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardElevation="3dp"
     app:cardCornerRadius="10dp"
@@ -11,14 +11,14 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="16dp">
 
         <TextView
             android:id="@+id/tvFirstname"
             android:layout_width="88dp"
-            android:layout_height="36dp"
+            android:layout_height="wrap_content"
             android:text="Naam"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -28,16 +28,14 @@
         <TextView
             android:id="@+id/tvDatum"
             android:layout_width="131dp"
-            android:layout_height="38dp"
-            android:layout_marginStart="85dp"
+            android:layout_marginLeft="20sp"
+            android:layout_height="wrap_content"
             android:text="Voornaam"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.051"
-            app:layout_constraintStart_toStartOf="@+id/tvFirstname"
+            app:layout_constraintStart_toEndOf="@+id/tvFirstname"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.08" />
+            />
 
         <TextView
             android:id="@+id/tvSnummer"

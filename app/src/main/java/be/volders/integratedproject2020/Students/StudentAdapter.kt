@@ -35,7 +35,7 @@ class StudentAdapter(context:Context, private val students: List<Student>) : Rec
         // click listener op item
         holder.itemView.setOnClickListener{
             //toast + redirect naar home (enkel als voorbeeld om naar een andere activity te gaan wanneer geklikt )
-            Toast.makeText(context, "${student.snumber} clicked", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(context, "${student.snumber} clicked", Toast.LENGTH_SHORT).show()
             databaseHelper?.getSignatureForDetailsList(student.snumber)
             //Toast.makeText(context, "${student.snumber} clicked", Toast.LENGTH_SHORT).show()
             val intent = Intent(context, StudentDetailsActivity::class.java)

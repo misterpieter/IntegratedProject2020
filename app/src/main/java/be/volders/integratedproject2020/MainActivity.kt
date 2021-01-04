@@ -92,10 +92,9 @@ class MainActivity : AppCompatActivity() {
 //                Toast.makeText(this, "ADMIN", Toast.LENGTH_SHORT).show()
             }
             else {
-                Toast.makeText(this, "FOUTE INPUT!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "FOUT wachtwoord ingegeven", Toast.LENGTH_SHORT).show()
             }
         }
-
 
         etPassword.addTextChangedListener(textWatcher)
 
