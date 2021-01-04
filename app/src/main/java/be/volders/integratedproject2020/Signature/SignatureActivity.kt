@@ -88,26 +88,21 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
         }
         btnStore.setOnClickListener{
 
-
-
             snumber = saveStudent.snumber
-
             bitmap = drawingView.drawToBitmap()
 
             //Method that checks suspicion level and sets suspicion value
             CheckSuspicion(snumber, drawingView.getReleaseCounter(), drawingView.getVectorCounter())
             Log.d("SUSPISION", "Is this signature suspiscious ?     $suspiciousSignature")
 
-
             path = saveImage(bitmap)
+
+            databaseHelper!!.addStudent(saveStudent)
             //databaseHelper!!.addStudent(saveStudent)
             val bytes = convertSignatur(bitmap)
             databaseHelper!!.insetImage(bytes, saveStudent.name + "_" + saveStudent.lastname, saveStudent.snumber, sigAndLocationLink.toString(), drawingView.getReleaseCounter(), drawingView.getVectorCounter(), suspiciousSignature)
 
-
-//            if (haveNetworkConnection()) {
-                getLocation()
-            //}
+            getLocation()
 
             Log.d("ST", "Signature ok!")
             intent = Intent(this, MainActivity::class.java)
