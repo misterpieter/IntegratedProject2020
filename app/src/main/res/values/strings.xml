@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">IntegratedProject2020</string>
+    <string name="app_name">AP - Sign</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="title_activity_student_details">StudentDetailsActivity</string>
     <string name="hello_world">Hello Square World!</string>
@@ -8,8 +8,8 @@
     values-round/strings.xml for round devices.
     -->
     <string-array name="sort_list">
-        <item>firstname</item>
-        <item>lastname</item>
-        <item>student_id</item>
+        <item>voornaam</item>
+        <item>naam</item>
+        <item>s-nummer</item>
     </string-array>
 </resources>
