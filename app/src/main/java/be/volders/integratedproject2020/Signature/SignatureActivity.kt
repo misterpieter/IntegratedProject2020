@@ -26,6 +26,7 @@ import be.volders.integratedproject2020.Model.SignatureCheck
 import be.volders.integratedproject2020.Model.Student
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
+import kotlinx.android.synthetic.main.activity_admin.*
 import okhttp3.*
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -75,6 +76,12 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
         recognize.setOnClickListener {
             StrokeManager.recognize(this)
         }
+
+        btnHome.setOnClickListener {
+            intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+
 
         clear.setOnClickListener {
             drawingView.clear()

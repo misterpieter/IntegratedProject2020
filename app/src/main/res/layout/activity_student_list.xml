@@ -6,6 +6,20 @@
     android:layout_height="match_parent"
     tools:context=".Students.StudentListActivity">
 
+    <TextView
+        android:id="@+id/etStudentList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Studenten"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvPersons"
@@ -26,7 +40,7 @@
         android:entries="@array/sort_list"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etStudentList"
         />
 
     <EditText
@@ -34,7 +48,8 @@
         android:layout_width="0dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="5dp"
-        android:layout_marginLeft="5dp"        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_height="wrap_content"
         android:hint="17/12/2020"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toStartOf="@+id/btFilter"
@@ -54,4 +69,17 @@
         app:layout_constraintTop_toBottomOf="@+id/spSorteren"
         />
 
+    <Button
+        android:id="@+id/btnHome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Home"
+        android:layout_marginBottom="30dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:textColor="@color/white"
+        android:background="@drawable/home_button"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>
