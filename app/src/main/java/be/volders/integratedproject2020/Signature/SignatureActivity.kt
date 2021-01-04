@@ -100,10 +100,7 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
             databaseHelper!!.insetImage(bytes, saveStudent.name + "_" + saveStudent.lastname, saveStudent.snumber, sigAndLocationLink.toString(), drawingView.getReleaseCounter(), drawingView.getVectorCounter(), suspiciousSignature)
             Log.d("InsertImageCounterValues", "releases: ${drawingView.getReleaseCounter()}     vectors: ${drawingView.getVectorCounter()} ")
 
-
-//            if (haveNetworkConnection()) {
-                getLocation()
-            //}
+            getLocation()
 
             Log.d("ST", "Signature ok!")
             intent = Intent(this, MainActivity::class.java)
