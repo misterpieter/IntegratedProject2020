@@ -99,8 +99,6 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
 
             path = saveImage(bitmap)
 
-
-            //TODO: add check for student
             databaseHelper!!.addStudent(saveStudent)
             val bytes = convertSignatur(bitmap)
             databaseHelper!!.insetImage(bytes, saveStudent.name + "_" + saveStudent.lastname, saveStudent.snumber, sigAndLocationLink.toString(), drawingView.getReleaseCounter(), drawingView.getVectorCounter(), suspiciousSignature)
