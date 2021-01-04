@@ -8,106 +8,78 @@
 
     <TextView
         android:id="@+id/Welcome"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Admin pagina"
-        android:textAlignment="center"
+        android:layout_width="173dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="50dp"
+        android:text="Admin Page"
         android:textSize="20sp"
-        android:layout_marginTop="30dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btnImportCSV"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_width="0dp"
-        android:layout_marginRight="60dp"
-        android:layout_marginLeft="60dp"
         android:layout_marginTop="70dp"
         android:text="Import CSV"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/Welcome"
-        android:textColor="@color/white"
-        android:background="@drawable/button"
-        />
+        app:layout_constraintTop_toTopOf="@id/Welcome" />
 
 
     <Button
         android:id="@+id/btnClearDB"
-        android:layout_width="0dp"
-        android:layout_marginRight="60dp"
-        android:layout_marginLeft="60dp"
-        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/button"
+        android:layout_marginTop="404dp"
+        android:text="Clean DB"
         android:enabled="true"
-        android:text="Verwijder Local Storage DB"
-        android:textColor="@color/white"
+        app:layout_constraintHorizontal_bias="0.517"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnUpdateLocation" />
+        app:layout_constraintTop_toTopOf="@id/Welcome" />
 
     <Button
         android:id="@+id/btnExportCSV"
-        android:layout_width="0dp"
-        android:layout_marginRight="60dp"
-        android:layout_marginLeft="60dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="CSV exporteren"
+        android:text="Export"
         android:layout_marginTop="20dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnImportCSV"
-        android:textColor="@color/white"
-        android:background="@drawable/button"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/btnImportCSV" />
 
 
     <Button
         android:id="@+id/btnShowAllStudents"
-        android:layout_width="0dp"
-        android:layout_marginRight="60dp"
-        android:layout_marginLeft="60dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Lijst studenten"
+        android:text="Show Student List"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnExportCSV"
-        android:textColor="@color/white"
-        android:background="@drawable/button"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/btnExportCSV" />
 
     <Button
         android:id="@+id/btnSync"
-        android:layout_width="0dp"
-        android:layout_marginRight="60dp"
-        android:layout_marginLeft="60dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="70dp"
-        android:text="Firebase Synchronisatie"
+        android:text="Sync now"
         android:enabled="false"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/btnShowAllStudents"
-        android:textColor="@color/white"
-        android:background="@drawable/button"
         />
 
     <Button
         android:id="@+id/btnUpdateLocation"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="60dp"
         android:layout_marginTop="70dp"
-        android:layout_marginRight="60dp"
-        android:background="@drawable/button"
+        android:text="Update location in database"
         android:enabled="false"
-        android:text="Adres ophalen van LAT/LON"
-        android:textColor="@color/white"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/btnSync"
@@ -118,12 +90,10 @@
         android:id="@+id/btnHome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="28dp"
         android:text="Home"
-        android:layout_marginBottom="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:textColor="@color/white"
-        android:background="@drawable/home_button"
-        />
+        app:layout_constraintRight_toRightOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

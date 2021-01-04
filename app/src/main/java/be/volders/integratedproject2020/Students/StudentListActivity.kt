@@ -61,17 +61,15 @@ class StudentListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListe
             btfilter?.setOnClickListener{
                 etFilter = ettFilter.text.toString()
                 result = databaseHelper!!.filterStudent(etFilter)
-                if(result.size != 0){
-                    if(filter(etFilter)){
-                        sortlist = databaseHelper!!.filterStudent(etFilter)
-                    }else{
-                        sortlist=  studentlist.filter { x -> x.name == etFilter || x.lastname == etFilter || x.snumber == etFilter }
-                    }
+
+                if(filter(etFilter)){
+                    sortlist = databaseHelper!!.filterStudent(etFilter)
+                }else{
+                    sortlist=  studentlist.filter { x -> x.name == etFilter || x.lastname == etFilter || x.snumber == etFilter }
+                }
                     val adapter = StudentAdapter(this, sortlist)
                     rvPersons.adapter = adapter
-                }else{
-                    Toast.makeText(this, "Zijn geen studenten", Toast.LENGTH_SHORT).show()
-                }
+
             }
         }
 

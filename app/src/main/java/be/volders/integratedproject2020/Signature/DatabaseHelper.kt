@@ -130,17 +130,16 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
 
     }
 
-
-    fun addStudent(student: Student){
-            val db = this.writableDatabase
-            val values = ContentValues().apply {
-                put(STUDENT_ID, student.snumber)
-                put(FIRSTNAME, student.name)
-                put(LASTNAME, student.lastname)
-            }
-            // inserts new if not exists. If exists => replace
-            db.replace(TABLE_STUDENTS, null, values)
-            db.close()
+    fun addStudent(student: Student): Long{
+        val db = this.writableDatabase
+        val values = ContentValues().apply {
+            put(STUDENT_ID, student.snumber)
+            put(FIRSTNAME, student.name)
+            put(LASTNAME, student.lastname)
+        }
+        val result = db.insert(TABLE_STUDENTS, null, values)
+        db.close()
+        return result
     }
 
     fun getAllStudent(): ArrayList<Student>{
@@ -158,7 +157,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                     stfirstname = c.getString(c.getColumnIndex(FIRSTNAME))?:""
                     stsnr = c.getString(c.getColumnIndex(STUDENT_ID))?:""
 
-                    val s : Student = Student(stname,stfirstname,stsnr, "password")
+                    val s : Student = Student(stname,stfirstname,stsnr)
                     studentList.add(s)
                 }while(c.moveToNext())
             }
@@ -313,7 +312,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                     stname = c.getString(c.getColumnIndex(LASTNAME))
                     stfirstname = c.getString(c.getColumnIndex(FIRSTNAME))
                     stsnr = c.getString(c.getColumnIndex(STUDENT_ID))
-                    var s = Student(stname,stfirstname,stsnr,"password") //PASSWORD MAG WEG
+                    var s = Student(stname,stfirstname,stsnr) //PASSWORD MAG WEG
                     StudentList.add(s)
                     Log.d("FIL", "afterTextChanged: ${s.name}")
                 }while(c.moveToNext())

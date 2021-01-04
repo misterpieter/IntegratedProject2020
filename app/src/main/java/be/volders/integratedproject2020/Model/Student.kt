@@ -12,8 +12,7 @@ import java.lang.Exception
 data class Student(
     val name: String,
     val lastname: String,
-    val snumber: String,
-    val password: String? = ""
+    val snumber: String
 ){
 
     override fun toString(): String {

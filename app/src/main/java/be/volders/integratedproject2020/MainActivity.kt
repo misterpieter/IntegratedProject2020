@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     var parentView:View?=null
     private lateinit var adres : Address
     private lateinit var selectedStudent:Student
+    var databaseHelper: DatabaseHelpe? = DatabaseHelpe(this)
 
     private val ADMIN_NAME = "Admin"
 
@@ -44,16 +45,18 @@ class MainActivity : AppCompatActivity() {
 
 
         // lijst hardcoded van studenten
-        val studentList = ArrayList<Student>()
-        studentList.add(Student( "Admin","Admin","pnumber","admin"))
-        studentList.add(Student( "Barrack","Obama","snumber1","password1"))
-        studentList.add(Student("Angela", "Merkel","snumber2","password2"))
-        studentList.add(Student("Kim", "Jong-Un","snumber3","password3"))
-        studentList.add(Student("Donald", "Trump","snumber4","password4"))
-        studentList.add(Student("Pieter", "Volders","snumber5","password5"))
-        studentList.add(Student("Jonas", "Adriaanssens","snumber6","password6"))
-        studentList.add(Student("Halima", "Rahimi","S425316","halima"))
-        studentList.add(Student("Halima", "Rahimi","S425315","halima"))
+        val studentList: ArrayList<Student>
+        studentList = databaseHelper!!.getAllStudent()
+        /*
+        studentList.add(Student( "Admin","Admin","pnumber"))
+        studentList.add(Student( "Barrack","Obama","snumber1"))
+        studentList.add(Student("Angela", "Merkel","snumber2"))
+        studentList.add(Student("Kim", "Jong-Un","snumber3"))
+        studentList.add(Student("Donald", "Trump","snumber4"))
+        studentList.add(Student("Pieter", "Volders","snumber5"))
+        studentList.add(Student("Jonas", "Adriaanssens","snumber6"))
+        studentList.add(Student("Halima", "Rahimi","S425316"))
+        studentList.add(Student("Halima", "Rahimi","S425315"))*/
 
         // lijst imported csv
         var sList = getStudentsFromLocalCSV(this)
@@ -93,7 +96,7 @@ class MainActivity : AppCompatActivity() {
                 resetPage()
 //                Toast.makeText(this, "STUDENT", Toast.LENGTH_SHORT).show()
             }
-            else if (boolAdmin && selectedStudent.password == password) {
+            else if (boolAdmin ) {
                 intent = Intent(this, AdminActivity::class.java)
                 startActivity(intent)
                 resetPage()
