@@ -9,6 +9,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
 import android.widget.Toast
+import androidx.core.database.getStringOrNull
 import be.volders.integratedproject2020.Admin.AddressWithIdFirebase
 import be.volders.integratedproject2020.Model.*
 import java.time.LocalDate
@@ -130,16 +131,17 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
 
     }
 
-    fun addStudent(student: Student): Long{
-        val db = this.writableDatabase
-        val values = ContentValues().apply {
-            put(STUDENT_ID, student.snumber)
-            put(FIRSTNAME, student.name)
-            put(LASTNAME, student.lastname)
-        }
-        val result = db.insert(TABLE_STUDENTS, null, values)
-        db.close()
-        return result
+
+    fun addStudent(student: Student){
+            val db = this.writableDatabase
+            val values = ContentValues().apply {
+                put(STUDENT_ID, student.snumber)
+                put(FIRSTNAME, student.name)
+                put(LASTNAME, student.lastname)
+            }
+            // inserts new if not exists. If exists => replace
+            db.replace(TABLE_STUDENTS, null, values)
+            db.close()
     }
 
     fun getAllStudent(): ArrayList<Student>{
@@ -163,9 +165,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
             }
             c.close()
         }catch (e: SQLiteException){
-
         }
-
         return studentList
     }
 
@@ -302,7 +302,6 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         values.put(SIGNATURE_LINK, adres.signatureLink)
 
         val result = db.insert(TABLE_LOCATION, null, values)
-        Log.d("FIL", "location opgeslagen: ${values}")
         db.close()
         return !result.equals( -1)
     }
@@ -322,7 +321,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                     stname = c.getString(c.getColumnIndex(LASTNAME))
                     stfirstname = c.getString(c.getColumnIndex(FIRSTNAME))
                     stsnr = c.getString(c.getColumnIndex(STUDENT_ID))
-                    var s = Student(stname,stfirstname,stsnr) //PASSWORD MAG WEG
+                    var s = Student(stname,stfirstname,stsnr)
                     StudentList.add(s)
                     Log.d("FIL", "afterTextChanged: ${s.name}")
                 }while(c.moveToNext())
@@ -359,7 +358,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 dbTown = c.getString(c.getColumnIndex(TOWN))?:""
                 dbNeibhourhood = c.getString(c.getColumnIndex(NEIGHBOURHOOD))?:""
                 dbCountry = c.getString(c.getColumnIndex(COUNTRY))?:""
-                dbDatum = c.getString(c.getColumnIndex(TIMESTAMP))
+                dbDatum = c.getStringOrNull(c.getColumnIndex(TIMESTAMP)).toString()//c.getString(c.getColumnIndex(TIMESTAMP))
                 var s = SignatureList(img,dbRoad,dbHouseNubmer,dbPostCode,dbTown,dbNeibhourhood,dbCountry,dbDatum)
                 signatureList.add(s)
                 Log.d("sig", "adres: ${s.imageByteArray.toString()}")

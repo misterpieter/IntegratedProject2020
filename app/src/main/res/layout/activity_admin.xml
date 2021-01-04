@@ -8,10 +8,10 @@
 
     <TextView
         android:id="@+id/Welcome"
-        android:layout_width="173dp"
-        android:layout_height="47dp"
-        android:layout_marginTop="50dp"
-        android:text="Admin Page"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Admin pagina"
+        android:textAlignment="center"
         android:textSize="20sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -19,32 +19,42 @@
 
     <Button
         android:id="@+id/btnImportCSV"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_marginRight="60dp"
+        android:layout_marginLeft="60dp"
         android:layout_marginTop="70dp"
         android:text="Import CSV"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/Welcome" />
+        app:layout_constraintTop_toTopOf="@id/Welcome"
+        android:textColor="@color/white"
+        android:background="@drawable/button"
+        />
 
 
     <Button
         android:id="@+id/btnClearDB"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:layout_marginRight="60dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginTop="20dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="404dp"
-        android:text="Clean DB"
+        android:background="@drawable/button"
         android:enabled="true"
-        app:layout_constraintHorizontal_bias="0.517"
+        android:text="Verwijder Local Storage DB"
+        android:textColor="@color/white"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/Welcome" />
+        app:layout_constraintTop_toBottomOf="@+id/btnUpdateLocation" />
 
     <Button
         android:id="@+id/btnExportCSV"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:layout_marginRight="60dp"
+        android:layout_marginLeft="60dp"
         android:layout_height="wrap_content"
-        android:text="Export"
+        android:text="CSV exporteren"
         android:layout_marginTop="20dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -56,30 +66,38 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Show Student List"
+        android:text="Lijst studenten"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnExportCSV" />
 
     <Button
         android:id="@+id/btnSync"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:layout_marginRight="60dp"
+        android:layout_marginLeft="60dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="70dp"
-        android:text="Sync now"
+        android:text="Firebase Synchronisatie"
         android:enabled="false"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/btnShowAllStudents"
+        android:textColor="@color/white"
+        android:background="@drawable/button"
         />
 
     <Button
         android:id="@+id/btnUpdateLocation"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="60dp"
         android:layout_marginTop="70dp"
-        android:text="Update location in database"
+        android:layout_marginRight="60dp"
+        android:background="@drawable/button"
         android:enabled="false"
+        android:text="Adres ophalen van LAT/LON"
+        android:textColor="@color/white"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/btnSync"
@@ -90,10 +108,12 @@
         android:id="@+id/btnHome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="28dp"
         android:text="Home"
+        android:layout_marginBottom="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        android:textColor="@color/white"
+        android:background="@drawable/home_button"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -36,7 +36,6 @@ import java.net.URL
 import java.time.LocalDate
 import java.util.*
 
-
 lateinit var recognize:Button
 lateinit var clear:Button
 lateinit var drawingView: DrawingView
@@ -72,7 +71,6 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
         clear = findViewById(R.id.clear)
         drawingView = findViewById(R.id.drawingView)
 
-
         recognize.setOnClickListener {
             StrokeManager.recognize(this)
         }
@@ -100,9 +98,9 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
             path = saveImage(bitmap)
 
             databaseHelper!!.addStudent(saveStudent)
+            //databaseHelper!!.addStudent(saveStudent)
             val bytes = convertSignatur(bitmap)
             databaseHelper!!.insetImage(bytes, saveStudent.name + "_" + saveStudent.lastname, saveStudent.snumber, sigAndLocationLink.toString(), drawingView.getReleaseCounter(), drawingView.getVectorCounter(), suspiciousSignature)
-            Log.d("InsertImageCounterValues", "releases: ${drawingView.getReleaseCounter()}     vectors: ${drawingView.getVectorCounter()} ")
 
             getLocation()
 
