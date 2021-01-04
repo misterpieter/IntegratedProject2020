@@ -126,6 +126,12 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         onCreate(db)
         db.close()
     }
+
+    fun tabelexist(tabel: String){
+
+    }
+
+
     fun addStudent(student: Student){
             val db = this.writableDatabase
             val values = ContentValues().apply {
@@ -136,16 +142,6 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
             // inserts new if not exists. If exists => replace
             db.replace(TABLE_STUDENTS, null, values)
             db.close()
-    fun addStudent(student: Student): Long{
-        val db = this.writableDatabase
-        val values = ContentValues().apply {
-            put(STUDENT_ID, student.snumber)
-            put(FIRSTNAME, student.name)
-            put(LASTNAME, student.lastname)
-        }
-        val result = db.insert(TABLE_STUDENTS, null, values)
-        db.close()
-        return result
     }
 
     fun getAllStudent(): ArrayList<Student>{
@@ -169,9 +165,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
             }
             c.close()
         }catch (e: SQLiteException){
-
         }
-
         return studentList
     }
 
@@ -327,7 +321,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                     stname = c.getString(c.getColumnIndex(LASTNAME))
                     stfirstname = c.getString(c.getColumnIndex(FIRSTNAME))
                     stsnr = c.getString(c.getColumnIndex(STUDENT_ID))
-                    var s = Student(stname,stfirstname,stsnr)
+                    var s = Student(stname,stfirstname,stsnr,"password") //PASSWORD MAG WEG
                     StudentList.add(s)
                     Log.d("FIL", "afterTextChanged: ${s.name}")
                 }while(c.moveToNext())
@@ -336,6 +330,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         }catch (e: SQLiteException){
 
         }
+
         return StudentList
     }
 
