@@ -72,7 +72,6 @@ class StudentListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListe
                 }else{
                     Toast.makeText(this, "Zijn geen studenten", Toast.LENGTH_SHORT).show()
                 }
-
             }
         }
 
