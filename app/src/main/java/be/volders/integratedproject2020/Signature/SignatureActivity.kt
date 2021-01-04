@@ -65,7 +65,7 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
 
         val saveStudent = Student(intent.getStringExtra("studentFirstname").toString(),
                 intent.getStringExtra("studentLastname").toString(),
-                intent.getStringExtra("studentSnr").toString(), "halima")
+                intent.getStringExtra("studentSnr").toString())
 
         btnStore = findViewById(R.id.buttonSave)
         recognize = findViewById(R.id.recognize)
@@ -90,18 +90,17 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
         }
         btnStore.setOnClickListener{
 
-
-
             snumber = saveStudent.snumber
-
             bitmap = drawingView.drawToBitmap()
 
             //Method that checks suspicion level and sets suspicion value
             CheckSuspicion(snumber, drawingView.getReleaseCounter(), drawingView.getVectorCounter())
             Log.d("SUSPISION", "Is this signature suspiscious ?     $suspiciousSignature")
 
-
             path = saveImage(bitmap)
+
+
+            //TODO: add check for student
             databaseHelper!!.addStudent(saveStudent)
             val bytes = convertSignatur(bitmap)
             databaseHelper!!.insetImage(bytes, saveStudent.name + "_" + saveStudent.lastname, saveStudent.snumber, sigAndLocationLink.toString(), drawingView.getReleaseCounter(), drawingView.getVectorCounter(), suspiciousSignature)
