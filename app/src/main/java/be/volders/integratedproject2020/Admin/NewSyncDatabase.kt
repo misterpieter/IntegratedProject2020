@@ -3,10 +3,8 @@ package be.volders.integratedproject2020.Admin
 import android.content.Context
 import be.volders.integratedproject2020.DatabaseHelpe
 import be.volders.integratedproject2020.Model.SignatureHelper
-import be.volders.integratedproject2020.Model.Student
 import com.google.firebase.firestore.FirebaseFirestore
 import java.sql.Date
-import java.time.LocalDate
 import java.util.*
 
 class NewSyncDatabase(context: Context) {
@@ -16,12 +14,12 @@ class NewSyncDatabase(context: Context) {
 
     private fun signatureConverter(signature : SignatureHelper) : SignatureConvertedFirebase {
         val encodedImage: String = Base64.getEncoder().encodeToString(signature.imageByteArray)
-        return SignatureConvertedFirebase(signature.imageId, encodedImage, signature.fkStudent, signature.fkAddress)
+        return SignatureConvertedFirebase(signature.imageId, encodedImage, signature.fkStudent, signature.locationLink)
     }
 
     private fun locationConverter(address : AddressWithIdFirebase) : LocationUsingDate {
         var newDate : Date = Date.valueOf(address.date.toString())
-        return LocationUsingDate(address.addressId, address.lat, address.lon, newDate, address.fkSnumber, address.road, address.houseNumber, address.postcode, address.town, address.neighbourhood, address.county)
+        return LocationUsingDate(address.addressId, address.lat, address.lon, newDate, address.fkSnumber, address.signatureLink , address.road, address.houseNumber, address.postcode, address.town, address.neighbourhood, address.county)
     }
 
 
@@ -32,6 +30,7 @@ class NewSyncDatabase(context: Context) {
             var lon: Double,
             var date: Date,
             var fkSnumber: String,
+            var signatureLink: String,
             var road: String? = "NO road",
             var houseNumber: Int? = 0,
             var postcode: Int? = 0,
@@ -59,7 +58,7 @@ class NewSyncDatabase(context: Context) {
         for(sign in signList) {
             //names the document to snumber
             val imgRef = mFirestore.collection("Students").document(sign.fkStudent)
-                    .collection("Locations").document(sign.fkAddress.toString()).collection("Signatures").document(sign.imageId.toString())
+                    .collection("Locations").document(sign.locationLink).collection("Signatures").document(sign.imageId.toString())
             batch[imgRef] = signatureConverter(sign)
         }
         batch.commit()
@@ -79,7 +78,7 @@ class NewSyncDatabase(context: Context) {
 
             for(address in locationList) {
                 //names the document to snumber
-                val locationRef = mFirestore.collection("Students").document(address.fkSnumber).collection("Locations").document(address.addressId.toString())
+                val locationRef = mFirestore.collection("Students").document(address.fkSnumber).collection("Locations").document(address.signatureLink)
                 batch[locationRef] = locationConverter(address)
             }
             batch.commit()

@@ -8,6 +8,7 @@ class AddressWithIdFirebase(
         var lon: Double,
         var date: LocalDate,
         var fkSnumber: String,
+        var signatureLink: String,
 
         var road: String? = "NO road",
         var houseNumber: Int? = 0,

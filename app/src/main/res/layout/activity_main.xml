@@ -8,27 +8,38 @@
     android:id="@+id/parentView"
     >
 
+    <TextView
+        android:id="@+id/tvSignIn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Log in"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:layout_marginTop="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
     <AutoCompleteTextView
         android:id="@+id/actvStudents"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="30dp"
         android:layout_marginRight="20dp"
+        android:layout_marginTop="50dp"
         android:completionThreshold="1"
-        android:hint="Naam, voornaam of snummer"
+        android:hint="naam, voornaam of snummer"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/tvSignIn"
+        />
 
     <EditText
         android:id="@+id/etPassword"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_margin="20dp"
         android:ems="10"
         android:inputType="textPassword"
         android:hint="paswoord"
@@ -41,13 +52,21 @@
         android:id="@+id/btnLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="80dp"
         android:text="Log in"
+
+        android:layout_marginBottom="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etPassword" />
+        android:textColor="@color/white"
+        android:background="@drawable/home_button"
+        />
 
     <Button
+        android:visibility="gone"
         android:id="@+id/btnSignature"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -58,11 +77,12 @@
         app:layout_constraintTop_toBottomOf="@+id/btnLogin" />
 
     <Button
+        android:visibility="gone"
         android:id="@+id/btnAdmin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Admin"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnSignature" />

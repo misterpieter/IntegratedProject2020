@@ -11,10 +11,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.core.database.getStringOrNull
 import be.volders.integratedproject2020.Admin.AddressWithIdFirebase
-import be.volders.integratedproject2020.Model.Address
-import be.volders.integratedproject2020.Model.SignatureHelper
-import be.volders.integratedproject2020.Model.SignatureList
-import be.volders.integratedproject2020.Model.Student
+import be.volders.integratedproject2020.Model.*
 import java.time.LocalDate
 
 
@@ -40,6 +37,10 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         private val SIGNATURE_BITMAP = "signature_bitmap"
         private val FK_STUDENT_ID = "fk_student_id"
         private val FK_LOCATION_ID = "fk_location_id"
+        private val LOCATION_LINK = "location_link"
+        private val RELEASE_COUNT = "release_count"
+        private val VECTOR_COUNT = "vector_count"
+        private val SUSPICIOUS = "supsicious"
 
         //LOCATIE
         private val LOCATION_ID = "location_id"
@@ -52,6 +53,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         private val TOWN = "town"
         private val NEIGHBOURHOOD = "neighbourhood"
         private val COUNTRY = "country"
+        private val SIGNATURE_LINK = "signature_link"
 
         val selectQuery = "SELECT + FROM $TABLE_STUDENTS"
         private val CREATE_TABLE_STUDENTS = ("CREATE TABLE IF not exists "
@@ -66,6 +68,10 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 + SIGNATURE_BITMAP + " BLOB , "
                 + FK_LOCATION_ID + " INTEGER, "
                 + FK_STUDENT_ID + " VARCHAR(20), "
+                + LOCATION_LINK + " VARCHAR(50), "
+                + RELEASE_COUNT + " INTEGER, "
+                + VECTOR_COUNT + " INTEGER, "
+                + SUSPICIOUS + " BOOL, "
                 + " FOREIGN KEY( " + FK_STUDENT_ID + " ) REFERENCES " + TABLE_STUDENTS + " ( " + STUDENT_ID + " ), "
                 + " FOREIGN KEY( " + FK_LOCATION_ID + " ) REFERENCES " + TABLE_LOCATION + " ( " + LOCATION_ID + " ));"
                 )
@@ -81,6 +87,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 + TOWN + " VARCHAR(40), "
                 + NEIGHBOURHOOD + " VARCHAR(40), "
                 + COUNTRY + " VARCHAR(40), "
+                + SIGNATURE_LINK + " VARCHAR(50), "
                 + FK_STUDENT_ID + " VARCHAR(20), "
                 + " FOREIGN KEY( " + FK_STUDENT_ID + " ) REFERENCES " + TABLE_STUDENTS + " ( " + STUDENT_ID + " ));"
                 )
@@ -153,7 +160,9 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
             }
             c.close()
         }catch (e: SQLiteException){
+
         }
+
         return studentList
     }
 
@@ -162,7 +171,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         var dbImageId : String
         var dbImageByteArray : ByteArray
         var fkStudent : String
-        var fkAddress : Int
+        var locationLink: String
 
 
         val selectQuery ="SELECT * FROM $TABLE_SIGNATURE"
@@ -172,12 +181,9 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
             do{
                 dbImageId = c.getString(c.getColumnIndex(SIGNATURE_ID))
                 dbImageByteArray = c.getBlob(c.getColumnIndex(SIGNATURE_BITMAP))//c.getColumnIndex(SIGNATURE_BITMAP))
-              //  val img = BitmapFactory.decodeByteArray(dbImageByteArray, 0, dbImageByteArray.size)
-
-                //dbImageByteArray = c.getString(c.getColumnIndex(SIGNATURE_BITMAP)).toByteArray()
                 fkStudent = c.getString(c.getColumnIndex(FK_STUDENT_ID))
-                fkAddress = c.getInt(c.getColumnIndex(FK_LOCATION_ID))
-                var signature = SignatureHelper(dbImageId, dbImageByteArray ,fkStudent,fkAddress)
+                locationLink = c.getString(c.getColumnIndex(LOCATION_LINK))
+                var signature = SignatureHelper(dbImageId, dbImageByteArray ,fkStudent, locationLink)
                 signList.add(signature)
             }while(c.moveToNext())
         }
@@ -185,13 +191,17 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         return signList
     }
 
-    fun insetImage(dbBitmap: ByteArray, imageId: String?, studentNr: String): Boolean {
+    fun insetImage(dbBitmap: ByteArray, imageId: String?, studentNr: String, locationLink: String, releaseCount: Int, vectorCount: Int, suspiscious: Boolean): Boolean {
         val db = this.writableDatabase
         val values = ContentValues()
 
         values.put(SIGNATURE_NAME, imageId)
         values.put(FK_STUDENT_ID, studentNr)
         values.put(SIGNATURE_BITMAP, dbBitmap)
+        values.put(LOCATION_LINK, locationLink)
+        values.put(RELEASE_COUNT, releaseCount)
+        values.put(VECTOR_COUNT, vectorCount)
+        values.put(SUSPICIOUS, suspiscious)
 
         val result = db.insert(TABLE_SIGNATURE, null, values)
         db.close()
@@ -213,6 +223,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         var dbTown : String
         var dbNeibhourhood : String
         var dbCountry : String
+        var signatureLink : String
 
         val selectQuery ="SELECT * FROM $TABLE_LOCATION"
         val db = this.readableDatabase
@@ -231,9 +242,10 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 dbTown = c.getString(c.getColumnIndex(TOWN))
                 dbNeibhourhood = c.getString(c.getColumnIndex(NEIGHBOURHOOD))
                 dbCountry = c.getString(c.getColumnIndex(COUNTRY))
+                signatureLink = c.getString(c.getColumnIndex(SIGNATURE_LINK))
 
 
-                val location = AddressWithIdFirebase(dbLocId, dbLat, dbLon, date, fkSnumber, dbRoad, dbHouseNubmer, dbPostCode, dbTown, dbNeibhourhood, dbCountry)
+                val location = AddressWithIdFirebase(dbLocId, dbLat, dbLon, date, fkSnumber , signatureLink, dbRoad, dbHouseNubmer, dbPostCode, dbTown, dbNeibhourhood, dbCountry)
                 locationList.add(location)
             }while(c.moveToNext())
         }
@@ -274,6 +286,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         values.put(TOWN, adres.town)
         values.put(NEIGHBOURHOOD, adres.neighbourhood)
         values.put(COUNTRY, adres.county)
+        values.put(SIGNATURE_LINK, adres.signatureLink)
 
         val result = db.insert(TABLE_LOCATION, null, values)
         db.close()
@@ -304,7 +317,6 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         }catch (e: SQLiteException){
 
         }
-
         return StudentList
     }
 
@@ -342,4 +354,45 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         db.close()
         return signatureList
     }
+
+
+    // SELECT  * from signature where fk_student_id='snumber6'  ORDER by signature_id ASC limit 1
+
+    fun getFirstSignature(snumber: String): SignatureCheck {
+        var imageId : String? = null
+        var imageByteArray: ByteArray = byteArrayOf()
+        var fkStudent = ""
+        var releaseCounter = 0
+        var vectorCounter = 0
+
+
+        val selectQuery = "SELECT * FROM " + TABLE_SIGNATURE + " WHERE " + FK_STUDENT_ID +
+                " = '" + snumber + "' order by " + SIGNATURE_ID + " ASC LIMIT 1"
+
+        val db = this.readableDatabase
+        var c = db.rawQuery(selectQuery, null)
+        if(c.moveToFirst()) {
+            do {
+                imageId = c.getString(c.getColumnIndex(SIGNATURE_ID))
+                imageByteArray = c.getBlob(c.getColumnIndex(SIGNATURE_BITMAP))
+                fkStudent = c.getString(c.getColumnIndex(FK_STUDENT_ID))
+                releaseCounter = c.getInt(c.getColumnIndex(RELEASE_COUNT))
+                vectorCounter = c.getInt(c.getColumnIndex(VECTOR_COUNT))
+            }while (c.moveToNext())
+        }
+        db.close()
+        return SignatureCheck(imageId, imageByteArray, fkStudent, releaseCounter, vectorCounter)
+
+    }
+
+/*
+    class SignatureCheck (
+            var imageId: String?,
+            var imageByteArray: ByteArray,
+            var fkStudent: String,
+            var releaseCounter: Int,
+            var vectorCounter: Int
+    )
+    */
+
 }

@@ -1,8 +1,9 @@
 package be.volders.integratedproject2020.Model
 
-class SignatureHelper(
+class SignatureCheck (
         var imageId: String?,
         var imageByteArray: ByteArray,
         var fkStudent: String,
-        var locationLink: String
+        var releaseCounter: Int,
+        var vectorCounter: Int
 )

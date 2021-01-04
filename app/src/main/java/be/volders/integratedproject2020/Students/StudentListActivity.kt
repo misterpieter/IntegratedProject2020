@@ -1,5 +1,6 @@
 package be.volders.integratedproject2020.Students
 
+import android.content.Intent
 import android.database.sqlite.SQLiteException
 import android.os.Bundle
 import android.util.Log
@@ -10,9 +11,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import be.volders.integratedproject2020.DatabaseHelpe
 import be.volders.integratedproject2020.Helper.getStudentsFromLocalCSV
+import be.volders.integratedproject2020.MainActivity
 import be.volders.integratedproject2020.Model.Student
 import be.volders.integratedproject2020.R
 import be.volders.integratedproject2020.Students.rvPersons
+import kotlinx.android.synthetic.main.activity_admin.*
 import kotlinx.android.synthetic.main.activity_student_list.ettFilter
 import java.util.*
 import java.time.LocalDate
@@ -36,6 +39,12 @@ class StudentListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListe
 
         rvPersons = findViewById<RecyclerView>(R.id.rvPersons)
         rvPersons.layoutManager = LinearLayoutManager(this)
+
+
+        btnHome.setOnClickListener {
+            intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
 
         studentlist = databaseHelper!!.getAllStudent()
         val spinner: Spinner = findViewById(R.id.spSorteren)
