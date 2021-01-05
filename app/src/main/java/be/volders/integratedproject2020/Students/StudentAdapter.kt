@@ -36,6 +36,7 @@ class StudentAdapter(context:Context, private val students: List<Student>) : Rec
         if (databaseHelper?.getSuspiciousOrNot(student.snumber) == true) {
             holder.tvName.setTextColor(Color.RED)
             holder.tvLastName.setTextColor(Color.RED)
+            holder.tvSnumber.setTextColor(Color.RED)
         }
 
 
