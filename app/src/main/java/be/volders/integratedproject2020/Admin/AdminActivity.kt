@@ -73,11 +73,6 @@ class AdminActivity : AppCompatActivity() {
             }
             BackupToFirebase()
         }
-
-        btnUpdateLocation.setOnClickListener{
-            UpdateAddresses()
-            Toast.makeText(this, "Succesfully updated locations", Toast.LENGTH_SHORT).show()
-        }
     }
 
     fun UpdateAdressesBeforeUpload() {
