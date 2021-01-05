@@ -66,6 +66,8 @@ class AdminActivity : AppCompatActivity() {
 
         btnSync.setOnClickListener{
             //Coroutine : pauses main thread untill update UpdateAdressesBeforeUpload is done
+
+            Toast.makeText(this,"Starting synchronization", Toast.LENGTH_SHORT).show()
             runBlocking {
                 UpdateAdressesBeforeUpload()
             }
@@ -93,6 +95,7 @@ class AdminActivity : AppCompatActivity() {
             newDBsyn.saveOrUpdateAllStudents()
             newDBsyn.saveOrUpdateAllLocations()
             newDBsyn.saveOrUpdateAllSignatures()
+            Toast.makeText(this, "Synchronization complete", Toast.LENGTH_SHORT).show()
         }
         catch (e: Exception) {
             Toast.makeText(this, "Could not synchronize to firebase", Toast.LENGTH_SHORT).show()
