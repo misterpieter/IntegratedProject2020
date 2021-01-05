@@ -43,13 +43,17 @@ class AdminActivity : AppCompatActivity() {
             btnShowAllStudents.isEnabled = true
         }
 
-        btnShowAllStudents.setOnClickListener {
-            intent = Intent(this, StudentListActivity::class.java)
-            startActivity(intent)
+        //If database is empty => disable buttons clearDB and btnShowAllStudents
+        if (DatabaseEmptyCheck()){
+            btnClearDB.isEnabled = false
+            btnShowAllStudents.isEnabled = false
+        } else {
+            btnClearDB.isEnabled = true
+            btnShowAllStudents.isEnabled = true
         }
 
-        btnHome.setOnClickListener {
-            intent = Intent(this, MainActivity::class.java)
+        btnShowAllStudents.setOnClickListener {
+            intent = Intent(this, StudentListActivity::class.java)
             startActivity(intent)
         }
 
@@ -57,6 +61,7 @@ class AdminActivity : AppCompatActivity() {
             databaseHelper?.clearDatabase()
             Toast.makeText(this, "DB is leeg gemaakt", Toast.LENGTH_SHORT).show()
             btnShowAllStudents.isEnabled = false
+            btnClearDB.isEnabled = false
         }
 
         if (haveNetworkConnection()){
@@ -71,7 +76,27 @@ class AdminActivity : AppCompatActivity() {
             }
             BackupToFirebase()
         }
+
+        btnHome.setOnClickListener {
+            intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
     }
+
+    fun DatabaseEmptyCheck() : Boolean {
+        var isEmpty = true
+        try {
+            var studentList = databaseHelper!!.getAllStudent()
+
+            if (!studentList!!.isEmpty()) {
+                isEmpty = true
+            }
+        }catch (ex : Exception) {
+            Log.e("DatabaseCheck", ex.stackTraceToString())
+        }
+        return isEmpty
+    }
+
 
     fun UpdateAdressesBeforeUpload() {
         try {
