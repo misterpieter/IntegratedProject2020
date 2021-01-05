@@ -61,12 +61,10 @@ class AdminActivity : AppCompatActivity() {
 
         if (haveNetworkConnection()){
             btnSync.isEnabled = true
-            btnUpdateLocation.isEnabled = true
         }
 
         btnSync.setOnClickListener{
             //Coroutine : pauses main thread untill update UpdateAdressesBeforeUpload is done
-
             Toast.makeText(this,"Starting synchronization", Toast.LENGTH_SHORT).show()
             runBlocking {
                 UpdateAdressesBeforeUpload()

@@ -48,7 +48,7 @@
         android:textColor="@color/white"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnUpdateLocation" />
+        app:layout_constraintTop_toBottomOf="@+id/btnSync" />
 
     <Button
         android:id="@+id/btnExportCSV"
@@ -97,22 +97,6 @@
         android:background="@drawable/button"
         />
 
-    <Button
-        android:id="@+id/btnUpdateLocation"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="60dp"
-        android:layout_marginTop="70dp"
-        android:layout_marginRight="60dp"
-        android:background="@drawable/button"
-        android:enabled="false"
-        android:text="Adres ophalen van LAT/LON"
-        android:textColor="@color/white"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/btnSync"
-        />
-
 
     <Button
         android:id="@+id/btnHome"
@@ -126,4 +110,5 @@
         android:textColor="@color/white"
         android:background="@drawable/home_button"
         />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
