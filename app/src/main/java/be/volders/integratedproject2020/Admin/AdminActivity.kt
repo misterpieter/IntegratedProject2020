@@ -40,7 +40,6 @@ class AdminActivity : AppCompatActivity() {
             intent.addCategory(Intent.CATEGORY_OPENABLE)
             intent.type = "*/*"
             startActivityForResult(intent, REQUEST_CODE)
-            btnShowAllStudents.isEnabled = true
         }
 
         //If database is empty => disable buttons clearDB and btnShowAllStudents
