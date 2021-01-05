@@ -47,9 +47,13 @@ class AdminActivity : AppCompatActivity() {
         if (DatabaseEmptyCheck()){
             btnClearDB.isEnabled = false
             btnShowAllStudents.isEnabled = false
+            btnSync.isEnabled = false
         } else {
             btnClearDB.isEnabled = true
             btnShowAllStudents.isEnabled = true
+            if (haveNetworkConnection()){
+                btnSync.isEnabled = true
+            }
         }
 
         btnShowAllStudents.setOnClickListener {
@@ -62,11 +66,9 @@ class AdminActivity : AppCompatActivity() {
             Toast.makeText(this, "DB is leeg gemaakt", Toast.LENGTH_SHORT).show()
             btnShowAllStudents.isEnabled = false
             btnClearDB.isEnabled = false
+            btnSync.isEnabled = false
         }
 
-        if (haveNetworkConnection()){
-            btnSync.isEnabled = true
-        }
 
         btnSync.setOnClickListener{
             //Coroutine : pauses main thread untill update UpdateAdressesBeforeUpload is done
@@ -87,9 +89,8 @@ class AdminActivity : AppCompatActivity() {
         var isEmpty = true
         try {
             var studentList = databaseHelper!!.getAllStudent()
-
-            if (!studentList!!.isEmpty()) {
-                isEmpty = true
+            if (studentList!!.isNotEmpty()) {
+                isEmpty = false
             }
         }catch (ex : Exception) {
             Log.e("DatabaseCheck", ex.stackTraceToString())
