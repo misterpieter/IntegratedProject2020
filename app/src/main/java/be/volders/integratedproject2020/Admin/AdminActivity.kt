@@ -11,7 +11,9 @@ import be.volders.integratedproject2020.DatabaseHelpe
 import be.volders.integratedproject2020.Helper.getStudentsFromCSVString
 import be.volders.integratedproject2020.Helper.loadDataFromIntent
 import be.volders.integratedproject2020.MainActivity
+import be.volders.integratedproject2020.Model.SignatureList
 import be.volders.integratedproject2020.Model.Student
+import be.volders.integratedproject2020.Model.exportdata
 import be.volders.integratedproject2020.R
 import be.volders.integratedproject2020.Students.StudentListActivity
 import kotlinx.android.synthetic.main.activity_admin.*
@@ -21,17 +23,20 @@ import java.io.IOException
 import kotlinx.coroutines.*
 import okhttp3.internal.wait
 
-
+lateinit var studentlist : ArrayList<exportdata>
 class AdminActivity : AppCompatActivity() {
     val REQUEST_CODE = 1
     lateinit var dataString:String
     var databaseHelper: DatabaseHelpe? = DatabaseHelpe(this)
+    var exporthelper: exportHelper = exportHelper()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_admin)
 
         btnExportCSV.setOnClickListener {
+            studentlist = databaseHelper!!.getExportData()
+            exporthelper.export(studentlist,this)
             Toast.makeText(this, "Nog niet geimplementeerd", Toast.LENGTH_SHORT).show()
         }
 
@@ -101,7 +106,6 @@ class AdminActivity : AppCompatActivity() {
         Log.d("SYNCBUTTON", "backed up to firebase" )
     }
 
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
@@ -120,15 +124,8 @@ class AdminActivity : AppCompatActivity() {
                         val saveStudent = Student(firstname, lasstname,snr)
                         databaseHelper!!.addStudent(saveStudent)
                     }
-                    /*
-                    var str = dataString.split(",").toTypedArray()
-                    for(s in str){
-
-
-                    }*/
                     Toast.makeText(this, "CSV is ingeladen", Toast.LENGTH_SHORT).show()
                 }
-
             } catch (e: Exception) {
                 Toast.makeText(
                     this,

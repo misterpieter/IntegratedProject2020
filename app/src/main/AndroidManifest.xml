@@ -42,6 +42,15 @@
         <activity android:name=".StudentDetails.StudentDetailsActivity" />
         <activity android:name=".MainActivity">
         </activity>
+        <provider
+            android:authorities="be.volders.integratedproject2020.fileprovider"
+            android:name="androidx.core.content.FileProvider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
     </application>
 
 </manifest>

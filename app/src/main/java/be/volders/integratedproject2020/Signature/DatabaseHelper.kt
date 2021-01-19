@@ -101,6 +101,12 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                         ", l."+TOWN+", l."+NEIGHBOURHOOD+", l."+COUNTRY+" from "+TABLE_SIGNATURE+" as s "+
                         "left join "+TABLE_LOCATION+" as l on l."+FK_STUDENT_ID+" = s."+FK_STUDENT_ID
                 )
+        private val EXPORTDATASTUDENT = (
+                "select st."+FIRSTNAME+", st."+LASTNAME+", st."+STUDENT_ID+", l."+ ROAD+",  l."+HOUSE_NUMBER+", l."+POSTCODE+
+                        ", l."+TOWN+", l."+NEIGHBOURHOOD+", l."+COUNTRY+", l."+TIMESTAMP+
+                        " from "+TABLE_LOCATION+" as l " +
+                        " left join "+TABLE_STUDENTS+" as st on st."+STUDENT_ID+" = l."+FK_STUDENT_ID
+                )
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
@@ -126,11 +132,6 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         onCreate(db)
         db.close()
     }
-
-    fun tabelexist(tabel: String){
-
-    }
-
 
     fun addStudent(student: Student){
             val db = this.writableDatabase
@@ -368,6 +369,41 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         return signatureList
     }
 
+    fun getExportData(): ArrayList<exportdata>{
+        val studentlist = ArrayList<exportdata>()
+        var dbsudetid: String
+        var dbfirstname: String
+        var dblastname: String
+        var dbRoad : String
+        var dbHouseNubmer : Int
+        var dbPostCode : Int
+        var dbTown : String
+        var dbNeibhourhood : String
+        var dbCountry : String
+        var dbDatum: String
+
+        val selectQuery = EXPORTDATASTUDENT
+        val db = this.readableDatabase
+        var c = db.rawQuery(selectQuery,null)
+        if(c.moveToFirst()){
+            do{
+                dbsudetid = c.getString(c.getColumnIndex(STUDENT_ID))
+                dbfirstname = c.getString(c.getColumnIndex(LASTNAME))
+                dblastname = c.getString(c.getColumnIndex(FIRSTNAME))
+                dbRoad = c.getString(c.getColumnIndex(ROAD))?:""
+                dbHouseNubmer = c.getInt(c.getColumnIndex(HOUSE_NUMBER))?:0
+                dbPostCode = c.getInt(c.getColumnIndex(POSTCODE))?:0
+                dbTown = c.getString(c.getColumnIndex(TOWN))?:""
+                dbNeibhourhood = c.getString(c.getColumnIndex(NEIGHBOURHOOD))?:""
+                dbCountry = c.getString(c.getColumnIndex(COUNTRY))?:""
+                dbDatum = c.getStringOrNull(c.getColumnIndex(TIMESTAMP)).toString()//c.getString(c.getColumnIndex(TIMESTAMP))
+                var s = exportdata(dbsudetid,dbfirstname,dblastname,dbDatum,dbRoad,dbHouseNubmer,dbPostCode,dbTown,dbNeibhourhood,dbCountry)
+                studentlist.add(s)
+            }while(c.moveToNext())
+        }
+        db.close()
+        return studentlist
+    }
 
     // SELECT  * from signature where fk_student_id='snumber6'  ORDER by signature_id ASC limit 1
 
