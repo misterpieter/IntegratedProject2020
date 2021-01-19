@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.core.database.getStringOrNull
 import be.volders.integratedproject2020.Admin.AddressWithIdFirebase
 import be.volders.integratedproject2020.Model.*
+import java.sql.SQLException
 import java.time.LocalDate
 
 
@@ -145,6 +146,23 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
             db.close()
     }
 
+    fun getSuspiciousOrNot(snumber: String) : Boolean {
+        var hasFraude = false
+
+        val selectQuery = "SELECT * FROM $TABLE_SIGNATURE  WHERE $FK_STUDENT_ID =  \"$snumber\" AND $SUSPICIOUS=1"
+
+        try {
+            val db = this.readableDatabase
+            val c = db.rawQuery(selectQuery, null)
+            if (c.moveToFirst()) {
+                hasFraude = true
+            }
+        }catch (ex: SQLException) {
+            Log.e("GetSuspisiousOrNot", ex.stackTraceToString())
+        }
+        return hasFraude
+    }
+
     fun getAllStudent(): ArrayList<Student>{
         val studentList = ArrayList<Student>()
         var stname:String
@@ -165,7 +183,8 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 }while(c.moveToNext())
             }
             c.close()
-        }catch (e: SQLiteException){
+        }catch (ex: SQLiteException){
+            Log.e("getAllStudents", ex.stackTraceToString())
         }
         return studentList
     }

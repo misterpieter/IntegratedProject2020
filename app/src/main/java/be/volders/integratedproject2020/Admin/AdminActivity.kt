@@ -45,7 +45,19 @@ class AdminActivity : AppCompatActivity() {
             intent.addCategory(Intent.CATEGORY_OPENABLE)
             intent.type = "*/*"
             startActivityForResult(intent, REQUEST_CODE)
+        }
+
+        //If database is empty => disable buttons clearDB and btnShowAllStudents
+        if (DatabaseEmptyCheck()){
+            btnClearDB.isEnabled = false
+            btnShowAllStudents.isEnabled = false
+            btnSync.isEnabled = false
+        } else {
+            btnClearDB.isEnabled = true
             btnShowAllStudents.isEnabled = true
+            if (haveNetworkConnection()){
+                btnSync.isEnabled = true
+            }
         }
 
         btnShowAllStudents.setOnClickListener {
@@ -53,35 +65,43 @@ class AdminActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        btnHome.setOnClickListener {
-            intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-        }
-
         btnClearDB.setOnClickListener{
             databaseHelper?.clearDatabase()
             Toast.makeText(this, "DB is leeg gemaakt", Toast.LENGTH_SHORT).show()
             btnShowAllStudents.isEnabled = false
+            btnClearDB.isEnabled = false
+            btnSync.isEnabled = false
         }
 
-        if (haveNetworkConnection()){
-            btnSync.isEnabled = true
-            btnUpdateLocation.isEnabled = true
-        }
 
         btnSync.setOnClickListener{
             //Coroutine : pauses main thread untill update UpdateAdressesBeforeUpload is done
+            Toast.makeText(this,"Starting synchronization", Toast.LENGTH_SHORT).show()
             runBlocking {
                 UpdateAdressesBeforeUpload()
             }
             BackupToFirebase()
         }
 
-        btnUpdateLocation.setOnClickListener{
-            UpdateAddresses()
-            Toast.makeText(this, "Succesfully updated locations", Toast.LENGTH_SHORT).show()
+        btnHome.setOnClickListener {
+            intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
         }
     }
+
+    fun DatabaseEmptyCheck() : Boolean {
+        var isEmpty = true
+        try {
+            var studentList = databaseHelper!!.getAllStudent()
+            if (studentList!!.isNotEmpty()) {
+                isEmpty = false
+            }
+        }catch (ex : Exception) {
+            Log.e("DatabaseCheck", ex.stackTraceToString())
+        }
+        return isEmpty
+    }
+
 
     fun UpdateAdressesBeforeUpload() {
         try {
@@ -98,6 +118,7 @@ class AdminActivity : AppCompatActivity() {
             newDBsyn.saveOrUpdateAllStudents()
             newDBsyn.saveOrUpdateAllLocations()
             newDBsyn.saveOrUpdateAllSignatures()
+            Toast.makeText(this, "Synchronization complete", Toast.LENGTH_SHORT).show()
         }
         catch (e: Exception) {
             Toast.makeText(this, "Could not synchronize to firebase", Toast.LENGTH_SHORT).show()

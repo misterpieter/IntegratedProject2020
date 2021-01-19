@@ -2,6 +2,7 @@ package be.volders.integratedproject2020.Students
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,6 +32,18 @@ class StudentAdapter(context:Context, private val students: List<Student>) : Rec
         holder.tvLastName.text = student.lastname
         holder.tvName.text = student.name
         holder.tvSnumber.text = student.snumber
+
+        if (databaseHelper?.getSuspiciousOrNot(student.snumber) == true) {
+            holder.tvName.setTextColor(Color.RED)
+            holder.tvLastName.setTextColor(Color.RED)
+            holder.tvSnumber.setTextColor(Color.RED)
+        }
+
+
+//      to change color to red  holder.tvName.setTextColor(Color.RED)
+
+
+
 
         // click listener op item
         holder.itemView.setOnClickListener{
