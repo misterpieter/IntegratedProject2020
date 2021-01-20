@@ -14,6 +14,7 @@ import be.volders.integratedproject2020.Admin.AddressWithIdFirebase
 import be.volders.integratedproject2020.Model.*
 import java.sql.SQLException
 import java.time.LocalDate
+import kotlin.math.sign
 
 
 class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
@@ -364,7 +365,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         var dbCountry : String
         var dbDatum: String
         var i = 0
-        val selectQuery = GETSIGNATURE+" where s."+FK_STUDENT_ID+" = '"+snumber+"'"
+        val selectQuery = GETSIGNATURE+" where s."+FK_STUDENT_ID+" = '" + snumber + "'  Group by " + SIGNATURE_BITMAP
 
         val db = this.readableDatabase
         var c = db.rawQuery(selectQuery,null)
@@ -385,6 +386,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
             }while(c.moveToNext())
         }
         db.close()
+
         return signatureList
     }
 
@@ -425,7 +427,6 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
     }
 
     // SELECT  * from signature where fk_student_id='snumber6'  ORDER by signature_id ASC limit 1
-
     fun getFirstSignature(snumber: String): SignatureCheck {
         var imageId : String? = null
         var imageByteArray: ByteArray = byteArrayOf()
@@ -452,15 +453,5 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         return SignatureCheck(imageId, imageByteArray, fkStudent, releaseCounter, vectorCounter)
 
     }
-
-/*
-    class SignatureCheck (
-            var imageId: String?,
-            var imageByteArray: ByteArray,
-            var fkStudent: String,
-            var releaseCounter: Int,
-            var vectorCounter: Int
-    )
-    */
 
 }

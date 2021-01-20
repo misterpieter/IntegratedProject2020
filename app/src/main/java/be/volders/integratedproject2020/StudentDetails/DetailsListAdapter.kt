@@ -3,6 +3,7 @@ package be.volders.integratedproject2020.StudentDetails;
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,10 +17,6 @@ import be.volders.integratedproject2020.R
 
 class DetailsListAdapter(context: Context, private val signatuurList: List<SignatureList>) :  RecyclerView.Adapter<DetailsListAdapter.ViewHolder>() {
 
-    companion object {
-        const val STUDENTLIST = 1
-        const val STUDENTDETAILS = 2
-    }
     val context = context
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DetailsListAdapter.ViewHolder {
@@ -30,6 +27,8 @@ class DetailsListAdapter(context: Context, private val signatuurList: List<Signa
 
     override fun onBindViewHolder(holder: DetailsListAdapter.ViewHolder, position: Int) {
         val signature = signatuurList[position]
+
+
         holder.tvSignature?.setImageBitmap(signature.imageByteArray)
         holder.tvroad?.text = signature.dbRoad
         holder.tvhousenumber?.text = signature.dbHouseNubmer.toString()
