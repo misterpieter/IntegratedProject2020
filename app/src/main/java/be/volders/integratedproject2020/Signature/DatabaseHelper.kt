@@ -98,7 +98,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                         " left join "+TABLE_LOCATION+" as lo on st."+STUDENT_ID+" = lo."+FK_STUDENT_ID
                 )
         private  val GETSIGNATURE = (
-                "select s."+SIGNATURE_BITMAP+", l."+ ROAD+",  l."+HOUSE_NUMBER+", l."+POSTCODE+", l."+TIMESTAMP+
+                "select distinct s."+SIGNATURE_BITMAP+", l."+ ROAD+",  l."+HOUSE_NUMBER+", l."+POSTCODE+", l."+TIMESTAMP+
                         ", l."+TOWN+", l."+NEIGHBOURHOOD+", l."+COUNTRY+" from "+TABLE_SIGNATURE+" as s "+
                         "left join "+TABLE_LOCATION+" as l on l."+FK_STUDENT_ID+" = s."+FK_STUDENT_ID
                 )
