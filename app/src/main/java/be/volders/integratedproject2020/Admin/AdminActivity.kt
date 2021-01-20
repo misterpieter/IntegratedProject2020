@@ -37,7 +37,6 @@ class AdminActivity : AppCompatActivity() {
         btnExportCSV.setOnClickListener {
             studentlist = databaseHelper!!.getExportData()
             exporthelper.export(studentlist,this)
-            Toast.makeText(this, "Nog niet geimplementeerd", Toast.LENGTH_SHORT).show()
         }
 
         btnImportCSV.setOnClickListener {
