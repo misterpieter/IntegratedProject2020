@@ -100,7 +100,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 )
         private  val GETSIGNATURE = (
                 "select distinct s."+SIGNATURE_BITMAP+", l."+ ROAD+",  l."+HOUSE_NUMBER+", l."+POSTCODE+", l."+TIMESTAMP+
-                        ", l."+TOWN+", l."+NEIGHBOURHOOD+", l."+COUNTRY+" from "+TABLE_SIGNATURE+" as s "+
+                        ", l."+TOWN+", l."+NEIGHBOURHOOD+", l."+COUNTRY+" , s." + SIGNATURE_ID + " from "+TABLE_SIGNATURE+" as s "+
                         "left join "+TABLE_LOCATION+" as l on l."+FK_STUDENT_ID+" = s."+FK_STUDENT_ID
                 )
         private val EXPORTDATASTUDENT = (
@@ -365,7 +365,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         var dbCountry : String
         var dbDatum: String
         var i = 0
-        val selectQuery = GETSIGNATURE+" where s."+FK_STUDENT_ID+" = '" + snumber + "'  Group by " + SIGNATURE_BITMAP
+        val selectQuery = GETSIGNATURE+" where s."+FK_STUDENT_ID+" = '" + snumber + "'  Group by " + SIGNATURE_BITMAP + " order by " + SIGNATURE_ID
 
         val db = this.readableDatabase
         var c = db.rawQuery(selectQuery,null)
