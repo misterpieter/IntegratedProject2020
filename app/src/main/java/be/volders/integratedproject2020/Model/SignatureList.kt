@@ -10,7 +10,9 @@ class SignatureList(
         var dbTown: String,
         var dbNeibhourhood: String,
         var dbCountry: String,
-        var dbDatum: String
+        var dbDatum: String,
+        var dbsignatureId: Int,
+        var dbSuspisious : Boolean
 ) {
     override fun toString(): String {
         return "SignatureList( dbRoad='$dbRoad', dbHouseNubmer=$dbHouseNubmer, dbPostCode=$dbPostCode, dbTown='$dbTown', dbNeibhourhood='$dbNeibhourhood', dbCountry='$dbCountry', dbDatum='$dbDatum')"

@@ -100,7 +100,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 )
         private  val GETSIGNATURE = (
                 "select distinct s."+SIGNATURE_BITMAP+", l."+ ROAD+",  l."+HOUSE_NUMBER+", l."+POSTCODE+", l."+TIMESTAMP+
-                        ", l."+TOWN+", l."+NEIGHBOURHOOD+", l."+COUNTRY+" , s." + SIGNATURE_ID + " from "+TABLE_SIGNATURE+" as s "+
+                        ", l."+TOWN+", l."+NEIGHBOURHOOD+", l."+COUNTRY+" , s." + SIGNATURE_ID + " , s." + SUSPICIOUS +  " from "+TABLE_SIGNATURE+" as s "+
                         "left join "+TABLE_LOCATION+" as l on l."+FK_STUDENT_ID+" = s."+FK_STUDENT_ID
                 )
         private val EXPORTDATASTUDENT = (
@@ -364,7 +364,9 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         var dbNeibhourhood : String
         var dbCountry : String
         var dbDatum: String
-        var i = 0
+        var dbSignatureId : Int
+        var dbSuspicion = false
+
         val selectQuery = GETSIGNATURE+" where s."+FK_STUDENT_ID+" = '" + snumber + "'  Group by " + SIGNATURE_BITMAP + " order by " + SIGNATURE_ID
 
         val db = this.readableDatabase
@@ -380,7 +382,12 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 dbNeibhourhood = c.getString(c.getColumnIndex(NEIGHBOURHOOD))?:""
                 dbCountry = c.getString(c.getColumnIndex(COUNTRY))?:""
                 dbDatum = c.getStringOrNull(c.getColumnIndex(TIMESTAMP)).toString()//c.getString(c.getColumnIndex(TIMESTAMP))
-                var s = SignatureList(img,dbRoad,dbHouseNubmer,dbPostCode,dbTown,dbNeibhourhood,dbCountry,dbDatum)
+                dbSignatureId = c.getInt(c.getColumnIndex(SIGNATURE_ID))
+                var tmp = c.getInt(c.getColumnIndex(SUSPICIOUS))
+                if (tmp == 1) {
+                    dbSuspicion = true
+                }
+                var s = SignatureList(img,dbRoad,dbHouseNubmer,dbPostCode,dbTown,dbNeibhourhood,dbCountry,dbDatum, dbSignatureId, dbSuspicion)
                 signatureList.add(s)
                 Log.d("sig", "adres: ${s.imageByteArray.toString()}")
             }while(c.moveToNext())
