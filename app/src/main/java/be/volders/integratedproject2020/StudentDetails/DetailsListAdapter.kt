@@ -13,13 +13,16 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.isGone
 import androidx.recyclerview.widget.RecyclerView
+import be.volders.integratedproject2020.DatabaseHelpe
 import be.volders.integratedproject2020.Model.SignatureList
 import be.volders.integratedproject2020.R
+import java.lang.Exception
 
 
 class DetailsListAdapter(context: Context, private val signatuurList: List<SignatureList>) :  RecyclerView.Adapter<DetailsListAdapter.ViewHolder>() {
 
     val context = context
+    var databaseHelper: DatabaseHelpe? = DatabaseHelpe(context)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DetailsListAdapter.ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -30,11 +33,22 @@ class DetailsListAdapter(context: Context, private val signatuurList: List<Signa
     override fun onBindViewHolder(holder: DetailsListAdapter.ViewHolder, position: Int) {
         val signature = signatuurList[position]
 
+        //TODO: reload element to update view
+
         if (signature.dbSuspisious) {
             holder.tvRemoveFlag?.isGone = false
             holder.tvRemoveFlag?.isClickable = true
-            //TODO: add clicklistener functionality
-            //holder.tvRemoveFlag?.setOnClickListener()
+
+            holder.tvRemoveFlag?.setOnClickListener{
+                try {
+                    databaseHelper?.removeSuspicion(signature.dbsignatureId)
+                    Toast.makeText(context, "Suspision removed", Toast.LENGTH_SHORT).show()
+                }catch (ex: Exception) {
+                    Toast.makeText(context, "Failed to remove suspicion", Toast.LENGTH_SHORT).show()
+                    Log.e("RemoveSuspicion", ex.stackTraceToString())
+                }
+            }
+
         }
 
 
