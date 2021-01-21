@@ -7,9 +7,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.isGone
 import androidx.recyclerview.widget.RecyclerView
 import be.volders.integratedproject2020.Model.SignatureList
 import be.volders.integratedproject2020.R
@@ -28,6 +30,14 @@ class DetailsListAdapter(context: Context, private val signatuurList: List<Signa
     override fun onBindViewHolder(holder: DetailsListAdapter.ViewHolder, position: Int) {
         val signature = signatuurList[position]
 
+        if (signature.dbSuspisious) {
+            holder.tvRemoveFlag?.isGone = false
+            holder.tvRemoveFlag?.isClickable = true
+            //TODO: add clicklistener functionality
+            //holder.tvRemoveFlag?.setOnClickListener()
+        }
+
+
 
         holder.tvSignature?.setImageBitmap(signature.imageByteArray)
         holder.tvroad?.text = signature.dbRoad
@@ -42,6 +52,8 @@ class DetailsListAdapter(context: Context, private val signatuurList: List<Signa
         return signatuurList.size
     }
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var tvRemoveFlag: Button? = itemView.findViewById(R.id.btnRemoveFlag)
+
         var tvSignature: ImageView? = itemView.findViewById(R.id.imageView) as? ImageView
         var tvroad: TextView? = itemView.findViewById(R.id.tvStraat)
         var tvhousenumber: TextView? = itemView.findViewById(R.id.tvHuisnumer)
