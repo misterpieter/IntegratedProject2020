@@ -36,6 +36,10 @@ class DetailsListAdapter(context: Context, private val signatuurList: List<Signa
         val signature = signatuurList[position]
 
         //TODO: reload element to update view. Fix show flags everywhere after first suspicion
+        holder.tvRemoveFlag?.isGone = true
+        holder.tvRemoveFlag?.isClickable = false
+
+        Log.d("testing", "Position: $position    and suspision is :  ${signature.dbSuspisious}")
 
         if (signature.dbSuspisious) {
             holder.tvRemoveFlag?.isGone = false
@@ -54,9 +58,6 @@ class DetailsListAdapter(context: Context, private val signatuurList: List<Signa
                     Log.e("RemoveSuspicion", ex.stackTraceToString())
                 }
             }
-        } else {
-            holder.tvRemoveFlag?.isGone = true
-            holder.tvRemoveFlag?.isClickable = false
         }
 
         holder.tvSignature?.setImageBitmap(signature.imageByteArray)
@@ -74,7 +75,6 @@ class DetailsListAdapter(context: Context, private val signatuurList: List<Signa
     }
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var tvRemoveFlag: Button? = itemView.findViewById(R.id.btnRemoveFlag)
-
         var tvSignature: ImageView? = itemView.findViewById(R.id.imageView) as? ImageView
         var tvroad: TextView? = itemView.findViewById(R.id.tvStraat)
         var tvhousenumber: TextView? = itemView.findViewById(R.id.tvHuisnumer)

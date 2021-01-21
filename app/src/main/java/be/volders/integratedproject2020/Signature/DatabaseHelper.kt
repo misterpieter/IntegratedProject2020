@@ -392,11 +392,9 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 dbCountry = c.getString(c.getColumnIndex(COUNTRY))?:""
                 dbDatum = c.getStringOrNull(c.getColumnIndex(TIMESTAMP)).toString()//c.getString(c.getColumnIndex(TIMESTAMP))
                 dbSignatureId = c.getInt(c.getColumnIndex(SIGNATURE_ID))
-                var tmp = c.getInt(c.getColumnIndex(SUSPICIOUS))
-                if (tmp == 1) {
-                    dbSuspicion = true
-                }
-                var s = SignatureList(img,dbRoad,dbHouseNubmer,dbPostCode,dbTown,dbNeibhourhood,dbCountry,dbDatum, dbSignatureId, dbSuspicion)
+                val tmp = c.getInt(c.getColumnIndex(SUSPICIOUS))
+                dbSuspicion = tmp == 1
+                val s = SignatureList(img,dbRoad,dbHouseNubmer,dbPostCode,dbTown,dbNeibhourhood,dbCountry,dbDatum, dbSignatureId, dbSuspicion)
                 signatureList.add(s)
                 Log.d("sig", "adres: ${s.imageByteArray.toString()}")
             }while(c.moveToNext())
