@@ -35,11 +35,10 @@ class DetailsListAdapter(context: Context, private val signatuurList: List<Signa
     override fun onBindViewHolder(holder: DetailsListAdapter.ViewHolder, position: Int) {
         val signature = signatuurList[position]
 
-        //TODO: reload element to update view. Fix show flags everywhere after first suspicion
         holder.tvRemoveFlag?.isGone = true
         holder.tvRemoveFlag?.isClickable = false
 
-        Log.d("testing", "Position: $position    and suspision is :  ${signature.dbSuspisious}")
+        Log.d("signatureSusAtView", "Position: $position    and suspision is :  ${signature.dbSuspisious}")
 
         if (signature.dbSuspisious) {
             holder.tvRemoveFlag?.isGone = false
