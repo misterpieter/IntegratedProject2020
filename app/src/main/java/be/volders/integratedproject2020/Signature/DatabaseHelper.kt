@@ -287,9 +287,18 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         return locationList
     }
 
+    //rewrites suspision to false at certain row
+    fun removeSuspicion(signatureId: Int) {
+        val db = this.writableDatabase
+        val values = ContentValues()
+        values.put(SUSPICIOUS, false)
+        db.update(TABLE_SIGNATURE, values, "$SIGNATURE_ID=$signatureId", null)
+        db.close()
+    }
+
+
     //update location based on id
     fun updateLocation(adres: AddressWithIdFirebase){
-
         val db = this.writableDatabase
         val values = ContentValues()
         values.put(LONGITUDE, adres.lon)
