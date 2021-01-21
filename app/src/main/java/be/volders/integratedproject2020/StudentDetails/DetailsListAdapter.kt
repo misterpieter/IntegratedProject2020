@@ -1,6 +1,7 @@
 package be.volders.integratedproject2020.StudentDetails;
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
@@ -11,6 +12,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 import androidx.core.view.isGone
 import androidx.recyclerview.widget.RecyclerView
 import be.volders.integratedproject2020.DatabaseHelpe
@@ -33,7 +35,7 @@ class DetailsListAdapter(context: Context, private val signatuurList: List<Signa
     override fun onBindViewHolder(holder: DetailsListAdapter.ViewHolder, position: Int) {
         val signature = signatuurList[position]
 
-        //TODO: reload element to update view
+        //TODO: reload element to update view. Fix show flags everywhere after first suspicion
 
         if (signature.dbSuspisious) {
             holder.tvRemoveFlag?.isGone = false
@@ -43,15 +45,19 @@ class DetailsListAdapter(context: Context, private val signatuurList: List<Signa
                 try {
                     databaseHelper?.removeSuspicion(signature.dbsignatureId)
                     Toast.makeText(context, "Suspision removed", Toast.LENGTH_SHORT).show()
+
+                    holder.tvRemoveFlag?.isGone = true
+                    holder.tvRemoveFlag?.isClickable = false
+
                 }catch (ex: Exception) {
                     Toast.makeText(context, "Failed to remove suspicion", Toast.LENGTH_SHORT).show()
                     Log.e("RemoveSuspicion", ex.stackTraceToString())
                 }
             }
-
+        } else {
+            holder.tvRemoveFlag?.isGone = true
+            holder.tvRemoveFlag?.isClickable = false
         }
-
-
 
         holder.tvSignature?.setImageBitmap(signature.imageByteArray)
         holder.tvroad?.text = signature.dbRoad
@@ -61,6 +67,7 @@ class DetailsListAdapter(context: Context, private val signatuurList: List<Signa
         holder.tvtown.text = signature.dbTown
         holder.tvcountry.text = signature.dbCountry
     }
+
 
     override fun getItemCount(): Int {
         return signatuurList.size
