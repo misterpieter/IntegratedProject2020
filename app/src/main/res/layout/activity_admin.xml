@@ -55,7 +55,12 @@
         android:layout_marginLeft="60dp"
         android:layout_height="wrap_content"
         android:text="CSV exporteren"
+<<<<<<< Updated upstream
         android:layout_marginTop="20dp"
+=======
+        android:enabled="false"
+        android:textColor="@color/white"
+>>>>>>> Stashed changes
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnImportCSV"

@@ -70,6 +70,7 @@ class AdminActivity : AppCompatActivity() {
                 UpdateAdressesBeforeUpload()
             }
             BackupToFirebase()
+            btnExportCSV.isEnabled = true
         }
 
         btnUpdateLocation.setOnClickListener{

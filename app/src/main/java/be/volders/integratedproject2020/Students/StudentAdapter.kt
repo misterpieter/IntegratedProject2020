@@ -32,12 +32,18 @@ class StudentAdapter(context:Context, private val students: List<Student>) : Rec
         holder.tvName.text = student.name
         holder.tvSnumber.text = student.snumber
 
+<<<<<<< Updated upstream
+=======
+        if (databaseHelper?.getSuspiciousOrNot(student.snumber) == true) {
+            holder.tvName.setTextColor(Color.RED)
+            holder.tvLastName.setTextColor(Color.RED)
+            holder.tvSnumber.setTextColor(Color.RED)
+        }
+
+>>>>>>> Stashed changes
         // click listener op item
         holder.itemView.setOnClickListener{
-            //toast + redirect naar home (enkel als voorbeeld om naar een andere activity te gaan wanneer geklikt )
-//            Toast.makeText(context, "${student.snumber} clicked", Toast.LENGTH_SHORT).show()
             databaseHelper?.getSignatureForDetailsList(student.snumber)
-            //Toast.makeText(context, "${student.snumber} clicked", Toast.LENGTH_SHORT).show()
             val intent = Intent(context, StudentDetailsActivity::class.java)
             intent.putExtra("studentSnr",student.snumber)
             context.startActivity(intent)

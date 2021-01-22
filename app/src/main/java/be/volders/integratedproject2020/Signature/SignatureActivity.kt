@@ -80,7 +80,6 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
             startActivity(intent)
         }
 
-
         clear.setOnClickListener {
             drawingView.clear()
             //drawingView.clearCanvas()
@@ -108,7 +107,6 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
             intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
-
     }
 
     private fun CheckSuspicion(snumber: String, releases: Int, vectors: Int) {
@@ -132,8 +130,6 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
             //first signature => not suspicious
             suspiciousSignature = false
         }
-
-
     }
 
     //convert img

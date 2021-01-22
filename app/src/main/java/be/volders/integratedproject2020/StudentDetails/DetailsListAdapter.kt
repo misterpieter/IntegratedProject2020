@@ -16,10 +16,6 @@ import be.volders.integratedproject2020.R
 
 class DetailsListAdapter(context: Context, private val signatuurList: List<SignatureList>) :  RecyclerView.Adapter<DetailsListAdapter.ViewHolder>() {
 
-    companion object {
-        const val STUDENTLIST = 1
-        const val STUDENTDETAILS = 2
-    }
     val context = context
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DetailsListAdapter.ViewHolder {

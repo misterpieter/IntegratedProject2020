@@ -74,13 +74,10 @@ class StudentListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListe
     fun filter(f:String):Boolean{
         var dateTrue = true
         val string = f //2017-07-25
-
         try {
             val date = LocalDate.parse(string, DateTimeFormatter.ISO_DATE)
-            Log.d("datum", "datum: ${dateTrue}")
         }catch (e:Exception){
             dateTrue = false
-            Log.d("datum", "geen datum: ${dateTrue}")
         }
         return dateTrue
     }
