@@ -45,7 +45,7 @@
 
     <EditText
         android:id="@+id/ettFilter"
-        android:layout_width="300dp"
+        android:layout_width="500dp"
         android:layout_height="wrap_content"
         android:hint="17/12/2020, naam, voornaam, snr"
         android:inputType="textPersonName"
@@ -58,8 +58,8 @@
         android:id="@+id/btFilter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="5dp"
         android:text="Filter"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/ettFilter"
         app:layout_constraintTop_toBottomOf="@+id/etStudentList" />
 
@@ -68,9 +68,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="50dp"
         android:background="@drawable/home_button"
-        android:text="Home"
+        android:text="@string/home"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

@@ -48,7 +48,7 @@
         android:background="@drawable/button"
         android:layout_marginBottom="30dp"
         android:layout_marginRight="30dp"
-        android:text="Reset"
+        android:text="@string/reset"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -59,7 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="30dp"
         android:background="@drawable/button"
-        android:text="ok"
+        android:text="@string/ok"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -72,7 +72,7 @@
         android:layout_marginBottom="30dp"
         android:layout_marginLeft="30dp"
         android:background="@drawable/home_button"
-        android:text="Back"
+        android:text="@string/home"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" />

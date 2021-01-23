@@ -41,7 +41,7 @@
 
         <Space
             android:id="@+id/spacerBegin"
-            android:layout_width="100dp"
+            android:layout_width="50dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageView"
@@ -56,8 +56,8 @@
             android:textAlignment="center"
             android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@+id/tvStraat"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/spacerBegin"
-            app:layout_constraintEnd_toStartOf="@id/spacerEnd"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -76,12 +76,12 @@
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:textAlignment="textEnd"
             android:text="200"
+            android:textAlignment="textEnd"
             android:textSize="20sp"
 
             app:layout_constraintBottom_toTopOf="@+id/tvTown"
-            app:layout_constraintEnd_toStartOf="@id/spacerEnd"
+            app:layout_constraintStart_toEndOf="@+id/tvStraat"
             app:layout_constraintTop_toBottomOf="@+id/tvDatum" />
 
         <TextView
@@ -104,9 +104,8 @@
             android:textAlignment="textEnd"
             android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@+id/tvCountry"
-            app:layout_constraintEnd_toStartOf="@id/spacerEnd"
-            app:layout_constraintTop_toBottomOf="@+id/tvStraat"
-            />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvStraat" />
 
         <TextView
             android:id="@+id/tvCountry"
@@ -117,17 +116,8 @@
             android:textAlignment="center"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="@+id/imageView"
-            app:layout_constraintEnd_toStartOf="@id/spacerEnd"
-            app:layout_constraintStart_toEndOf="@id/spacerBegin"
-            />
-
-        <Space
-            android:id="@+id/spacerEnd"
-            android:layout_width="50dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toEndOf="@id/spacerBegin" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

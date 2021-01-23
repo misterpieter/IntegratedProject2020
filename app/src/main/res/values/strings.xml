@@ -11,6 +11,10 @@
     <string name="admin_pagina">Admin pagina</string>
     <string name="lijst_studenten">Lijst studenten</string>
     <string name="home">Home</string>
+    <string name="reset">Reset</string>
+    <string name="ok">ok</string>
+    <string name="log_in">Log in</string>
+    <string name="fraude_flag_verwijderen">fraude-flag verwijderen</string>
     <!--
     This string is used for square devices and overridden by hello_world in
     values-round/strings.xml for round devices.

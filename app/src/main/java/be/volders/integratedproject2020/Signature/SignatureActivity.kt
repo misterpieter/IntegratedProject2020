@@ -15,19 +15,16 @@ import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import android.widget.Button
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.drawToBitmap
 import be.volders.integratedproject2020.*
 import be.volders.integratedproject2020.Model.Address
-import be.volders.integratedproject2020.Model.SignatureCheck
 import be.volders.integratedproject2020.Model.Student
-import com.beust.klaxon.JsonObject
-import com.beust.klaxon.Parser
 import kotlinx.android.synthetic.main.activity_admin.*
-import okhttp3.*
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -230,6 +227,7 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
             return response
         }
 
+        fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
 
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
