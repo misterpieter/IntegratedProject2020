@@ -26,7 +26,7 @@ object Helper {
 
         val rows: List<List<String>> = csvReader().readAll(csvString!!)
         for (r in rows) {
-            studentList.add(Student(r[0], r[1], r[2], r[3]))
+            studentList.add(Student(r[0], r[1], r[2]))
         }
 
         // check if CSV has headers and remove them from list
@@ -50,7 +50,7 @@ object Helper {
 
         val rows: List<List<String>> = csvReader().readAll(csvData!!)
         for (r in rows) {
-            studentList.add(Student(r[0], r[1], r[2], r[3]))
+            studentList.add(Student(r[0], r[1], r[2]))
         }
 
         // check if CSV has headers and remove them from list
@@ -74,8 +74,7 @@ object Helper {
                 Student(
                         students.getJSONObject(it).getString("name"),
                         students.getJSONObject(it).getString("lastname"),
-                        students.getJSONObject(it).getString("snumber"),
-                        students.getJSONObject(it).getString("password")
+                        students.getJSONObject(it).getString("snumber")
                 )                }
         } catch (e: JSONException) {
             e.printStackTrace()

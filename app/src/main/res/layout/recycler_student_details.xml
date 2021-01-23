@@ -13,12 +13,26 @@
         android:layout_width="match_parent"
         android:layout_height="200dp">
 
+        <Button
+            android:id="@+id/btnRemoveFlag"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:translationZ="90dp"
+            android:text="Remove flag"
+            android:visibility="gone"
+            android:clickable="false"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:textColor="@color/white"
+            android:background="@drawable/button"
+            />
+
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="243dp"
+            android:layout_height="185dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@id/btnRemoveFlag"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_launcher_foreground" />
 

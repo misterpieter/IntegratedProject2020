@@ -2,6 +2,7 @@ package be.volders.integratedproject2020.StudentDetails
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,6 +29,9 @@ class StudentDetailsActivity : AppCompatActivity() {
         signaturelist = databaseHelper!!.getSignatureForDetailsList(snumber)
 
         val adapter = DetailsListAdapter(this,signaturelist)
+
+
+
         rvSignatur.adapter = adapter
 
         btnHome.setOnClickListener {

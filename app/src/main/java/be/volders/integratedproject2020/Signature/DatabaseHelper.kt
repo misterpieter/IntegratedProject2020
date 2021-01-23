@@ -9,9 +9,12 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
 import android.widget.Toast
+import androidx.core.database.getStringOrNull
 import be.volders.integratedproject2020.Admin.AddressWithIdFirebase
 import be.volders.integratedproject2020.Model.*
+import java.sql.SQLException
 import java.time.LocalDate
+import kotlin.math.sign
 
 
 class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
@@ -96,9 +99,15 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                         " left join "+TABLE_LOCATION+" as lo on st."+STUDENT_ID+" = lo."+FK_STUDENT_ID
                 )
         private  val GETSIGNATURE = (
-                "select s."+SIGNATURE_BITMAP+", l."+ ROAD+",  l."+HOUSE_NUMBER+", l."+POSTCODE+", l."+TIMESTAMP+
-                        ", l."+TOWN+", l."+NEIGHBOURHOOD+", l."+COUNTRY+" from "+TABLE_SIGNATURE+" as s "+
-                        "left join "+TABLE_LOCATION+" as l on l."+FK_STUDENT_ID+" = s."+FK_STUDENT_ID
+                "select distinct s."+SIGNATURE_BITMAP+", l."+ ROAD+",  l."+HOUSE_NUMBER+", l."+POSTCODE+", l."+TIMESTAMP+
+                        ", l."+TOWN+", l."+NEIGHBOURHOOD+", l."+COUNTRY+" , s." + SIGNATURE_ID + " , s." + SUSPICIOUS +  " from "+TABLE_SIGNATURE+" as s "+
+                        "left join "+TABLE_LOCATION+" as l on l."+ SIGNATURE_LINK+" = s."+ LOCATION_LINK
+                )
+        private val EXPORTDATASTUDENT = (
+                "select st."+FIRSTNAME+", st."+LASTNAME+", st."+STUDENT_ID+", l."+ ROAD+",  l."+HOUSE_NUMBER+", l."+POSTCODE+
+                        ", l."+TOWN+", l."+NEIGHBOURHOOD+", l."+COUNTRY+", l."+TIMESTAMP+
+                        " from "+TABLE_LOCATION+" as l " +
+                        " left join "+TABLE_STUDENTS+" as st on st."+STUDENT_ID+" = l."+FK_STUDENT_ID
                 )
     }
 
@@ -126,11 +135,6 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         db.close()
     }
 
-    fun tabelexist(tabel: String){
-
-    }
-
-
     fun addStudent(student: Student){
             val db = this.writableDatabase
             val values = ContentValues().apply {
@@ -141,6 +145,23 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
             // inserts new if not exists. If exists => replace
             db.replace(TABLE_STUDENTS, null, values)
             db.close()
+    }
+
+    fun getSuspiciousOrNot(snumber: String) : Boolean {
+        var hasFraude = false
+
+        val selectQuery = "SELECT * FROM $TABLE_SIGNATURE  WHERE $FK_STUDENT_ID =  \"$snumber\" AND $SUSPICIOUS=1"
+
+        try {
+            val db = this.readableDatabase
+            val c = db.rawQuery(selectQuery, null)
+            if (c.moveToFirst()) {
+                hasFraude = true
+            }
+        }catch (ex: SQLException) {
+            Log.e("GetSuspisiousOrNot", ex.stackTraceToString())
+        }
+        return hasFraude
     }
 
     fun getAllStudent(): ArrayList<Student>{
@@ -158,15 +179,14 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                     stfirstname = c.getString(c.getColumnIndex(FIRSTNAME))?:""
                     stsnr = c.getString(c.getColumnIndex(STUDENT_ID))?:""
 
-                    val s : Student = Student(stname,stfirstname,stsnr, "password")
+                    val s : Student = Student(stname,stfirstname,stsnr)
                     studentList.add(s)
                 }while(c.moveToNext())
             }
             c.close()
-        }catch (e: SQLiteException){
-
+        }catch (ex: SQLiteException){
+            Log.e("getAllStudents", ex.stackTraceToString())
         }
-
         return studentList
     }
 
@@ -267,9 +287,18 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         return locationList
     }
 
+    //rewrites suspision to false at certain row
+    fun removeSuspicion(signatureId: Int) {
+        val db = this.writableDatabase
+        val values = ContentValues()
+        values.put(SUSPICIOUS, false)
+        db.update(TABLE_SIGNATURE, values, "$SIGNATURE_ID=$signatureId", null)
+        db.close()
+    }
+
+
     //update location based on id
     fun updateLocation(adres: AddressWithIdFirebase){
-
         val db = this.writableDatabase
         val values = ContentValues()
         values.put(LONGITUDE, adres.lon)
@@ -303,7 +332,6 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         values.put(SIGNATURE_LINK, adres.signatureLink)
 
         val result = db.insert(TABLE_LOCATION, null, values)
-        Log.d("FIL", "location opgeslagen: ${values}")
         db.close()
         return !result.equals( -1)
     }
@@ -323,7 +351,7 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                     stname = c.getString(c.getColumnIndex(LASTNAME))
                     stfirstname = c.getString(c.getColumnIndex(FIRSTNAME))
                     stsnr = c.getString(c.getColumnIndex(STUDENT_ID))
-                    var s = Student(stname,stfirstname,stsnr,"password") //PASSWORD MAG WEG
+                    var s = Student(stname,stfirstname,stsnr)
                     StudentList.add(s)
                     Log.d("FIL", "afterTextChanged: ${s.name}")
                 }while(c.moveToNext())
@@ -345,8 +373,10 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         var dbNeibhourhood : String
         var dbCountry : String
         var dbDatum: String
-        var i = 0
-        val selectQuery = GETSIGNATURE+" where s."+FK_STUDENT_ID+" = '"+snumber+"'"
+        var dbSignatureId : Int
+        var dbSuspicion = false
+
+        val selectQuery = GETSIGNATURE+" where s."+FK_STUDENT_ID+" = '" + snumber +  "'  order by " + SIGNATURE_ID
 
         val db = this.readableDatabase
         var c = db.rawQuery(selectQuery,null)
@@ -360,19 +390,57 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
                 dbTown = c.getString(c.getColumnIndex(TOWN))?:""
                 dbNeibhourhood = c.getString(c.getColumnIndex(NEIGHBOURHOOD))?:""
                 dbCountry = c.getString(c.getColumnIndex(COUNTRY))?:""
-                dbDatum = c.getString(c.getColumnIndex(TIMESTAMP))
-                var s = SignatureList(img,dbRoad,dbHouseNubmer,dbPostCode,dbTown,dbNeibhourhood,dbCountry,dbDatum)
+                dbDatum = c.getStringOrNull(c.getColumnIndex(TIMESTAMP)).toString()//c.getString(c.getColumnIndex(TIMESTAMP))
+                dbSignatureId = c.getInt(c.getColumnIndex(SIGNATURE_ID))
+                val tmp = c.getInt(c.getColumnIndex(SUSPICIOUS))
+                dbSuspicion = tmp == 1
+                val s = SignatureList(img,dbRoad,dbHouseNubmer,dbPostCode,dbTown,dbNeibhourhood,dbCountry,dbDatum, dbSignatureId, dbSuspicion)
                 signatureList.add(s)
                 Log.d("sig", "adres: ${s.imageByteArray.toString()}")
             }while(c.moveToNext())
         }
         db.close()
+
         return signatureList
     }
 
+    fun getExportData(): ArrayList<exportdata>{
+        val studentlist = ArrayList<exportdata>()
+        var dbsudetid: String
+        var dbfirstname: String
+        var dblastname: String
+        var dbRoad : String
+        var dbHouseNubmer : Int
+        var dbPostCode : Int
+        var dbTown : String
+        var dbNeibhourhood : String
+        var dbCountry : String
+        var dbDatum: String
+
+        val selectQuery = EXPORTDATASTUDENT
+        val db = this.readableDatabase
+        var c = db.rawQuery(selectQuery,null)
+        if(c.moveToFirst()){
+            do{
+                dbsudetid = c.getString(c.getColumnIndex(STUDENT_ID))
+                dbfirstname = c.getString(c.getColumnIndex(LASTNAME))
+                dblastname = c.getString(c.getColumnIndex(FIRSTNAME))
+                dbRoad = c.getString(c.getColumnIndex(ROAD))?:""
+                dbHouseNubmer = c.getInt(c.getColumnIndex(HOUSE_NUMBER))?:0
+                dbPostCode = c.getInt(c.getColumnIndex(POSTCODE))?:0
+                dbTown = c.getString(c.getColumnIndex(TOWN))?:""
+                dbNeibhourhood = c.getString(c.getColumnIndex(NEIGHBOURHOOD))?:""
+                dbCountry = c.getString(c.getColumnIndex(COUNTRY))?:""
+                dbDatum = c.getStringOrNull(c.getColumnIndex(TIMESTAMP)).toString()//c.getString(c.getColumnIndex(TIMESTAMP))
+                var s = exportdata(dbsudetid,dbfirstname,dblastname,dbDatum,dbRoad,dbHouseNubmer,dbPostCode,dbTown,dbNeibhourhood,dbCountry)
+                studentlist.add(s)
+            }while(c.moveToNext())
+        }
+        db.close()
+        return studentlist
+    }
 
     // SELECT  * from signature where fk_student_id='snumber6'  ORDER by signature_id ASC limit 1
-
     fun getFirstSignature(snumber: String): SignatureCheck {
         var imageId : String? = null
         var imageByteArray: ByteArray = byteArrayOf()
@@ -399,15 +467,5 @@ class DatabaseHelpe(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,
         return SignatureCheck(imageId, imageByteArray, fkStudent, releaseCounter, vectorCounter)
 
     }
-
-/*
-    class SignatureCheck (
-            var imageId: String?,
-            var imageByteArray: ByteArray,
-            var fkStudent: String,
-            var releaseCounter: Int,
-            var vectorCounter: Int
-    )
-    */
 
 }

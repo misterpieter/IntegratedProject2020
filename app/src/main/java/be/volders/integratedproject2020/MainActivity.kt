@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
     var parentView:View?=null
     private lateinit var adres : Address
     private lateinit var selectedStudent:Student
-
+    var databaseHelper: DatabaseHelpe? = DatabaseHelpe(this)
     private val ADMIN_NAME = "Admin"
 
     override fun onCreate(savedInstanceState: Bundle?) {
