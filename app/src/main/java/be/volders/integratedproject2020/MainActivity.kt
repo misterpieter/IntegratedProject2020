@@ -33,34 +33,33 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setupPermissions()
-
-
         setContentView(R.layout.activity_main)
 
         // LOGIN
         btnLogin.isEnabled = false
         etPassword.isVisible = false
 
-
         // lijst hardcoded van studenten
 //        val studentList = ArrayList<Student>()
 //        studentList.add(Student( "Admin","Admin","pnumber","admin"))
-//        studentList.add(Student( "Barrack","Obama","snumber1","password1"))
-//        studentList.add(Student("Angela", "Merkel","snumber2","password2"))
-//        studentList.add(Student("Kim", "Jong-Un","snumber3","password3"))
-//        studentList.add(Student("Donald", "Trump","snumber4","password4"))
-//        studentList.add(Student("Pieter", "Volders","snumber5","password5"))
-//        studentList.add(Student("Jonas", "Adriaanssens","snumber6","password6"))
-//        studentList.add(Student("Halima", "Rahimi","S425316","halima"))
-//        studentList.add(Student("Halima", "Rahimi","S425315","halima"))
 
         // lijst imported csv
+
         var sList = getStudentsFromLocalCSV(this)
+
+        try {
+            var slist = databaseHelper!!.getAllStudent()
+            for(r in slist){
+                sList.add(r)
+            }
+        }catch (e: Exception){
+            Log.d("TAG", "er zijn geen student in de db ")
+        }
+
         parentView = findViewById(R.id.parentView)
 
-//        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, studentList)
+        //val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, studentList)
         val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, sList)
         actvStudents.setAdapter(adapter)
 
@@ -102,7 +101,7 @@ class MainActivity : AppCompatActivity() {
 //                Toast.makeText(this, "ADMIN", Toast.LENGTH_SHORT).show()
             }
             else {
-                Toast.makeText(this, "FOUT wachtwoord ingegeven", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "FOUT wachtwoord ingegeven${selectedStudent.password}", Toast.LENGTH_SHORT).show()
             }
         }
 
