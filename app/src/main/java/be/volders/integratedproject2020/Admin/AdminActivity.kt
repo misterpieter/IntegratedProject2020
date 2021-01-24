@@ -75,7 +75,7 @@ class AdminActivity : AppCompatActivity() {
 
         btnSync.setOnClickListener{
             //Coroutine : pauses main thread untill update UpdateAdressesBeforeUpload is done
-            Toast.makeText(this,"Starting synchronization", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this,"Synchronisatie gestart", Toast.LENGTH_SHORT).show()
             runBlocking {
                 UpdateAdressesBeforeUpload()
             }
@@ -108,7 +108,7 @@ class AdminActivity : AppCompatActivity() {
         try {
             UpdateAddresses()
         } catch (e: Exception) {
-            Toast.makeText(this, "Could not update adresses", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Kon adress niet updaten", Toast.LENGTH_SHORT).show()
             Log.e("Error while updating adresses", e.stackTraceToString())
         }
     }
@@ -119,10 +119,10 @@ class AdminActivity : AppCompatActivity() {
             newDBsyn.saveOrUpdateAllStudents()
             newDBsyn.saveOrUpdateAllLocations()
             newDBsyn.saveOrUpdateAllSignatures()
-            Toast.makeText(this, "Synchronization complete", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Synchronisatie geslaagd", Toast.LENGTH_SHORT).show()
         }
         catch (e: Exception) {
-            Toast.makeText(this, "Could not synchronize to firebase", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Kon niet synchroniseren met firebase", Toast.LENGTH_SHORT).show()
             Log.e("Error while synchronizing to firebase", e.stackTraceToString())
         }
         Log.d("SYNCBUTTON", "backed up to firebase" )

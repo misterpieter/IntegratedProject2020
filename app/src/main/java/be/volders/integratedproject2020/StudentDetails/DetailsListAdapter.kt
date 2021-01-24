@@ -47,13 +47,13 @@ class DetailsListAdapter(context: Context, private val signatuurList: List<Signa
             holder.tvRemoveFlag?.setOnClickListener{
                 try {
                     databaseHelper?.removeSuspicion(signature.dbsignatureId)
-                    Toast.makeText(context, "Suspision removed", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Verdenking verwijderd", Toast.LENGTH_SHORT).show()
 
                     holder.tvRemoveFlag?.isGone = true
                     holder.tvRemoveFlag?.isClickable = false
 
                 }catch (ex: Exception) {
-                    Toast.makeText(context, "Failed to remove suspicion", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Kon verdenking niet verwijderen", Toast.LENGTH_SHORT).show()
                     Log.e("RemoveSuspicion", ex.stackTraceToString())
                 }
             }
