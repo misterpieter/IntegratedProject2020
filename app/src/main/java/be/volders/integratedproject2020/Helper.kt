@@ -28,7 +28,7 @@ object Helper {
 
         val rows: List<List<String>> = csvReader().readAll(csvString!!)
         for (r in rows) {
-            studentList.add(Student(r[0], r[1], r[2]))
+            studentList.add(Student(r[0], r[1], r[2],r[3]))
         }
 
         // check if CSV has headers and remove them from list
@@ -44,7 +44,7 @@ object Helper {
 
         var csvData: String? = null
         try {
-            csvData = loadDataFromAsset("students.csv", context)
+            csvData = loadDataFromAsset("admin.csv", context)
         }
         catch (e: Exception){
             Log.d("TAG", "readCSV: ${e.message}")
@@ -52,7 +52,7 @@ object Helper {
 
         val rows: List<List<String>> = csvReader().readAll(csvData!!)
         for (r in rows) {
-            studentList.add(Student(r[0], r[1], r[2]))
+            studentList.add(Student(r[0], r[1], r[2],r[3]))
         }
 
         // check if CSV has headers and remove them from list
