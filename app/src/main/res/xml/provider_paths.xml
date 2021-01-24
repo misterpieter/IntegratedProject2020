@@ -1,5 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <paths>
-    <files-path
-        name="data"
-        path="."/>
+    <files-path name="data" path="/"/>
+    <files-path name="data" path="mydata/"/>
+    <files-path name="files" path="." />
 </paths>

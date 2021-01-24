@@ -40,12 +40,7 @@ class MainActivity : AppCompatActivity() {
         btnLogin.isEnabled = false
         etPassword.isVisible = false
 
-        // lijst hardcoded van studenten
-//        val studentList = ArrayList<Student>()
-//        studentList.add(Student( "Admin","Admin","pnumber","admin"))
-
         // lijst imported csv
-
         var sList = getStudentsFromLocalCSV(this)
 
         try {
@@ -54,7 +49,7 @@ class MainActivity : AppCompatActivity() {
                 sList.add(r)
             }
         }catch (e: Exception){
-            Log.d("TAG", "er zijn geen student in de db ")
+            Log.d("kld", "er zijn geen student in de db ")
         }
 
         parentView = findViewById(R.id.parentView)
