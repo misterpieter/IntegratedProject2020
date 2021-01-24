@@ -40,7 +40,6 @@ class exportHelper (){
                 out.close()
 
                 //exporting
-                //context = getApplicationcontext();
                 val filelocation: File = File(context.getFilesDir(), "data.csv")
                 val path = FileProvider.getUriForFile(context, "be.volders.integratedproject2020.fileprovider", filelocation)
                 val fileIntent = Intent(Intent.ACTION_SEND)
