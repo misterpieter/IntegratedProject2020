@@ -15,6 +15,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -32,6 +33,7 @@ import java.io.IOException
 import java.net.URL
 import java.time.LocalDate
 import java.util.*
+
 
 lateinit var recognize:Button
 lateinit var clear:Button
@@ -254,5 +256,16 @@ class SignatureActivity : AppCompatActivity(), LocationListener {
                 Log.d("TAG", "EXCEPTION at Mainactivity R233: ${e.message}\n${e.stackTrace}")
             }
         }
+    }
+
+    override fun onProviderEnabled(provider: String) {
+    }
+
+    override fun onProviderDisabled(provider: String) {
+        Toast.makeText(this, "Gelieve locatie voorziening aan te zetten!\n\nHierna kan u pas de handtekening zetten!", Toast.LENGTH_LONG).show()
+    }
+
+    override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
+        Toast.makeText(this, "Signature - onStatusChanged", Toast.LENGTH_SHORT).show()
     }
 }
