@@ -1,10 +1,12 @@
 package be.volders.integratedproject2020
 
 import android.content.Context
+import android.content.Intent
 import android.util.Base64InputStream
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.core.content.ContextCompat.startActivity
 import be.volders.integratedproject2020.Model.Student
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import org.json.JSONException

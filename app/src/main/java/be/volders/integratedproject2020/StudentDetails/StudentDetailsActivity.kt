@@ -28,7 +28,7 @@ class StudentDetailsActivity : AppCompatActivity() {
         val snumber = intent.getStringExtra("studentSnr").toString()
         signaturelist = databaseHelper!!.getSignatureForDetailsList(snumber)
 
-        val adapter = DetailsListAdapter(this,signaturelist)
+        val adapter = DetailsListAdapter(this, signaturelist)
 
 
 
@@ -36,7 +36,10 @@ class StudentDetailsActivity : AppCompatActivity() {
 
         btnHome.setOnClickListener {
             intent = Intent(this, MainActivity::class.java)
+
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
+            finish() // finish the current activity
         }
     }
 

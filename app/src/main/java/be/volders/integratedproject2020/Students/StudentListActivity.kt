@@ -43,7 +43,9 @@ class StudentListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListe
 
         btnHome.setOnClickListener {
             intent = Intent(this, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
+            finish() // finish the current activity
         }
 
         studentlist = databaseHelper!!.getAllStudent()
@@ -70,6 +72,14 @@ class StudentListActivity : AppCompatActivity(), AdapterView.OnItemSelectedListe
                 rvPersons.adapter = adapter
             }
         }
+
+    fun HomeAndclearBackstack() {
+
+        val intent = Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+        finish() // finish the current activity
+    }
 
     fun filter(f:String):Boolean{
         var dateTrue = true

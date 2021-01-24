@@ -83,8 +83,10 @@ class AdminActivity : AppCompatActivity() {
         }
 
         btnHome.setOnClickListener {
-            intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
+            finish() // finish the current activity
         }
     }
 
